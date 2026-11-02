@@ -1,0 +1,193 @@
+{
+  "name": "EH 01 · Meta instant forms → lead-api",
+  "nodes": [
+    {
+      "parameters": {
+        "page": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "form": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "id": "41351424-fa52-434f-b3cb-7545d8671ead",
+      "name": "Meta Lead Ads Trigger",
+      "type": "n8n-nodes-base.facebookLeadAdsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "facebookLeadAdsOAuth2Api": {
+          "id": "REPLACE",
+          "name": "Facebook Lead Ads account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Meta instant form → Edgehomes /api/lead payload. Handles simplified and raw trigger output.\nreturn $input.all().map(item => {\n  const j = item.json;\n  const f = {};\n  if (Array.isArray(j.field_data)) j.field_data.forEach(x => { f[x.name] = (x.values || [])[0]; });\n  Object.assign(f, j.data || {}, j.fields || {});\n  const pick = (...keys) => { for (const k of keys) if (f[k] != null && f[k] !== '') return f[k]; return ''; };\n  return { json: {\n    name: pick('full_name', 'name', 'first_name'),\n    phone: pick('phone_number', 'phone', 'mobile'),\n    email: pick('email'),\n    city: pick('city', 'which_city_is_your_home_in?', 'city_name'),\n    society: pick('society', 'which_society_or_sector?', 'society_name'),\n    property: pick('property', 'home_type', 'what_are_we_designing?'),\n    possession: pick('possession', 'when_is_your_possession?', 'possession_month'),\n    budget: pick('budget', 'rough_budget?', 'interior_budget'),\n    source: 'meta_form',\n    campaign: (j.campaign && j.campaign.name) || j.campaign_name || '',\n    adset: (j.adset && j.adset.name) || j.adset_name || '',\n    ad: (j.ad && j.ad.name) || j.ad_name || '',\n    form_name: (j.form && j.form.name) || j.form_name || '',\n    // Meta instant forms used for Edgehomes MUST include the WhatsApp consent checkbox (see brief §6)\n    consent: !!(f.whatsapp_consent || f.consent || j.consent),\n    consent_source: 'Meta instant form consent checkbox',\n  } };\n});"
+      },
+      "id": "9f823075-92bf-4104-b502-9d744ad34941",
+      "name": "Map to Edgehomes lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.edgehomesarchitects.in/api/lead",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.EH_LEAD_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "c01324bf-2f3e-4dbb-b564-b734a62e090c",
+      "name": "POST /api/lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c6fe08b3-fc2a-4792-8e98-0d35ec324eb8",
+              "leftValue": "={{ $json.qualified }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9f9e59ce-0b88-46eb-af92-e5780b40c05c",
+      "name": "Qualified?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "REPLACE: desk@edgehomes (comma-separated)",
+        "subject": "=Qualified Meta lead · {{ $('Map to Edgehomes lead').item.json.name }} · {{ $('Map to Edgehomes lead').item.json.city }}",
+        "emailType": "text",
+        "message": "=Call within 5 minutes (9 AM–9 PM).\nName: {{ $('Map to Edgehomes lead').item.json.name }}\nPhone: {{ $('Map to Edgehomes lead').item.json.phone }}\nCity / society: {{ $('Map to Edgehomes lead').item.json.city }} / {{ $('Map to Edgehomes lead').item.json.society }}\nPossession: {{ $('Map to Edgehomes lead').item.json.possession }} · Budget: {{ $('Map to Edgehomes lead').item.json.budget }}\nCampaign: {{ $('Map to Edgehomes lead').item.json.campaign }}",
+        "options": {}
+      },
+      "id": "505c4208-b544-4a5f-8d04-645e44241e8c",
+      "name": "Alert desk — qualified form lead",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        960,
+        -80
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Meta Lead Ads Trigger": {
+      "main": [
+        [
+          {
+            "node": "Map to Edgehomes lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map to Edgehomes lead": {
+      "main": [
+        [
+          {
+            "node": "POST /api/lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST /api/lead": {
+      "main": [
+        [
+          {
+            "node": "Qualified?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qualified?": {
+      "main": [
+        [
+          {
+            "node": "Alert desk — qualified form lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "edge-homes"
+    },
+    {
+      "name": "leads"
+    }
+  ],
+  "pinData": {}
+}

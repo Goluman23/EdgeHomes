@@ -1,0 +1,13 @@
+{
+  "name": "edgehomes-lead-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Edge Homes lead back end: concierge replies, WhatsApp webhook, lead intake, follow-up sender and stage sync.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "build:gs": "node scripts/build-followup-gs.mjs",
+    "check": "node --test test/*.test.js && node scripts/build-followup-gs.mjs --check"
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "name": "EH 04 · 9 PM scoreboard",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 21 * * *"
+            }
+          ]
+        }
+      },
+      "id": "3e8d9b6d-5d91-475c-a305-6cd0727993c9",
+      "name": "Every day 9 PM IST",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "REPLACE: Google Sheet URL (Edgehomes Leads)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "options": {}
+      },
+      "id": "156677c0-ef32-47fd-bec0-3c681092dd99",
+      "name": "Read Leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        240,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 9 PM scoreboard against the sprint plan (25 Oct – 15 Nov 2026). Targets from the sprint document.\nconst rows = $input.all().map(i => i.json).filter(r => r['Lead ID']);\nconst ist = t => new Date(new Date(t).getTime() + 330 * 60000).toISOString().slice(0, 10);\nconst today = ist(Date.now());\nconst reached = { walked_in: 1, proposal: 2, signed: 3, client: 3, past_client: 3 };\nconst count = f => rows.filter(f).length;\nconst sprint = rows.filter(r => r['First enquiry'] && ist(r['First enquiry']) >= '2026-10-25');\nconst m = {\n  leads: sprint.length,\n  leadsToday: count(r => r['First enquiry'] && ist(r['First enquiry']) === today),\n  qualified: sprint.filter(r => r['Qualified'] === 'YES').length,\n  booked: sprint.filter(r => ['visit_booked', 'no_show', 'walked_in', 'proposal', 'signed', 'client'].includes(r['Stage'])).length,\n  walkins: sprint.filter(r => reached[r['Stage']] >= 1).length,\n  proposals: sprint.filter(r => reached[r['Stage']] >= 2).length,\n  signed: sprint.filter(r => reached[r['Stage']] >= 3).length,\n  waiting: count(r => r['Paused until'] && Date.parse(r['Paused until']) > Date.now()),\n  optedOut: count(r => r['Stage'] === 'opted_out'),\n  signedValue: sprint.reduce((s, r) => s + (Number(r['Signed value (₹)']) || 0), 0),\n};\nconst T = today <= '2026-11-05' ? { label: 'by 5 Nov', leads: 140, qualified: 50, booked: 15, walkins: 9, proposals: 7, signed: 0 }\n                                : { label: 'by 15 Nov', leads: 258, qualified: 92, booked: 26, walkins: 15, proposals: 12, signed: 2 };\nconst line = (k, n) => `${k.padEnd(14)} ${String(m[n]).padStart(4)}  / ${T[n]} ${T.label}${m[n] < T[n] ? '' : '  ✓'}`;\nconst text = [\n  `Edgehomes · 9 PM scoreboard · ${today}`, '',\n  line('Leads', 'leads'), line('Qualified', 'qualified'), line('Visits booked', 'booked'), line('Walk-ins', 'walkins'),\n  line('Proposals', 'proposals'), line('Signed', 'signed'), '',\n  `New leads today: ${m.leadsToday}`, `Waiting for a person now: ${m.waiting}`, `Opted out (all time): ${m.optedOut}`,\n  `Signed value: ₹${m.signedValue.toLocaleString('en-IN')}`, '',\n  'Red flags: < 10 leads a day for 2 days · qualified < 25% · < 4 walk-ins on 3 Nov · 0 signed by 12 Nov.',\n  'Add today\\'s ad spend in the sheet to get cost per qualified lead (target ≤ ₹1,400).',\n].join('\\n');\nreturn [{ json: { text, ...m } }];",
+        "mode": "runOnceForAllItems"
+      },
+      "id": "b0771d34-5aaf-49a9-ba73-39cbf00e00c7",
+      "name": "Build scoreboard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "REPLACE: desk@edgehomes (comma-separated)",
+        "subject": "=Edgehomes · 9 PM scoreboard",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {}
+      },
+      "id": "32a77475-647a-4565-b946-b39458a9bf54",
+      "name": "Send to Mr Deepak, Ms Priya, 4SYSTMS",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every day 9 PM IST": {
+      "main": [
+        [
+          {
+            "node": "Read Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Leads": {
+      "main": [
+        [
+          {
+            "node": "Build scoreboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build scoreboard": {
+      "main": [
+        [
+          {
+            "node": "Send to Mr Deepak, Ms Priya, 4SYSTMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "edge-homes"
+    },
+    {
+      "name": "reporting"
+    }
+  ],
+  "pinData": {}
+}

@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edge Homes — 21-Day Walk-in Sprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F1E36;--navy2:#172B4A;--gold:#C6A15B;--gold2:#E3C98F;--ivory:#F7F4EE;--page:#FBF9F5;
+  --ink:#1A1F29;--muted:#6B6A66;--line:#E6DFD2;--card:#FFFFFF;--good:#2E6B4F;--warn:#B8562F;--r:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.6 Inter,system-ui,-apple-system,sans-serif}
+a{color:var(--navy2)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{margin:0}
+h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;letter-spacing:.01em;line-height:1}
+h3{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;color:var(--navy)}
+
+header.hero{position:relative;background:radial-gradient(1200px 400px at 85% -10%,#24406b 0%,transparent 60%),var(--navy);color:#fff;padding:64px 0 48px;overflow:hidden}
+header.hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--gold)}
+.mono{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border:1.5px solid var(--gold);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;border-radius:4px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand small{display:block;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold2)}
+.brand b{font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:.12em}
+.pill{display:inline-block;margin:28px 0 16px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold2);border:1px solid var(--gold);border-radius:99px;padding:6px 16px}
+h1{font-size:clamp(46px,8vw,96px)}
+h1 em{font-style:italic;color:var(--gold)}
+.sub{font-size:clamp(16px,1.8vw,19px);color:#d8dbe3;max-width:820px;margin:18px 0 0;line-height:1.55}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:36px}
+.kpis div{border:1px solid rgba(198,161,91,.4);border-radius:var(--r);padding:14px 16px;background:rgba(255,255,255,.03)}
+.kpis b{display:block;font-family:'Cormorant Garamond',serif;font-size:40px;line-height:1;color:var(--gold)}
+.kpis span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#c4c8d2}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:32px;font-size:13px;color:#aab0bd}
+.meta b{color:#fff}
+
+nav.toc{position:sticky;top:0;z-index:5;background:rgba(251,249,245,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:20px;overflow-x:auto;padding-top:12px;padding-bottom:12px;white-space:nowrap}
+nav.toc a{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+nav.toc a:hover{color:var(--gold)}
+
+section{padding:56px 0 44px}
+section:nth-of-type(even){background:var(--ivory)}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1.5px solid var(--navy);padding-bottom:12px;margin-bottom:8px;flex-wrap:wrap}
+h2{font-size:clamp(30px,4.2vw,44px);color:var(--navy)}
+.num{color:var(--gold);margin-right:12px}
+.kick{font-size:11.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);padding-bottom:6px}
+.lead{font-size:16px;margin:14px 0 24px;max-width:860px}
+.lead b{color:var(--navy)}
+.label{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);margin:30px 0 10px}
+
+.grid{display:grid;gap:14px}.grid>*{min-width:0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card.gold{border-top:3px solid var(--gold)}
+.card.dark{background:var(--navy);color:#e8ebf1;border:0}.card.dark h3{color:var(--gold2)}
+.card p{margin:0 0 6px}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:#fff}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--navy);color:#f1eadb;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;white-space:nowrap}
+tr.tot td{font-weight:700;background:#F3EDE1}
+td[contenteditable]{background:#FFFDF6;outline:none;min-width:70px}
+td[contenteditable]:focus{box-shadow:inset 0 0 0 2px var(--gold)}
+.src{font-size:12.5px;color:var(--muted);margin-top:8px}
+.src a{color:var(--muted)}
+
+.callout{background:var(--navy);color:#e6e9ef;border-radius:var(--r);padding:16px 20px 16px 54px;margin:22px 0;position:relative;font-size:14.5px}
+.callout::before{content:"EH";position:absolute;left:16px;top:15px;color:var(--gold);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:18px}
+.callout b{color:#fff}.callout em{color:var(--gold2);font-style:normal}
+
+ul.clean,ol.clean{margin:8px 0 0;padding-left:20px}
+ul.clean li,ol.clean li{margin:5px 0}
+ul.clean li::marker,ol.clean li::marker{color:var(--gold)}
+ul.check{list-style:none;padding:0;margin:8px 0 0}
+ul.check li{padding-left:28px;position:relative;margin:7px 0}
+ul.check li::before{content:"";position:absolute;left:0;top:3px;width:16px;height:16px;border:1.5px solid var(--gold);border-radius:3px}
+
+/* funnel */
+.funnel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 20px 12px}
+.frow{display:grid;grid-template-columns:180px 1fr 60px;align-items:center;gap:12px;margin:10px 0}
+.frow .nm{font-size:14px}
+.frow .bar{height:30px;display:flex;justify-content:center}
+.frow .bar i{display:flex;align-items:center;justify-content:center;height:100%;background:#E2DBCC;border-radius:5px;font-style:normal;font-weight:700;font-size:14px;min-width:4px;position:relative}
+.frow .bar i span{position:absolute;left:calc(100% + 8px);white-space:nowrap}
+.frow .bar i.in span{position:static}
+.frow.hi .nm{font-weight:700;color:var(--navy)}
+.frow.hi .bar i{background:var(--navy);color:#fff}
+.frow.hi .bar i span{color:var(--ink)}
+.frow .pc{text-align:right;font-size:12.5px;color:var(--muted)}
+.fnote{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:8px}
+@media(max-width:600px){.frow{grid-template-columns:110px 1fr 40px}}
+
+/* timeline */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:860px){.phases{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.phases{grid-template-columns:1fr}}
+.ph{border-radius:var(--r);padding:18px;color:#fff;display:flex;flex-direction:column}
+.ph:nth-child(1){background:#3A4A63}.ph:nth-child(2){background:var(--navy2)}.ph:nth-child(3){background:#7A5F33}.ph:nth-child(4){background:var(--navy)}
+.ph .d{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.ph h3{font-family:'Cormorant Garamond',serif;text-transform:none;letter-spacing:0;font-size:28px;color:#fff;margin:6px 0 8px;font-weight:600}
+.ph ul{margin:0 0 12px;padding-left:18px;font-size:13.5px;color:#dfe3ea}
+.ph .gate{margin-top:auto;border-top:1px solid rgba(255,255,255,.2);padding-top:10px;font-size:13px}
+.ph .gate b{color:var(--gold2)}
+
+.msg{background:#F4FBF3;border:1px solid #D6E8D2;border-radius:12px 12px 12px 2px;padding:12px 14px;font-size:14px;max-width:560px}
+.tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;padding:3px 9px;border-radius:99px;background:#EFE6D3;color:#5d4720;margin:0 4px 4px 0;white-space:nowrap}
+code{font-size:12px;background:#EFE9DD;padding:1px 6px;border-radius:4px}
+
+footer{background:var(--navy);color:#9ea6b5;padding:32px 0 48px;font-size:13px}
+footer b{color:var(--gold)}
+@media print{nav.toc{display:none}section{page-break-inside:avoid}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="brand"><span class="mono">EH</span><div><b>EDGE HOMES</b><small>Architects · Interiors · Constructions</small></div></div>
+  <span class="pill">21-Day Walk-in Sprint · 25 Oct – 15 Nov 2026</span>
+  <h1>10 Walk-ins.<br><em>2 Signatures.</em></h1>
+  <p class="sub">A numbers-first plan to bring possession-stage homeowners from Faridabad, Gurugram, Noida and Palwal into the Edge Homes studio — and sign two turnkey projects before 15 November.</p>
+  <div class="kpis">
+    <div><b>258</b><span>Leads planned</span></div>
+    <div><b>26</b><span>Visits booked</span></div>
+    <div><b>15</b><span>Walk-ins (target 10)</span></div>
+    <div><b>2–3</b><span>Signed by 15 Nov</span></div>
+    <div><b>₹1.5L</b><span>Working budget</span></div>
+  </div>
+  <div class="meta"><span>Prepared by <b>4SYSTMS</b> for Edge Homes · +91 98715 22556 · edgehomesarchitects.in</span><span>As of 25 Oct 2026</span></div>
+</div></header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#s1">1 · Maths</a><a href="#s2">2 · Audit</a><a href="#s3">3 · Market</a><a href="#s4">4 · Cities</a><a href="#s5">5 · Offer</a><a href="#s6">6 · Channels</a><a href="#s7">7 · Lead handling</a><a href="#s8">8 · Closing</a><a href="#s9">9 · Day plan</a><a href="#s10">10 · Budget &amp; risks</a><a href="#src">Sources</a>
+</div></nav>
+
+<!-- 1 -->
+<section id="s1"><div class="wrap">
+  <div class="sh"><h2><span class="num">01</span>The target and the maths</h2><span class="kick">Reverse funnel · 50% buffer</span></div>
+  <p class="lead">To land 10 walk-ins and 2 signed projects by 15 Nov, plan for <b>15 walk-ins and 26 booked visits from about 260 leads</b>, at a working budget of ₹1.5 lakh. The 50% buffer covers no-shows, Diwali week and slow closers.</p>
+  <div class="grid g2">
+    <div class="card gold"><h3>Walk-in</h3><p>A qualified prospect (owns or is taking possession of a property, budget fits) who meets the team in person at the Edge Homes studio or at a live Edge Homes site, with their floor plan.</p></div>
+    <div class="card gold"><h3>Conversion</h3><p>Signed design agreement plus booking amount received by 15 Nov.</p></div>
+  </div>
+
+  <div class="label">258 leads become 15 walk-ins and 2–3 signed projects</div>
+  <div class="funnel">
+    <div class="frow"><span class="nm">Leads, all channels</span><div class="bar"><i class="in" style="width:100%"><span>258</span></i></div><span class="pc"></span></div>
+    <div class="frow"><span class="nm">Qualified</span><div class="bar"><i class="in" style="width:35.7%"><span>92</span></i></div><span class="pc">36%</span></div>
+    <div class="frow"><span class="nm">Studio visit booked</span><div class="bar"><i style="width:10.1%"><span>26</span></i></div><span class="pc">28%</span></div>
+    <div class="frow hi"><span class="nm">Walk-ins</span><div class="bar"><i style="width:5.8%"><span>15 · target 10</span></i></div><span class="pc">58%</span></div>
+    <div class="frow"><span class="nm">Proposal in 48 h</span><div class="bar"><i style="width:4.7%"><span>12</span></i></div><span class="pc">80%</span></div>
+    <div class="frow"><span class="nm">Signed by 15 Nov</span><div class="bar"><i style="width:1%"><span>2.5</span></i></div><span class="pc">21%</span></div>
+    <p class="fnote">Right column = share that carries on from the stage above. Per selling day (19 days): 13.6 leads, 4.8 qualified, 1.4 visits booked, 0.8 walk-ins. Rates are planning assumptions — replace with the sprint's own rates from 2 Nov.</p>
+  </div>
+
+  <div class="callout"><b>Why the close rate is set low (17% of walk-ins):</b> interiors decisions usually take 2–6 weeks, and only walk-ins that happen before 8 Nov have time to close inside the window. That is why <em>9 of the 15 walk-ins must happen by 5 Nov.</em></div>
+
+  <div class="grid g3">
+    <div class="card"><h3>Contract value</h3><p>3 BHK ₹10–15 L · 4 BHK ₹14–20 L. Two average projects at ₹15 L = <b>₹30 L</b>.</p></div>
+    <div class="card"><h3>Cost per signed client</h3><p>₹1.5 L spend = 5% of contract value ≈ <b>₹75,000</b> per signed client.</p></div>
+    <div class="card"><h3>Cost per walk-in</h3><p>₹1.5 L ÷ 15 ≈ <b>₹10,000</b> per walk-in.</p></div>
+  </div>
+
+  <div class="label">Funnel by channel</div>
+  <div class="tbl"><table>
+    <thead><tr><th>Channel</th><th class="r">Budget (₹)</th><th class="r">Leads</th><th class="r">Qualified</th><th class="r">Visits booked</th><th class="r">Walk-ins</th></tr></thead>
+    <tbody>
+      <tr><td>Meta: click-to-WhatsApp + instant forms</td><td class="r">60,000</td><td class="r">109</td><td class="r">33</td><td class="r">8</td><td class="r">5</td></tr>
+      <tr><td>Google Search</td><td class="r">35,000</td><td class="r">35</td><td class="r">16</td><td class="r">5</td><td class="r">3</td></tr>
+      <tr><td>Society / possession-camp activations</td><td class="r">30,000</td><td class="r">48</td><td class="r">19</td><td class="r">5</td><td class="r">3</td></tr>
+      <tr><td>Warm database (past clients + old enquiries)</td><td class="r">3,000</td><td class="r">60 replies</td><td class="r">18</td><td class="r">4</td><td class="r">2</td></tr>
+      <tr><td>Partners (brokers, CAs, structural engineers)</td><td class="r">referral fee</td><td class="r">6</td><td class="r">6</td><td class="r">2</td><td class="r">1</td></tr>
+      <tr><td>Instagram organic + Google Business Profile</td><td class="r">0</td><td class="r">—</td><td class="r">—</td><td class="r">2</td><td class="r">1</td></tr>
+      <tr><td>Creative, print, incentives</td><td class="r">22,000</td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>
+      <tr class="tot"><td>Total</td><td class="r">1,50,000</td><td class="r">258</td><td class="r">92</td><td class="r">26</td><td class="r">15</td></tr>
+    </tbody></table></div>
+  <p class="src">Price bands: <a href="https://www.interiorcompany.com/in/trends/interior-design-cost-in-delhi">Interior Company, Feb 2026</a>.</p>
+</div></section>
+
+<!-- 2 -->
+<section id="s2"><div class="wrap">
+  <div class="sh"><h2><span class="num">02</span>Audit: website &amp; Instagram</h2><span class="kick">Checked 25 Oct 2026</span></div>
+  <p class="lead">Edge Homes has strong proof assets — developer logos, 200+ interiors, a 16-week process, Faridabad and Greater Noida before/afters — but the site and profile talk to <b>Delhi</b>, not to the four target cities, and give no reason to visit the studio this month. Seven fixes go live by 27 Oct, before any ad spend.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Asset</th><th>What works</th><th>What leaks leads</th><th>Fix by 27 Oct</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://edgehomesarchitects.in">Website</a> title &amp; meta</td><td>Ranks for "Delhi NCR"</td><td>Title and description say "Delhi"; canonical tag points to a different domain (edgehomes.in)</td><td>Title: "Turnkey Interiors &amp; Construction — Faridabad, Gurugram, Noida, Palwal"; fix canonical</td></tr>
+      <tr><td>Proof numbers</td><td>150+ projects, 200+ homes, 50+ offices, 500+ furniture pieces</td><td>Page says 10+ years, meta says 15+ years and 500+ projects; trust counters render as "0%" and "0+"</td><td>One set of numbers; hard-code counter values</td></tr>
+      <tr><td>Testimonials</td><td>3 named reviews</td><td>All West/North Delhi (Pitampura, Model Town, Rohini)</td><td>One review each from Faridabad, Gurugram, Noida (video if possible)</td></tr>
+      <tr><td>Before/after</td><td>Faridabad living room, Greater Noida kitchen</td><td>Only 2, hidden behind a tap</td><td>Hero of each city landing page</td></tr>
+      <tr><td>Developer logos</td><td>Emaar, M3M, BPTP, Tata, DLF</td><td>Not linked to projects or societies</td><td>Name the societies done ("BPTP Parklands, Sector 77")</td></tr>
+      <tr><td>Call to action</td><td>"Get Free Consultation", "Start Your Project"</td><td>No studio address, visit slot, prices or pre-filled WhatsApp link</td><td>"Book a 60-min studio visit", price bands per BHK, wa.me link with source tag</td></tr>
+      <tr><td><a href="https://www.instagram.com/edgehomes_architects/">Instagram</a></td><td>8,847 followers; Architecture · Interiors · Turnkey Construction; site linked</td><td>Location "Delhi NCR" only; no offer, no WhatsApp link; follows 16</td><td>Bio: "Possession this year? Free snag check + 3D of your flat → WhatsApp"; city highlights; keyword DMs</td></tr>
+    </tbody></table></div>
+  <div class="callout"><b>The single most valuable asset is the developer logos.</b> Buyers in BPTP, M3M, DLF and Emaar societies are the people taking possession now — and <em>"we've already done your developer's layouts"</em> removes the biggest fear in turnkey interiors.</div>
+  <ul class="check"><li>Confirm the studio address and visiting hours (not on the website) — every walk-in plan depends on it</li><li>Confirm the list of societies already delivered, with one photo set each</li></ul>
+</div></section>
+
+<!-- 3 -->
+<section id="s3"><div class="wrap">
+  <div class="sh"><h2><span class="num">03</span>Market: why this window works</h2><span class="kick">Handovers · muhurats · budgets</span></div>
+  <p class="lead">The next 21 days are the best moment of the year for turnkey interiors in NCR: thousands of keys are being handed over, Chaturmas has just ended, and families want to move in on a November or December muhurat. <b>The pitch is time, not price.</b></p>
+  <div class="tbl"><table>
+    <thead><tr><th>Signal</th><th>Number</th><th>What it means for Edge Homes</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>NCR leads home-interior spend</td><td>₹5.8 L per home; ₹580/sq ft vs ₹560 national</td><td>NCR buyers spend the most in India</td><td><a href="https://www.nbmcw.com/news/delhi-ncr-leads-india-in-home-interior-spending-magicbricks.html">Magicbricks / NBM</a></td></tr>
+      <tr><td>Full-home design preferred</td><td>Bedrooms + kitchens = over half the budget</td><td>Lead with wardrobes and kitchen; turnkey is the format</td><td>Same</td></tr>
+      <tr><td>NCR handovers</td><td>Godrej: 3,000+ homes in 12 months; 120 families at Godrej Nest, Sec 150 Noida</td><td>Fresh possession = fresh interior demand</td><td><a href="https://www.angelone.in/news/stocks/godrej-properties-share-price-in-focus-records-100th-home-handover-at-godrej-nest-noida">Angel One, 23 Sep 2026</a></td></tr>
+      <tr><td>Dwarka Expressway</td><td>~38,680 units 2021–H1 2026; 67% are 3 BHK+; ₹14,180/sq ft</td><td>Large, premium homes, big budgets</td><td><a href="https://www.outlookmoney.com/amp/story/invest/dwarka-expressway-turning-into-delhi-ncrs-new-residential-power-corridor-prices-up-135-per-cent-since-2021-says-report">Outlook Money / Anarock</a></td></tr>
+      <tr><td>New Gurugram</td><td>Horizon Floors, Sec 93: possession from Nov 2026, from ₹1.5 Cr</td><td>Builder floors need interiors from day one</td><td><a href="https://www.newsx.com/nx-news/horizon-floors-in-new-gurugram-progresses-towards-november-2026-possession-271694/">NewsX, 14 Sep 2026</a></td></tr>
+      <tr><td>Greater Noida West</td><td>88 completed societies, 4.5 L+ residents</td><td>Largest pool of upgrade/renovation homes</td><td><a href="https://www.thedailyjagran.com/uttar-pradesh/greater-noida-west-homebuyers-face-stalled-registrations-for-over-50000-flats-residents-protest-details-40128354">Daily Jagran</a></td></tr>
+      <tr><td>Muhurat calendar</td><td>None Aug–Oct; Nov 11, 14, 20, 21, 25, 26; 8 dates in Dec</td><td>Pent-up move-ins start now</td><td><a href="https://www.astroyogi.com/panchang/muhurat/griha-pravesh-muhurat">Astroyogi</a></td></tr>
+      <tr><td>Turnkey timeline</td><td>2 BHK turnkey: 45–90 days</td><td>Sign by 15 Nov → move in by Jan–Feb</td><td><a href="https://constructionestimatorindia.com/?p=11246">Construction Estimator India</a></td></tr>
+    </tbody></table></div>
+  <div class="label">Price bands to quote (Delhi NCR, 2026)</div>
+  <div class="grid g4">
+    <div class="card"><h3>2 BHK</h3><p><b>₹1,000–1,200</b>/sq ft</p><p class="muted small">₹8–11 lakh</p></div>
+    <div class="card"><h3>3 BHK</h3><p><b>₹1,200–1,700</b>/sq ft</p><p class="muted small">₹10–15 lakh</p></div>
+    <div class="card"><h3>4 BHK</h3><p><b>₹2,000–2,200</b>/sq ft</p><p class="muted small">₹14–20 lakh</p></div>
+    <div class="card"><h3>Villa / floor</h3><p><b>₹3,000–3,500</b>/sq ft</p><p class="muted small">₹18–25 lakh+</p></div>
+  </div>
+  <p class="src">Source: <a href="https://www.interiorcompany.com/in/trends/interior-design-cost-in-delhi">Interior Company, Feb 2026</a>. Publish Edge Homes' own bands — buyers who see a range before visiting arrive pre-qualified.</p>
+  <div class="callout"><b>Three trends in every creative:</b> full-home design over room-by-room · modular kitchens and wardrobes as the anchor spend · <em>"see it in 3D before we build"</em> — already weeks 5–6 of the Edge Homes process.</div>
+</div></section>
+
+<!-- 4 -->
+<section id="s4"><div class="wrap">
+  <div class="sh"><h2><span class="num">04</span>Geography: four cities</h2><span class="kick">Where the 15 walk-ins come from</span></div>
+  <p class="lead">Faridabad and Gurugram carry <b>10 of the 15 walk-ins</b> — that is where Edge Homes already has proof and where builder floors need turnkey work. Noida gets 4; Palwal gets 1 and is seeded for December onward.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>City</th><th>Budget</th><th class="r">Walk-ins</th><th>Target pockets</th><th>Buyer type</th><th>Lead offer</th></tr></thead>
+    <tbody>
+      <tr><td><b>Faridabad</b></td><td>35% · ₹44k</td><td class="r">5</td><td>Greater Faridabad sectors 75–89 (BPTP Parklands 77–78, SkyNest 80, builder floors 85, Heritage Ozone Square 89 due Dec 2026), HSVP plot owners</td><td>Possession flats, builder floors, self-build plots</td><td>Free snag check + turnkey construction for plots</td></tr>
+      <tr><td><b>Gurugram</b></td><td>30% · ₹37.5k</td><td class="r">5</td><td>Dwarka Expressway (sectors 99–113), New Gurugram (Sec 93 floors from Nov 2026), Sohna Road</td><td>3–4 BHK, ₹1.5 Cr+, HNI and NRI owners</td><td>"Your developer's layout, already designed" + 3D at studio</td></tr>
+      <tr><td><b>Noida / Gr. Noida</b></td><td>25% · ₹31k</td><td class="r">4</td><td>Sector 150 (Godrej Nest and neighbours), Expressway 137–168, Greater Noida West</td><td>New possession (150) and 3–8-year-old flats to upgrade</td><td>Move in by December muhurat; renovation package</td></tr>
+      <tr><td><b>Palwal</b></td><td>10% · ₹12.5k</td><td class="r">1</td><td>Palwal–Sohna Road colonies, sectors near KMP / Delhi–Mumbai Expressway</td><td>Plot owners building independent houses</td><td>Design + build, fixed cost per sq ft</td></tr>
+    </tbody></table></div>
+  <p class="src">Palwal plots average ~₹59 L, apartments ₹65 L (<a href="https://www.squareyards.com/sale/property-for-sale-in-palwal">Square Yards</a>) — treat it as a construction market, not an interiors market. Faridabad projects: <a href="https://houssed.com/faridabad-sector.89/sale/flats/possession/new-projects">Houssed Sec 89</a>, <a href="https://houssed.com/faridabad-sector.85/sale/flats/possession/new-projects">Sec 85</a>.</p>
+  <div class="grid g3" style="margin-top:16px">
+    <div class="card"><h3>Name the society</h3><p class="small">Every ad, page and reply names the city and, where possible, the society. "Interiors for BPTP Parklands owners" beats "interiors in Delhi NCR".</p></div>
+    <div class="card"><h3>Geo-fence tight</h3><p class="small">Meta ads at 2–3 km around 12–15 named societies per city, not whole cities.</p></div>
+    <div class="card"><h3>Distance rule</h3><p class="small">If the studio is 45+ minutes from a pocket, the walk-in for that pocket is a visit to a live Edge Homes site in that city.</p></div>
+  </div>
+</div></section>
+
+<!-- 5 -->
+<section id="s5"><div class="wrap">
+  <div class="sh"><h2><span class="num">05</span>The offer</h2><span class="kick">One reason to visit this month</span></div>
+  <p class="lead">The walk-in hook is a deliverable they can only get at the studio: <b>"Bring your floor plan, leave with your home in 3D and a fixed price band in 60 minutes."</b> The deadline hook is the muhurat: sign by 15 Nov to move in by a January–February muhurat.</p>
+  <div class="label">The Possession Pack</div>
+  <div class="tbl"><table>
+    <thead><tr><th>Component</th><th>What they get</th><th>Cost to Edge Homes</th><th>Why it works</th></tr></thead>
+    <tbody>
+      <tr><td>Free possession snag check</td><td>Engineer checks plaster, seepage, levels, electricals before keys; 1-page report</td><td>~₹1,500 per visit</td><td>Useful even if they never hire us; gets us inside the flat</td></tr>
+      <tr><td>60-minute studio session</td><td>Living room + kitchen 3D on their plan, material board, price band</td><td>~₹2,000 designer time</td><td>The reason to travel; competitors send a PDF</td></tr>
+      <tr><td>Sign-by-15-Nov benefit</td><td>Design fee adjusted against execution + price lock till 31 Jan + one upgrade</td><td>~₹40–60k per signed project (3–4% of ₹15 L)</td><td>Turns "after Diwali" into a dated decision</td></tr>
+      <tr><td>Developer-layout library</td><td>"We've done your developer's layouts" — BPTP, M3M, DLF, Emaar, Tata</td><td>₹0</td><td>Removes the biggest fear</td></tr>
+    </tbody></table></div>
+  <p class="src">Only the sign-by-15-Nov benefit carries a real cost, and it is paid only on conversion.</p>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card dark"><h3>Lead magnet</h3><p><i>"Possession to Griha Pravesh: 2026 Turnkey Interior Cost Guide for Faridabad, Gurugram, Noida and Palwal"</i> — per-BHK price bands, a 12-week timeline and a snag checklist. Sent on WhatsApp in exchange for possession date, society and BHK.</p></div>
+    <div class="card"><h3>Diwali timing (Sun 8 Nov)</h3><p>Full spend 28 Oct–5 Nov · cold spend halved 6–10 Nov, retargeting and follow-ups stay on · full spend again 11–15 Nov.</p></div>
+  </div>
+  <div class="label">Creative angles — test 3 per city in week 1, keep the 2 cheapest per qualified lead</div>
+  <ol class="clean">
+    <li><b>Muhurat:</b> "November has 6 griha pravesh dates, December has 8. Your interiors take 10–12 weeks. Start this week."</li>
+    <li><b>Layout proof:</b> "Taking possession in BPTP Parklands? We've already designed your layout. See it in 3D at our studio."</li>
+    <li><b>Before/after:</b> the Faridabad living room and Greater Noida kitchen reels, city name on screen.</li>
+    <li><b>Price clarity:</b> "3 BHK turnkey interiors from ₹10 lakh. Exact price for your plan in 60 minutes."</li>
+    <li><b>Plot owners:</b> "Own a plot? One team for design, construction and interiors. Fixed cost per sq ft."</li>
+  </ol>
+</div></section>
+
+<!-- 6 -->
+<section id="s6"><div class="wrap">
+  <div class="sh"><h2><span class="num">06</span>Channels</h2><span class="kick">Six engines · each with a kill rule</span></div>
+  <p class="lead">Six channels run in parallel so no single one has to work: <b>paid Meta and Google bring 8 walk-ins; people-led channels bring 7</b>. Each has a cost ceiling that triggers a cut.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Channel</th><th>Benchmark</th><th>Source</th><th>Plan figure</th></tr></thead>
+    <tbody>
+      <tr><td>Meta instant form, real estate India</td><td>₹400–900 per lead</td><td><a href="https://owlclaw.com/benchmarks/meta-ads-benchmarks-india">OwlClaw India</a></td><td>₹550</td></tr>
+      <tr><td>Meta click-to-WhatsApp</td><td>Up to 40% lower effective CPL than forms</td><td><a href="https://www.sell.do/blog/paid-lead-generation-real-estate-india-2026">Sell.Do</a></td><td>Blended into ₹550</td></tr>
+      <tr><td>Google Search, real estate India</td><td>₹40–120 per click, avg ₹65</td><td><a href="https://owlclaw.com/benchmarks/ppc-benchmarks-india">OwlClaw PPC India</a></td><td>₹70/click, 7% page conversion → ₹1,000/lead</td></tr>
+      <tr><td>Google Search, real estate leads</td><td>₹300–2,500/lead, higher site-visit rate</td><td><a href="https://www.sell.do/blog/paid-lead-generation-real-estate-india-2026">Sell.Do</a></td><td>Qualified 45% vs 30% Meta</td></tr>
+    </tbody></table></div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card gold"><h3>6.1 Meta · ₹60,000 · 5 walk-ins</h3><ul class="clean small">
+      <li>60% click-to-WhatsApp, 40% instant forms with 3 questions (possession month, society, BHK)</li>
+      <li>2–3 km radius around 40–50 named societies, age 28–55, Advantage+ inside the radius</li>
+      <li>₹3,600/day 28 Oct–5 Nov · ₹1,800/day 6–10 Nov · ₹3,600/day 11–15 Nov</li>
+      <li>5 angles × 4 cities = 20 ads, 9:16 reels from project footage</li>
+      <li><b>Kill:</b> &gt;₹800/lead after ₹5,000, or &lt;20% qualified after 15 leads</li>
+      <li>Retargeting ₹8k: site visitors, 50% video viewers, 60-day IG engagers (3–5x cheaper — <a href="https://owlclaw.com/benchmarks/meta-ads-benchmarks">OwlClaw</a>)</li></ul></div>
+    <div class="card gold"><h3>6.2 Google Search · ₹35,000 · 3 walk-ins</h3><ul class="clean small">
+      <li>One campaign per city, exact + phrase only: "interior designer faridabad", "turnkey interiors gurgaon", "3bhk interior cost noida", "house construction palwal", society names + "interior"</li>
+      <li>Negatives: course, job, free, cheap, DIY, software, internship</li>
+      <li>4 city landing pages, one action, price bands visible</li>
+      <li>₹1,850/day, 8 AM–10 PM, +20% bids Sat–Sun</li>
+      <li>Google Business Profile (free): 30 photos, weekly Possession Pack post, 10 review requests</li></ul></div>
+    <div class="card gold"><h3>6.3 Society activations · ₹30,000 · 3 walk-ins</h3><ul class="clean small">
+      <li>4 societies with live handovers: 2 Greater Faridabad, 1 Dwarka Expressway, 1 Sector 150 Noida</li>
+      <li>Sat–Sun 31 Oct–1 Nov and 14–15 Nov, 10 AM–6 PM, clubhouse or possession office</li>
+      <li>Kit: 2 standees, 500 flyers with society QR, tablet with that developer's 3D layouts, snag sign-up sheet</li>
+      <li>40 conversations × 4 society-days = 160 → 48 leads → 19 qualified → 5 booked → 3 walk-ins</li>
+      <li>Society WhatsApp groups: one helpful post (snag checklist), never a sales blast</li></ul></div>
+    <div class="card gold"><h3>6.4 Warm database · ₹3,000 · 2 walk-ins</h3><ul class="clean small">
+      <li>200+ past clients + every enquiry from the last 18 months (target ≥ 500 numbers, with consent)</li>
+      <li>Past clients: founder message — "Anyone in your society taking possession? Free snag check, and ₹25,000 off your next project or a gift voucher for you."</li>
+      <li>Old enquiries: one template with the Possession Pack, a second 5 days later, then stop</li>
+      <li>500 → 12% reply = 60 → 18 qualified → 4 visits → 2 walk-ins</li></ul></div>
+    <div class="card gold"><h3>6.5 Partners · referral fee · 1 walk-in</h3><ul class="clean small">
+      <li>10 partners: resale/possession brokers, home-loan agents, CAs, structural engineers, Palwal plot dealers</li>
+      <li>2% of signed contract on first payment (₹30,000 on ₹15 L)</li>
+      <li>Personal wa.me link per partner with their tag</li></ul></div>
+    <div class="card gold"><h3>6.6 Instagram organic · ₹0 · 1 walk-in</h3><ul class="clean small">
+      <li>3 reels/week: before/after, 3D-to-real, client voice — one per city per week</li>
+      <li>Comment keywords "3D", "PRICE", "SNAG" → DM with guide + WhatsApp link</li>
+      <li>Pin the Possession Pack reel; highlights: Faridabad, Gurugram, Noida, Palwal, Process, Prices</li></ul></div>
+  </div>
+</div></section>
+
+<!-- 7 -->
+<section id="s7"><div class="wrap">
+  <div class="sh"><h2><span class="num">07</span>Lead handling</h2><span class="kick">Every door · one WhatsApp desk</span></div>
+  <p class="lead">Every lead lands on WhatsApp <b>+91 98715 22556</b> with a source tag, gets a reply in under 5 minutes, answers 4 questions, sends a floor plan and is offered two studio slots — the same "no lead without a next step" rule as the Infinity flows. An uncontacted lead raises real cost per lead by the same share (<a href="https://www.sell.do/blog/paid-lead-generation-real-estate-india-2026">Sell.Do</a>).</p>
+  <div class="grid g2">
+    <div>
+      <div class="label" style="margin-top:0">Source tags (pre-filled wa.me text)</div>
+      <div class="tbl"><table><thead><tr><th>Door</th><th>Tag</th></tr></thead><tbody>
+        <tr><td>Meta ad, by city</td><td><span class="tag">EH-META-FBD</span><span class="tag">EH-META-GGN</span><span class="tag">EH-META-NOI</span><span class="tag">EH-META-PWL</span></td></tr>
+        <tr><td>Google ad, by city</td><td><span class="tag">EH-G-FBD</span> etc.</td></tr>
+        <tr><td>Society QR</td><td><span class="tag">EH-QR-BPTP77</span> etc.</td></tr>
+        <tr><td>Instagram bio / keyword DM</td><td><span class="tag">EH-IG</span></td></tr>
+        <tr><td>Partner link</td><td><span class="tag">EH-P-name</span></td></tr>
+        <tr><td>Website button</td><td><span class="tag">EH-WEB</span></td></tr>
+      </tbody></table></div>
+    </div>
+    <div>
+      <div class="label" style="margin-top:0">Qualification · 4 questions, buttons not typing</div>
+      <ol class="clean">
+        <li>Which city and society? (list)</li>
+        <li>Possession: keys in hand / within 3 months / 3–6 months / later</li>
+        <li>Home: 2 BHK / 3 BHK / 4 BHK+ / builder floor / plot to build</li>
+        <li>Budget: ₹5–8 L / ₹8–15 L / ₹15–25 L / ₹25 L+</li>
+      </ol>
+      <p class="small" style="margin-top:10px"><b>Qualified</b> = possession within 6 months (or keys in hand) and budget ₹8 L+ (₹25 L+ for plot construction). Unqualified leads get the PDF guide and monthly nurture — never a dead end.</p>
+    </div>
+  </div>
+  <div class="grid g2" style="margin-top:18px">
+    <div><div class="label" style="margin-top:0">First reply (session message)</div><div class="msg">Hi {name}, thanks for reaching Edge Homes — architects, interiors and turnkey construction. Congratulations on your new home in {society}! Send us your floor plan here and we'll show you your living room and kitchen in 3D at our studio, with an exact price band, in 60 minutes. Which day suits you — {slot 1} or {slot 2}?</div></div>
+    <div><div class="label" style="margin-top:0">Visit confirmation</div><div class="msg">Booked: {day}, {time} at the Edge Homes studio, {address}. Please bring your floor plan and builder's handover sheet. {Designer} will have your layout ready. Reply 1 to confirm.</div></div>
+  </div>
+  <div class="label">Follow-up cadence until the visit (stops the moment they reply or book)</div>
+  <div class="tbl"><table><thead><tr><th>When</th><th>Action</th><th>Owner</th></tr></thead><tbody>
+    <tr><td>0–5 min</td><td>First reply + 4 questions</td><td>Automation</td></tr>
+    <tr><td>+2 h, no reply</td><td>"Shall I send our 2026 cost guide for {BHK}?"</td><td>Automation</td></tr>
+    <tr><td>+24 h, qualified, not booked</td><td>Call from designer</td><td>Sales</td></tr>
+    <tr><td>Day 3</td><td>Before/after reel from their developer or city</td><td>Automation</td></tr>
+    <tr><td>Day 6</td><td>Last nudge with muhurat angle</td><td>Automation</td></tr>
+    <tr><td>Day before visit, 7 PM</td><td>Reminder + location pin</td><td>Automation</td></tr>
+    <tr><td>2 h before</td><td>"See you at {time}" + parking note</td><td>Automation</td></tr>
+    <tr><td>No-show +30 min</td><td>Rebook with 2 new slots</td><td>Sales</td></tr>
+  </tbody></table></div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h3>Always to a person</h3><p class="small">Price negotiation, structural changes, complaints, voice notes, anything after 2 unclear replies. Reply target 5 min, 9 AM–9 PM; after hours an auto-reply promises a call by 10 AM.</p></div>
+    <div class="card"><h3>Show-up boosters · 60% → 70%</h3><p class="small">Ask for the floor plan before confirming (people who send it show up), confirm the day before, offer a live-site visit if the studio is far, name the designer who will meet them.</p></div>
+  </div>
+</div></section>
+
+<!-- 8 -->
+<section id="s8"><div class="wrap">
+  <div class="sh"><h2><span class="num">08</span>From walk-in to signature</h2><span class="kick">15 → 12 → 6 → 2–3</span></div>
+  <p class="lead">The 2 conversions come from a fixed studio routine, a proposal inside 48 hours and a dated decision point: <b>15 walk-ins → 12 proposals → 6 serious negotiations → 2–3 signatures by 15 Nov.</b></p>
+  <div class="label">The 60-minute studio visit</div>
+  <div class="tbl"><table><thead><tr><th>Minute</th><th>Step</th><th>Output</th></tr></thead><tbody>
+    <tr><td>0–10</td><td>Welcome, family brief: who lives there, move-in date, must-haves</td><td>Brief sheet</td></tr>
+    <tr><td>10–25</td><td>Their layout on screen; 3D of living room and kitchen (prepared from the plan)</td><td>"That's my flat" moment</td></tr>
+    <tr><td>25–40</td><td>Material board: kitchen, wardrobes, flooring, lighting; 3 finish levels</td><td>Choice of level</td></tr>
+    <tr><td>40–50</td><td>Price band for their plan + 12-week timeline to their muhurat</td><td>Budget agreed in principle</td></tr>
+    <tr><td>50–60</td><td>Completed project of same developer; sign-by-15-Nov benefit; book proposal call</td><td>Proposal call in 48 h</td></tr>
+  </tbody></table></div>
+  <div class="label">After the visit</div>
+  <div class="tbl"><table><thead><tr><th>When</th><th>Action</th><th class="r">Target</th></tr></thead><tbody>
+    <tr><td>Same day</td><td>WhatsApp: photos of their 3D + summary of choices</td><td class="r">15 of 15</td></tr>
+    <tr><td>Within 48 h</td><td>Itemised proposal + payment schedule, on a call or second visit</td><td class="r">12</td></tr>
+    <tr><td>+3 days</td><td>Founder call: answer the real doubt (price, timeline, trust)</td><td class="r">6</td></tr>
+    <tr><td>Day 7 or 12 Nov, whichever first</td><td>Decision meeting: sign with benefit, or January follow-up</td><td class="r">2–3</td></tr>
+  </tbody></table></div>
+  <div class="label">Objections and answers</div>
+  <div class="tbl"><table><thead><tr><th>Doubt</th><th>Answer with a number</th></tr></thead><tbody>
+    <tr><td>"Too expensive"</td><td>Per-sq-ft band against market (3 BHK ₹1,200–1,700/sq ft); offer the mid finish level; never discount on the first visit</td></tr>
+    <tr><td>"Builder hasn't handed over yet"</td><td>Sign now, design runs in weeks 1–6 while waiting for keys; price locked to 31 Jan</td></tr>
+    <tr><td>"Will you finish on time?"</td><td>16-week process, 1-year warranty, weekly site photos; delay clause in the contract</td></tr>
+    <tr><td>"Let us compare quotes"</td><td>One-page checklist (board grade, hardware brand, warranty) so they compare like for like</td></tr>
+    <tr><td>"After Diwali"</td><td>Benefit ends 15 Nov; December muhurats need work to start by mid-November</td></tr>
+  </tbody></table></div>
+  <div class="callout"><b>Closing rules:</b> a signature = signed agreement + booking amount (design fee, adjusted against execution). The founder joins every decision meeting. <em>No discount beyond the published benefit</em>, so the deadline stays credible.</div>
+</div></section>
+
+<!-- 9 -->
+<section id="s9"><div class="wrap">
+  <div class="sh"><h2><span class="num">09</span>Day-by-day plan</h2><span class="kick">25 Oct – 15 Nov</span></div>
+  <p class="lead">Four phases with a checkpoint at the end of each: <b>set up by 27 Oct, 9 walk-ins by 5 Nov</b>, proposals out over Diwali, 2 signatures by 15 Nov.</p>
+  <div class="phases">
+    <div class="ph"><span class="d">Sun 25 – Tue 27 Oct</span><h3>Set-up</h3><ul><li>Website fixes (section 2)</li><li>4 city landing pages</li><li>WhatsApp flows + tags</li><li>Meta pixel, Google conversions</li><li>20 ad creatives</li><li>Warm list cleaned; society permissions; 10 partners</li></ul><div class="gate"><b>Gate:</b> all channels live 28 Oct</div></div>
+    <div class="ph"><span class="d">Wed 28 Oct – Thu 5 Nov</span><h3>Launch &amp; fill</h3><ul><li>15 leads · 5–6 qualified · 2 booked · 1 walk-in per day</li><li>Full ad spend</li><li>Warm broadcast 28 Oct, second touch 2 Nov</li><li>Society weekend 31 Oct – 1 Nov</li><li>Partner meetings; 3 reels/week</li></ul><div class="gate"><b>Gate:</b> 9 walk-ins, 7 proposals</div></div>
+    <div class="ph"><span class="d">Fri 6 – Tue 10 Nov</span><h3>Diwali</h3><ul><li>8 leads · 1 visit per day</li><li>Cold spend halved, retargeting on</li><li>Diwali greeting to all leads (no offer)</li><li>Proposal calls + decision meetings for week-1 walk-ins</li></ul><div class="gate"><b>Gate:</b> 1st signature; 11 walk-ins</div></div>
+    <div class="ph"><span class="d">Wed 11 – Sun 15 Nov</span><h3>Close</h3><ul><li>15 leads · 2 visits per day</li><li>"Benefit ends 15 Nov" creative</li><li>Society weekend 14 – 15 Nov</li><li>Founder-led decision meetings</li></ul><div class="gate"><b>Gate:</b> 15 walk-ins, 2 signed</div></div>
+  </div>
+  <div class="label">Daily rhythm</div>
+  <div class="grid g4">
+    <div class="card"><h3>9:30 AM</h3><p class="small">Check last night's leads; all called or messaged by 10 AM.</p></div>
+    <div class="card"><h3>1 PM</h3><p class="small">Ad check: pause anything over the kill rule.</p></div>
+    <div class="card"><h3>6 PM</h3><p class="small">Confirm tomorrow's visits; send reminders.</p></div>
+    <div class="card"><h3>9 PM</h3><p class="small">Scoreboard update; WhatsApp to Mr Deepak, Ms Priya and 4SYSTMS.</p></div>
+  </div>
+</div></section>
+
+<!-- 10 -->
+<section id="s10"><div class="wrap">
+  <div class="sh"><h2><span class="num">10</span>Budget, scoreboard &amp; risks</h2><span class="kick">₹1.5 lakh · checked every night</span></div>
+  <p class="lead">The plan needs ₹1.5 lakh and a 9 PM scoreboard. If walk-ins are behind on 3 Nov, <b>a pre-set contingency adds volume</b> rather than hoping.</p>
+  <div class="grid g2">
+    <div>
+      <div class="label" style="margin-top:0">Budget</div>
+      <div class="tbl"><table><thead><tr><th>Line</th><th class="r">₹</th><th class="r">Share</th></tr></thead><tbody>
+        <tr><td>Meta ads (incl. ₹8k retargeting)</td><td class="r">60,000</td><td class="r">40%</td></tr>
+        <tr><td>Google Search</td><td class="r">35,000</td><td class="r">23%</td></tr>
+        <tr><td>Society activations (4 society-days ×2 weekends)</td><td class="r">30,000</td><td class="r">20%</td></tr>
+        <tr><td>Creative (reels, 3D of 6 developer layouts)</td><td class="r">15,000</td><td class="r">10%</td></tr>
+        <tr><td>Warm-list templates + guide print</td><td class="r">3,000</td><td class="r">2%</td></tr>
+        <tr><td>Snag-check travel, visitor refreshments</td><td class="r">7,000</td><td class="r">5%</td></tr>
+        <tr class="tot"><td>Total</td><td class="r">1,50,000</td><td class="r">100%</td></tr>
+      </tbody></table></div>
+      <p class="src">Not included: partner fees (2%, only on signed projects) and the sign-by-15-Nov benefit (only on conversion).</p>
+    </div>
+    <div>
+      <div class="label" style="margin-top:0">Lean version · ₹75,000</div>
+      <div class="card"><p>Meta ₹35k · Google ₹20k · one society weekend ₹12k · creative ₹8k.</p><p class="muted small">Expected 9–10 walk-ins and 1–2 signatures — no buffer against the target of 10.</p></div>
+      <div class="label">Open questions · answer by 27 Oct</div>
+      <ul class="check small">
+        <li>Studio address and hours; live sites that can host visits in each city</li>
+        <li>Societies already delivered, with photos</li>
+        <li>Size of past-client and old-enquiry list, and consent status</li>
+        <li>Budget: ₹1.5 L plan or ₹75k lean</li>
+        <li>Booking amount and design-fee terms for the benefit</li>
+        <li>Who owns WhatsApp replies and who joins decision meetings</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="label">9 PM scoreboard <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:500">— click the "Actual" cells to type</span></div>
+  <div class="tbl"><table><thead><tr><th>Metric</th><th class="r">By 5 Nov</th><th class="r">By 15 Nov</th><th>Actual</th><th>Red flag</th></tr></thead><tbody>
+    <tr><td>Leads</td><td class="r">140</td><td class="r">258</td><td contenteditable="true"></td><td>&lt; 10 a day for 2 days</td></tr>
+    <tr><td>Qualified</td><td class="r">50</td><td class="r">92</td><td contenteditable="true"></td><td>&lt; 25% of leads</td></tr>
+    <tr><td>Visits booked</td><td class="r">15</td><td class="r">26</td><td contenteditable="true"></td><td>&lt; 1 a day</td></tr>
+    <tr><td>Walk-ins</td><td class="r">9</td><td class="r">15</td><td contenteditable="true"></td><td>&lt; 4 on 3 Nov</td></tr>
+    <tr><td>Proposals sent</td><td class="r">7</td><td class="r">12</td><td contenteditable="true"></td><td>Any later than 48 h</td></tr>
+    <tr><td>Signed</td><td class="r">0</td><td class="r">2</td><td contenteditable="true"></td><td>0 by 12 Nov</td></tr>
+    <tr><td>Cost per qualified lead</td><td class="r">≤ ₹1,400</td><td class="r">≤ ₹1,400</td><td contenteditable="true"></td><td>&gt; ₹2,000</td></tr>
+    <tr><td>Median first-reply time</td><td class="r">≤ 5 min</td><td class="r">≤ 5 min</td><td contenteditable="true"></td><td>&gt; 15 min</td></tr>
+  </tbody></table></div>
+
+  <div class="label">Risks and the pre-agreed response</div>
+  <div class="tbl"><table><thead><tr><th>Risk</th><th>Early sign</th><th>Response</th></tr></thead><tbody>
+    <tr><td>Cheap but unqualified leads</td><td>Qualified &lt; 25% by 1 Nov</td><td>Move 30% of form budget to click-to-WhatsApp and Google; add budget question</td></tr>
+    <tr><td>Too few walk-ins</td><td>&lt; 4 walk-ins on 3 Nov</td><td>+₹30k to best channel; founder calls every unbooked qualified lead; live-site visits in Faridabad and Gurugram</td></tr>
+    <tr><td>No-shows</td><td>Show rate &lt; 50%</td><td>Floor plan required before confirming; call (not message) the day before</td></tr>
+    <tr><td>Diwali stall</td><td>0 visits for 3 days</td><td>Expected; keep proposal calls running, push decisions to 11–14 Nov</td></tr>
+    <tr><td>Studio far from Noida / Palwal</td><td>Leads decline on distance</td><td>Meeting at a live site counts as the walk-in; Palwal: plot visit by an architect</td></tr>
+    <tr><td>Slow replies</td><td>Median reply &gt; 15 min</td><td>One person owns WhatsApp 9 AM–9 PM; automation covers nights</td></tr>
+    <tr><td>Society refuses permission</td><td>No RWA reply by 29 Oct</td><td>Facility-management office, or a stall at the nearest market on handover days</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<section id="src"><div class="wrap">
+  <div class="sh"><h2><span class="num">—</span>Sources</h2><span class="kick">Opened 25 Oct 2026</span></div>
+  <ul class="clean small">
+    <li><a href="https://edgehomesarchitects.in">Edge Homes website</a> and <a href="https://www.instagram.com/edgehomes_architects/">Instagram profile</a></li>
+    <li><a href="https://www.nbmcw.com/news/delhi-ncr-leads-india-in-home-interior-spending-magicbricks.html">Magicbricks via NBM: Delhi-NCR leads India in home interior spending</a></li>
+    <li><a href="https://www.interiorcompany.com/in/trends/interior-design-cost-in-delhi">Interior Company: Interior design cost in Delhi 2026</a></li>
+    <li><a href="https://constructionestimatorindia.com/?p=11246">Construction Estimator India: 2 BHK interior cost 2026</a></li>
+    <li><a href="https://www.outlookmoney.com/amp/story/invest/dwarka-expressway-turning-into-delhi-ncrs-new-residential-power-corridor-prices-up-135-per-cent-since-2021-says-report">Outlook Money / Anarock: Dwarka Expressway report, Sep 2026</a></li>
+    <li><a href="https://www.angelone.in/news/stocks/godrej-properties-share-price-in-focus-records-100th-home-handover-at-godrej-nest-noida">Angel One: Godrej Nest 100th handover, 23 Sep 2026</a></li>
+    <li><a href="https://www.newsx.com/nx-news/horizon-floors-in-new-gurugram-progresses-towards-november-2026-possession-271694/">NewsX: Horizon Floors Sector 93 possession</a></li>
+    <li><a href="https://www.thedailyjagran.com/uttar-pradesh/greater-noida-west-homebuyers-face-stalled-registrations-for-over-50000-flats-residents-protest-details-40128354">Daily Jagran: Greater Noida West societies</a></li>
+    <li><a href="https://houssed.com/faridabad-sector.89/sale/flats/possession/new-projects">Houssed: Sector 89</a> and <a href="https://houssed.com/faridabad-sector.85/sale/flats/possession/new-projects">Sector 85, Faridabad</a></li>
+    <li><a href="https://www.squareyards.com/sale/property-for-sale-in-palwal">Square Yards: property prices in Palwal</a></li>
+    <li><a href="https://www.astroyogi.com/panchang/muhurat/griha-pravesh-muhurat">Astroyogi: Griha Pravesh muhurat 2026</a></li>
+    <li><a href="https://www.sell.do/blog/paid-lead-generation-real-estate-india-2026">Sell.Do: Paid lead gen for Indian real estate 2026</a></li>
+    <li><a href="https://owlclaw.com/benchmarks/meta-ads-benchmarks-india">OwlClaw: Meta Ads India</a>, <a href="https://owlclaw.com/benchmarks/meta-ads-benchmarks">Meta Ads benchmarks</a>, <a href="https://owlclaw.com/benchmarks/ppc-benchmarks-india">PPC India</a></li>
+  </ul>
+  <p class="src">Conversion rates between funnel stages are planning assumptions, not sourced figures; replace them with the sprint's own rates from 2 Nov.</p>
+</div></section>
+
+<footer><div class="wrap"><b>EDGE HOMES</b> · Architects · Interiors · Constructions — 21-Day Walk-in Sprint, prepared by 4SYSTMS, 25 Oct 2026. Benchmarks are third-party ranges as published in 2026; actual costs and rates will be tracked daily and the plan re-weighted from 2 Nov.</div></footer>
+</body>
+</html>

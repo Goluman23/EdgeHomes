@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 15
+    },
+    "api/es/concierge.js": {
+      "maxDuration": 20
+    },
+    "api/es/campaign-push.js": {
+      "maxDuration": 90
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "x-content-type-options",
+          "value": "nosniff"
+        },
+        {
+          "key": "referrer-policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "cache-control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}

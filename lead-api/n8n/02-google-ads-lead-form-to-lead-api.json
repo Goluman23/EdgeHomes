@@ -1,0 +1,102 @@
+{
+  "name": "EH 02 · Google Ads lead forms → lead-api",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "eh-google-lead",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "f4617626-2218-4407-9c7e-67ca150045fd",
+      "name": "Google Ads lead webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Google Ads lead form webhook → /api/lead. Set the same key in Google Ads and in EH_GOOGLE_KEY.\nconst b = $json.body || $json;\nif (b.google_key !== $env.EH_GOOGLE_KEY) return [];\nconst col = {};\n(b.user_column_data || []).forEach(c => { col[c.column_id] = c.string_value; });\nreturn [{ json: {\n  name: col.FULL_NAME || [col.FIRST_NAME, col.LAST_NAME].filter(Boolean).join(' '),\n  phone: col.PHONE_NUMBER || '', email: col.EMAIL || '', city: col.CITY || '',\n  possession: col.possession || '', budget: col.budget || '', property: col.property || '',\n  source: 'google', campaign: String(b.campaign_id || ''), ad: String(b.creative_id || ''),\n  consent: true, consent_source: 'Google Ads lead form (consent text on form)',\n} }];"
+      },
+      "id": "796e11ae-aa90-4246-ab00-023db66550b7",
+      "name": "Map Google lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.edgehomesarchitects.in/api/lead",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.EH_LEAD_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "8af1448a-504c-4218-abd3-db4339ede247",
+      "name": "POST /api/lead",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Google Ads lead webhook": {
+      "main": [
+        [
+          {
+            "node": "Map Google lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Google lead": {
+      "main": [
+        [
+          {
+            "node": "POST /api/lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "edge-homes"
+    },
+    {
+      "name": "leads"
+    }
+  ],
+  "pinData": {}
+}

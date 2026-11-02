@@ -6,3 +6,9 @@ Website for **Edgehomes Architects** — architecture, interiors and constructio
 - Deployed on Vercel as a static site; every push to `main` redeploys.
 
 Palette: Royal Navy `#1B2766` · Butter Cream `#F6F0DC` · Brick Red `#A93239` · Logo Gold `#C9A25A`.
+
+## lead-api/
+
+The WhatsApp & Instagram chatbot back end (EasySocial concierge, lead sheet, follow-ups, campaign push)
+lives in [`lead-api/`](lead-api/README.md) and deploys as its own Vercel project with Root Directory
+`lead-api`. The site's `vercel.json` redirects `/lead-api/*` to `/`, so none of it is served here.

@@ -1,0 +1,140 @@
+{
+  "name": "EH 03 · Person-waiting alert (no lead missed)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "73387660-cd6f-4cff-8c27-97f64c80ca24",
+      "name": "Every 5 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "REPLACE: Google Sheet URL (Edgehomes Leads)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "options": {}
+      },
+      "id": "0e3824f6-b8dd-4426-8004-df1e67674e6f",
+      "name": "Read Leads",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        240,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Leads waiting for a person (Paused until set by a human/call/complaint request) whose last\n// message is 10+ minutes old during staffed hours (9 AM–9 PM IST). Each wait is alerted once.\nconst seen = $getWorkflowStaticData('global'); seen.alerted = seen.alerted || {};\nconst now = Date.now();\nconst istHour = new Date(now + 330 * 60000).getUTCHours();\nif (istHour < 9 || istHour >= 21) return [];\nconst parse = v => { if (!v) return 0; const t = Date.parse(v); return isNaN(t) ? 0 : t; };\nconst out = [];\nfor (const item of $input.all()) {\n  const r = item.json;\n  const paused = parse(r['Paused until']), lastIn = parse(r['Last inbound']);\n  if (!paused || paused < now || !lastIn) continue;\n  if (now - lastIn < 10 * 60000) continue;\n  const key = `${r['Lead ID']}|${r['Last inbound']}`;\n  if (seen.alerted[key]) continue;\n  seen.alerted[key] = now;\n  out.push({ json: { lead: r['Lead ID'], name: r['Name'], phone: r['Phone'] || r['IG handle'], stage: r['Stage'], minutes: Math.round((now - lastIn) / 60000) } });\n}\n// keep memory small\nfor (const k of Object.keys(seen.alerted)) if (now - seen.alerted[k] > 3 * 86400000) delete seen.alerted[k];\nreturn out;"
+      },
+      "id": "d93940fb-2e9c-4b1a-9e62-a889ce37d8da",
+      "name": "Waiting 10+ min?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "REPLACE: desk@edgehomes (comma-separated)",
+        "subject": "=⚠️ {{ $json.name || $json.phone }} has waited {{ $json.minutes }} min for a person",
+        "emailType": "text",
+        "message": "=Lead {{ $json.lead }} · {{ $json.phone }} · stage {{ $json.stage }}\nThey asked for a person/call. Reply on WhatsApp now — target is 5 minutes.",
+        "options": {}
+      },
+      "id": "98fe326f-90ee-419f-ba99-aa63592d26b1",
+      "name": "Alert desk — person waiting",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REPLACE",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every 5 minutes": {
+      "main": [
+        [
+          {
+            "node": "Read Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Leads": {
+      "main": [
+        [
+          {
+            "node": "Waiting 10+ min?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Waiting 10+ min?": {
+      "main": [
+        [
+          {
+            "node": "Alert desk — person waiting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "edge-homes"
+    },
+    {
+      "name": "desk"
+    }
+  ],
+  "pinData": {}
+}

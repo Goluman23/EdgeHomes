@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edge Homes — Flow Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#160C24;--bg2:#1E1230;--plum:#2A1A42;--plum2:#352255;--edge:#47336B;--butter:#f3e3a0;--lime:#c6e35a;--ink:#EEE8F7;--muted:#AFA3C4;--quiet:#7F7298;--rose:#F29C8B;--r:12px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.55 Manrope,system-ui,sans-serif}
+.wrap{max-width:1320px;margin:0 auto;padding:0 20px}
+h1,h3{margin:0}
+h1{font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;text-transform:uppercase;line-height:.92;font-size:clamp(46px,7vw,88px)}
+h1 span{color:var(--butter)}h1 em{font-style:normal;color:var(--lime)}
+h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:var(--butter);margin-bottom:8px}
+header.hero{position:relative;overflow:hidden;padding:44px 0 30px;background:radial-gradient(420px 420px at 92% 10%,rgba(243,227,160,.16),transparent 60%),var(--bg);border-bottom:1px solid var(--edge)}
+.orb{position:absolute;right:-30px;top:20px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6cf,var(--butter) 45%,#d9c26d)}
+.orb2{position:absolute;right:210px;top:110px;width:26px;height:26px;border-radius:50%;background:var(--lime)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.mono{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--butter);border-radius:6px;font-family:'Big Shoulders Display';font-weight:900;font-size:21px;color:var(--butter)}
+.brand b{font-family:'Big Shoulders Display';font-weight:800;font-size:21px;letter-spacing:.04em;color:var(--butter)}
+.brand small{display:block;font-family:'Barlow Condensed';font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.sub{color:var(--muted);max-width:820px;margin:14px 0 0;font-size:15.5px}
+.app{display:grid;grid-template-columns:270px 390px 1fr;gap:20px;align-items:start;padding:24px 0 60px}
+@media(max-width:1120px){.app{grid-template-columns:1fr 390px}.insp{grid-column:1/-1}}
+@media(max-width:760px){.app{grid-template-columns:1fr}.scen{max-height:none;position:static}}
+.scen{background:var(--plum);border:1px solid var(--edge);border-radius:var(--r);padding:10px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
+.sg{font-family:'Barlow Condensed';font-weight:700;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--lime);margin:14px 6px 6px}
+.sg:first-child{margin-top:4px}
+.sb{display:block;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:7px 9px;font:13px/1.35 Manrope,sans-serif;color:var(--ink);cursor:pointer}
+.sb:hover{background:var(--plum2)}.sb.on{background:var(--butter);color:#24163A;font-weight:600}
+.find{width:100%;background:#120a1e;border:1px solid var(--edge);border-radius:8px;color:var(--ink);padding:8px 10px;font:13px Manrope;margin-bottom:4px}
+.phwrap{position:sticky;top:14px}
+.ph{background:#0b0612;border-radius:42px;padding:10px;box-shadow:0 24px 50px -20px rgba(0,0,0,.7),0 0 0 1px var(--edge);max-width:390px;margin:0 auto}
+.scr{border-radius:32px;overflow:hidden;height:700px;display:flex;flex-direction:column;position:relative}
+.scr.wa{background:#EFE7DC}.scr.ig{background:#fff}.scr.em{background:#F4F2F8}
+.notch{height:24px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:11px;font-weight:700}
+.wa .notch{background:#0F4F43;color:#fff}.ig .notch{background:#fff;color:#111}.em .notch{background:#2A1A42;color:#fff}
+.tp{display:flex;align-items:center;gap:9px;padding:8px 14px 10px}
+.wa .tp{background:#0F4F43;color:#fff}.ig .tp{color:#111;border-bottom:1px solid #eee}.em .tp{background:#2A1A42;color:#fff}
+.av{width:34px;height:34px;border-radius:50%;background:#2A1A42;color:var(--butter);display:flex;align-items:center;justify-content:center;font-family:'Big Shoulders Display';font-weight:900;font-size:15px;flex:none;border:1.5px solid var(--butter)}
+.av.sm{width:22px;height:22px;font-size:10px}
+.tpn{font-size:13.5px;font-weight:700;line-height:1.2}.tpn small{display:block;font-weight:400;font-size:11px;opacity:.75}
+#chat{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:6px}
+.bb{max-width:85%;font-size:13px;line-height:1.45;padding:7px 10px 5px;border-radius:10px;word-wrap:break-word;color:#111;animation:pop .18s ease-out;white-space:normal}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.wa .bb.in{background:#fff;align-self:flex-start;border-top-left-radius:2px}
+.wa .bb.out{background:#D9F7CB;align-self:flex-end;border-top-right-radius:2px}
+.ig .bb.in{background:#EFEFEF;align-self:flex-start;border-radius:18px}
+.ig .bb.out{background:#7B3FE4;color:#fff;align-self:flex-end;border-radius:18px}
+.em .bb.in,.em .bb.out{background:#fff;border:1px solid #e3ddef;border-radius:10px;max-width:96%;align-self:stretch}
+.em .bb.out{border-left:4px solid #7B3FE4}
+.em .bb.in{border-left:4px solid #c6a74a}
+.mh{font-size:11.5px;color:#666;border-bottom:1px solid #eee;padding-bottom:5px;margin-bottom:6px}
+.mh b{display:block;color:#1d1430;font-size:13.5px}
+.bb .ft{display:block;text-align:right;font-size:10.5px;color:#7b7b7b;margin-top:3px}
+.ig .bb.out .ft{color:#e3d6ff}
+.bb .sig{display:block;margin-top:8px;font-style:italic;color:#6a4f12}
+.ig .bb.out .sig{color:#fff}
+.media{display:flex;align-items:center;justify-content:center;min-height:118px;min-width:210px;margin:-3px -6px 4px;border-radius:7px;background:linear-gradient(135deg,#2A1A42,#47336B);color:var(--butter);font-family:'Barlow Condensed';letter-spacing:.12em;font-size:12.5px;text-transform:uppercase;text-align:center;padding:12px}
+.media.loc{background:#dfe8d0;color:#2f3d12;min-height:86px}
+.doc{display:flex;align-items:center;gap:8px;background:#f3eedf;border-radius:7px;padding:8px;margin:-2px -4px 4px;font-size:12.5px;color:#3c2d08}
+.doc i{font-style:normal;background:#c94a3a;color:#fff;border-radius:4px;padding:2px 5px;font-size:10px;font-weight:700}
+.voice{display:flex;align-items:center;gap:8px;min-width:200px;font-size:12px;color:#555}
+.voice .pl{width:26px;height:26px;border-radius:50%;background:#0E7A64;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px}
+.voice .wv{flex:1;height:14px;background:repeating-linear-gradient(90deg,#9bb7ad 0 2px,transparent 2px 5px)}
+.typing{display:flex;gap:4px;padding:11px 12px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#9a9a9a;animation:bl 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bl{0%,100%{opacity:.3}50%{opacity:1}}
+.sysm{align-self:center;max-width:90%;text-align:center;font-size:11px;color:#4f4660;background:rgba(255,255,255,.85);padding:4px 10px;border-radius:7px;line-height:1.4}
+.ig .sysm,.em .sysm{background:#ece8f4}
+.mtag{font-family:'Barlow Condensed';font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#7B3FE4;margin:-2px 4px 2px}
+.noids .mtag{display:none}
+.wbs{align-self:flex-start;width:85%;display:flex;flex-direction:column;gap:3px;margin-top:-2px}
+.wbs button{background:#fff;border:0;color:#0E7A64;font:700 12.8px Manrope,sans-serif;padding:8px;border-radius:8px;cursor:pointer}
+.wbs button:hover{background:#f2fbf7}
+.qbs{align-self:flex-end;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px;max-width:95%}
+.qbs button{border:1px solid #7B3FE4;color:#7B3FE4;background:#fff;font:700 12.4px Manrope,sans-serif;padding:6px 12px;border-radius:99px;cursor:pointer}
+.qbs button:hover{background:#f3ecff}
+.em .wbs button{color:#5a2fb0;border:1px solid #d9cdf2}
+.cmts{background:#fff;border:1px solid #eee;border-radius:12px;padding:6px 8px;font-size:12.5px;color:#111}
+.cmh{font-weight:700;font-size:12px;padding:2px 2px 6px;border-bottom:1px solid #f1f1f1}
+.cmr{display:flex;gap:8px;padding:7px 2px;line-height:1.4}.cmr.rep{padding-left:26px}
+.cmr .a2{width:24px;height:24px;border-radius:50%;background:#d9d3e7;flex:none}
+.cmr b{font-weight:700}.cmr small{display:block;color:#8a8a8a;font-size:11px}
+.comp{display:flex;gap:7px;padding:8px 9px 12px;align-items:center}
+.wa .comp{background:#EFE7DC}.ig .comp{border-top:1px solid #eee}.em .comp{border-top:1px solid #e3ddef}
+#compose{flex:1;border:0;border-radius:22px;padding:10px 14px;font:13.5px Manrope,sans-serif;background:#fff;outline:none;color:#111}
+.ig #compose,.em #compose{border:1px solid #ddd}
+#send{width:40px;height:40px;border-radius:50%;border:0;background:#0E7A64;color:#fff;font-size:16px;cursor:pointer;flex:none}
+.ig #send,.em #send{background:#7B3FE4}
+.ctlwrap{max-width:390px;margin:12px auto 0}
+#hint{font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:8px;min-height:18px}
+#ctl{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.act{border:1px solid var(--edge);background:var(--plum);border-radius:99px;padding:7px 13px;font:700 12px Manrope,sans-serif;cursor:pointer;color:var(--ink)}
+.act.t{border-color:var(--butter);color:var(--butter)}.act.d{border-color:var(--lime);color:var(--lime)}
+.act:hover{background:var(--plum2)}
+.tester{max-width:390px;margin:14px auto 0;background:var(--plum);border:1px solid var(--edge);border-radius:var(--r);padding:12px}
+.tester h3{margin-bottom:8px}
+#chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--edge);background:#120a1e;color:var(--ink);border-radius:99px;padding:5px 10px;font:600 12px Manrope,sans-serif;cursor:pointer}
+.chip:hover{border-color:var(--butter);color:var(--butter)}
+.chip.m{border-color:#4d6a1b;color:var(--lime)}
+.insp .card{background:var(--plum);border:1px solid var(--edge);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.now{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.now div{background:#120a1e;border-radius:8px;padding:9px 10px;border:1px solid var(--edge)}
+.now span{display:block;font-family:'Barlow Condensed';font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.now b{font-size:13.5px;color:var(--butter)}
+.score{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.score .big{font-family:'Big Shoulders Display';font-weight:800;font-size:46px;line-height:1;color:var(--butter);min-width:70px}
+.score .barw{flex:1;height:12px;background:#120a1e;border-radius:99px;overflow:hidden;border:1px solid var(--edge)}
+.score .bar{height:100%;width:0;background:var(--quiet);transition:width .35s}
+.tier{font-family:'Barlow Condensed';font-weight:700;letter-spacing:.14em;padding:3px 10px;border-radius:99px;font-size:12.5px;background:var(--plum2);color:var(--ink)}
+.tier.hot{background:var(--lime);color:#1e2a05}.tier.warm{background:var(--butter);color:#24163A}
+#iCard div{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--edge);font-size:13px}
+#iCard div:last-child{border-bottom:0}
+#iCard span{color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:12px}
+#iCard b{font-weight:600;text-align:right}#iCard b.nil{color:var(--quiet);font-weight:400}
+.win div{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid var(--edge)}
+.win div:last-child{border:0}
+.win b.open{color:var(--lime)}.win b.shut{color:var(--rose)}
+#log{list-style:none;margin:0;padding:0;max-height:240px;overflow:auto}
+#log li{font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--edge)}
+#log li b{font-family:'Barlow Condensed';color:var(--lime);letter-spacing:.06em;margin-right:6px}
+#log li span{color:var(--muted)}
+.opts label{display:flex;align-items:center;gap:8px;font-size:13px;margin:7px 0}
+.opts input[type=text],.opts select{background:#120a1e;border:1px solid var(--edge);border-radius:6px;padding:6px 8px;font:13px Manrope;color:var(--ink);width:150px}
+.small{font-size:12.5px}.muted{color:var(--muted)}
+.opts b{color:var(--butter)}
+footer{padding:28px 0 46px;font-size:12.5px;color:var(--quiet);border-top:1px solid var(--edge)}
+</style>
+</head>
+<body>
+<header class="hero"><div class="orb"></div><div class="orb2"></div><div class="wrap">
+  <div class="brand"><div class="mono">EH</div><div><b>EDGEHOMES</b><small>Architects · Interiors · Constructions</small></div></div>
+  <h1>Test Every <span>Chat.</span><br><em>Before It's Live.</em></h1>
+  <p class="sub">Pick a scenario, tap the buttons, type like a real homeowner (English or Hinglish), and move time forward to see every follow-up. The right panel shows the lead score, the messaging windows and exactly what ManyChat records — switch the season to see Diwali, muhurat, Christmas and New Year versions.</p>
+</div></header>
+
+<div class="wrap"><div class="app">
+<aside class="scen" id="scen" aria-label="Scenarios"><input class="find" id="find" placeholder="Search scenarios…" aria-label="Search scenarios"></aside>
+
+<div class="phwrap">
+  <div class="ph"><div class="scr wa" id="scr">
+    <div class="notch"><span>9:41</span><span>5G ▮▮▮</span></div>
+    <div class="tp"><div class="av">EH</div><div class="tpn" id="tpname">Edge Homes<small>Business account</small></div></div>
+    <div id="chat"></div>
+    <div class="comp"><input id="compose" type="text" placeholder="Type a message" aria-label="Type as the lead"><button id="send" aria-label="Send">➤</button></div>
+  </div></div>
+  <div class="ctlwrap"><div id="hint"></div><div id="ctl"></div></div>
+  <div class="tester"><h3>Try a message</h3><p class="small muted" style="margin:0 0 8px">Tap to send as the lead — any text, emoji, number or media. Every one gets a relevant reply.</p><div id="chips"></div></div>
+</div>
+
+<div class="insp">
+  <div class="card"><h3>Right now</h3><div class="now"><div><span>Flow</span><b id="iFlow">—</b></div><div><span>Message</span><b id="iMsg">—</b></div><div><span>Sent as</span><b id="iType">—</b></div></div></div>
+  <div class="card"><h3>Lead score</h3>
+    <div class="score"><div class="big" id="sNum">0</div><div class="barw"><div class="bar" id="sBar"></div></div><span class="tier" id="sTier">—</span></div>
+    <p class="small muted" id="sWhy" style="margin:0">Answer the 4 questions to score the lead.</p></div>
+  <div class="card win"><h3>Messaging windows</h3><div id="iWin"></div><p class="small muted" style="margin:8px 0 0" id="iClock">Sim time: Day 1, 10:00</p></div>
+  <div class="card"><h3>Contact in ManyChat</h3><div id="iCard"></div></div>
+  <div class="card opts"><h3>Test settings</h3>
+    <label>Lead name <input type="text" id="nameI" value="Neha"></label>
+    <label>Season <select id="seasonI"><option value="diwali">Diwali sprint (25 Oct–15 Nov)</option><option value="muhurat">Muhurat season (16 Nov–20 Dec)</option><option value="xmas">Christmas (21–25 Dec)</option><option value="ny">New Year (26 Dec–15 Jan)</option><option value="ever">Evergreen (no campaign)</option></select></label>
+    <label>Contact status <select id="statusI"><option value="new">New lead</option><option value="mid">Left halfway (mid-qualification)</option><option value="booked">Visit booked</option><option value="proposal">Proposal stage</option><option value="client">Active client</option><option value="past">Past client</option><option value="return">Nurture · back after 40 days</option><option value="waiting">Waiting for a person</option><option value="optout">Opted out</option></select></label>
+<label><input type="checkbox" id="nightT"> After hours (9 PM – 9 AM)</label>
+    <label><input type="checkbox" id="forceHi"> Start in Hinglish</label>
+    <label><input type="checkbox" id="showIds" checked> Show message IDs</label>
+    <button class="act" id="resetB" style="margin-top:6px">↺ Restart scenario</button>
+    <p class="small muted" style="margin:10px 0 0">Contact status applies to the two <b>Free chat</b> scenarios. Also try typing: <b>3bhk ka kitna lagega</b>, <b>best price if I sign today?</b>, <b>can we remove a wall</b>, <b>only need a wardrobe</b>, <b>flat in Jaipur</b>, <b>hiring?</b>, <b>pooja room vastu</b>, <b>asdf</b> (twice), <b>STOP</b> then <b>hi</b>.</p></div>
+  <div class="card"><h3>Event log</h3><ul id="log"></ul></div>
+</div>
+</div></div>
+<footer><div class="wrap">Edge Homes flow simulator — companion to the Automation Flows document. Phone screens are illustrations, not the exact Instagram, WhatsApp or email interfaces. Names, societies, slots, prices and proposal values are sample data; studio address to be confirmed. Prepared by 4SYSTMS, 25 Oct 2026.</div></footer>
+
+<script>
+(function(){
+/* ---------- seasons ---------- */
+var SEAS={
+ diwali:{label:'Diwali sprint',emoji:'🪔',sig:'शुभ दीपावली।',deadline:'15 Nov',kw:'DIWALI',
+  greet:{en:'Happy Diwali season from Edge Homes.',hi:'Edge Homes ki taraf se Diwali ki shubhkamnayein.'},
+  offer:{en:'*Diwali Possession Pack:* free snag check + your flat in 3D at our studio. Sign by 15 Nov: design fee adjusted + prices locked till 31 Jan.',hi:'*Diwali Possession Pack:* free snag check + studio mein aapka flat 3D mein. 15 Nov tak sign karein: design fee adjust + 31 Jan tak price lock.'},
+  quiet:{en:'From all of us at Edge Homes — wishing you and your family a bright, joyful Diwali, {name}. May your home always be full of light. 🪔',hi:'Edge Homes ki poori team ki taraf se — aapko aur aapke parivaar ko roshan aur khushiyon bhari Diwali, {name}. Aapka ghar hamesha roshni se bhara rahe. 🪔'}},
+ muhurat:{label:'Muhurat season',emoji:'🏡',sig:'शुभ गृह प्रवेश।',deadline:'20 Dec',kw:'MUHURAT',
+  greet:{en:'Congratulations on your new home!',hi:'Naye ghar ki bahut badhai!'},
+  offer:{en:'December has 8 griha pravesh dates. Interiors take 10–12 weeks, so families moving in by February are designing now — free 3D of your flat at our studio.',hi:'December mein 8 griha pravesh muhurat hain. Interiors mein 10–12 hafte lagte hain, isliye February tak shift hone wale abhi design kar rahe hain — studio mein aapke flat ka free 3D.'},
+  quiet:{en:'Wishing you a blessed griha pravesh, {name}. 🏡',hi:'Aapko shubh griha pravesh ki badhai, {name}. 🏡'}},
+ xmas:{label:'Christmas',emoji:'🎄',sig:'Merry Christmas.',deadline:'31 Dec',kw:'XMAS',
+  greet:{en:"Season's greetings from Edge Homes.",hi:'Edge Homes ki taraf se Christmas ki shubhkamnayein.'},
+  offer:{en:'*Year-end price lock:* free 3D of your flat this week, and 2026 prices locked on any project signed by 31 Dec.',hi:'*Year-end price lock:* is hafte aapke flat ka free 3D, aur 31 Dec tak sign kiye project par 2026 ke price lock.'},
+  quiet:{en:'Merry Christmas from all of us at Edge Homes, {name}. Thank you for letting us be part of your home. 🎄',hi:'Edge Homes ki poori team ki taraf se Merry Christmas, {name}. 🎄'}},
+ ny:{label:'New Year',emoji:'✨',sig:'Happy New Year.',deadline:'15 Jan',kw:'NEWYEAR',
+  greet:{en:'Happy New Year from Edge Homes!',hi:'Edge Homes ki taraf se Naya Saal Mubarak!'},
+  offer:{en:'*New year, new home:* design in January, move in by spring. Free 3D at our studio — 2026 prices held on projects signed by 15 Jan.',hi:'*Naya saal, naya ghar:* January mein design, spring tak shift. Studio mein free 3D — 15 Jan tak sign karne par 2026 ke price.'},
+  quiet:{en:'Happy New Year, {name}! May 2027 bring your family joy in every corner of your home. ✨',hi:'Naya Saal Mubarak, {name}! ✨'}},
+ ever:{label:'Evergreen',emoji:'📐',sig:'',deadline:'',kw:'OFFER',
+  greet:{en:'Thanks for reaching Edge Homes.',hi:'Edge Homes se judne ke liye shukriya.'},
+  offer:{en:'Bring your floor plan, leave with your home in 3D and an exact price band — in 60 minutes. Plus a free possession snag check.',hi:'Apna floor plan laayein, 60 minute mein apna ghar 3D mein aur exact price band le jaayein. Saath mein free possession snag check.'},
+  quiet:{en:'Warm wishes from Edge Homes, {name}.',hi:'Edge Homes ki taraf se shubhkamnayein, {name}.'}}
+};
+var SOC={Faridabad:['BPTP Parklands (Sec 77–78)','BPTP SkyNest (Sec 80)','Builder floor, Sec 85','Heritage Ozone Square (Sec 89)','HSVP plot'],Gurugram:['Dwarka Expressway society','New Gurugram floor (Sec 93)','Sohna Road society','DLF / M3M / Emaar project'],Noida:['Godrej Nest (Sec 150)','Other society, Sec 150','Noida Expressway (137–168)','Greater Noida West society'],Palwal:['Plot, Palwal–Sohna Road','Plot near KMP Expressway','Apartment / builder floor']};
+var PRICE={en:'Turnkey interior price bands (Delhi NCR, 2026):\n• 2 BHK — ₹8–11 L\n• 3 BHK — ₹10–15 L\n• 4 BHK — ₹14–20 L\n• Villa / builder floor — ₹18–25 L+\n\nExact price for *your* plan in 60 minutes at our studio.',hi:'Turnkey interior price (Delhi NCR, 2026):\n• 2 BHK — ₹8–11 L\n• 3 BHK — ₹10–15 L\n• 4 BHK — ₹14–20 L\n• Villa / builder floor — ₹18–25 L+\n\n*Aapke* plan ka exact price studio mein 60 minute mein.'};
+var WELCOME={en:'Hi {name} {emoji} {greet}\nWe\'re architects, interior designers and turnkey builders — one team from plan to keys.\n\n{offer}\n\nLet\'s find what fits your home — 4 quick taps 👇',hi:'Hi {name} {emoji} {greet}\nHum architects, interior designers aur turnkey builders hain — plan se chaabi tak ek hi team.\n\n{offer}\n\nChaliye aapke ghar ke liye sahi plan dhoondte hain — bas 4 tap 👇'};
+var DESIGNER='Aditi (Design Lead)', PM='Rakesh (Project Manager)', ADDR='Edge Homes studio (address to confirm)';
+
+function B(en,hi,to,f){return{en:en,hi:hi||en,to:to,f:f||null}}
+var POSS=[B('Keys in hand','Chaabi mil gayi',null,{eh_possession:'keys'}),B('Within 3 months','3 mahine mein',null,{eh_possession:'0-3 mo'}),B('3–6 months','3–6 mahine',null,{eh_possession:'3-6 mo'}),B('Later','Baad mein',null,{eh_possession:'later'}),B('Renovating my home','Ghar renovate karna hai',null,{eh_possession:'reno'})];
+function withTo(arr,to){return arr.map(function(b){return{en:b.en,hi:b.hi,to:to,f:b.f}})}
+var CITY=['Faridabad','Gurugram','Noida','Palwal'];
+
+/* ---------- nodes ---------- */
+var N={
+/* ===== WHATSAPP CORE ===== */
+wa_direct:{ch:'wa',meta:['WA-1','Welcome','Session'],set:{eh_source:'WA-DIRECT',stage:'st_new'},m:[{u:'Hi'},{t:WELCOME,sig:1}],b:[B('Start · 4 quick taps','Shuru karein · 4 tap','q_city'),B('See prices','Prices dekhein','wa_price'),B('Talk to a designer','Designer se baat','human')]},
+q_city:{ch:'wa',meta:['WA-1','Q1 · City','Session'],set:{stage:'st_qualifying'},m:[{t:{en:'*1/4 · Which city is your home in?*',hi:'*1/4 · Aapka ghar kis shehar mein hai?*'}}],
+ b:CITY.map(function(c){return B(c,c,'q_soc',{eh_city:c})}).concat([B('Other city','Koi aur shehar','f_out_r',{eh_city:'Other'})])},
+q_soc:{ch:'wa',meta:['WA-1','Q1b · Society','Session'],m:[{t:{en:'Great! Which society or sector?',hi:'Badhiya! Kaunsi society ya sector?'}}],bf:function(){return (SOC[st.f.eh_city]||SOC.Faridabad).map(function(s){return B(s,s,'q_poss',{eh_society:s})})}},
+q_poss:{ch:'wa',meta:['WA-1','Q2 · Possession','Session'],m:[{t:{en:'{socline}*2/4 · When do you get possession?*',hi:'{socline}*2/4 · Possession kab mil raha hai?*'}}],b:withTo(POSS,'q_prop')},
+q_prop:{ch:'wa',meta:['WA-1','Q3 · Property','Session'],m:[{t:{en:'*3/4 · What are we designing?*',hi:'*3/4 · Kya design karna hai?*'}}],b:['2 BHK','3 BHK','4 BHK+','Builder floor','Villa','Plot to build'].map(function(p){return B(p,p==='Plot to build'?'Plot par ghar banana':p,'q_budget',{eh_property:p})})},
+q_budget:{ch:'wa',meta:['WA-1','Q4 · Budget','Session'],m:[{t:{en:'*4/4 · Rough budget for interiors / build?*',hi:'*4/4 · Interiors / construction ka rough budget?*'}}],b:[B('₹5–8 L',null,'@score',{eh_budget:'5-8 L'}),B('₹8–15 L',null,'@score',{eh_budget:'8-15 L'}),B('₹15–25 L',null,'@score',{eh_budget:'15-25 L'}),B('₹25 L+',null,'@score',{eh_budget:'25 L+'}),B('Not sure yet','Abhi pata nahi','q_unsure')]},
+q_unsure:{ch:'wa',meta:['WA-1','Budget helper','Session'],m:[{t:PRICE},{t:{en:'Which range looks closest for your home?',hi:'Aapke ghar ke liye kaunsa range sahi lagta hai?'}}],b:[B('₹5–8 L',null,'@score',{eh_budget:'5-8 L'}),B('₹8–15 L',null,'@score',{eh_budget:'8-15 L'}),B('₹15–25 L',null,'@score',{eh_budget:'15-25 L'}),B('₹25 L+',null,'@score',{eh_budget:'25 L+'})]},
+hot:{ch:'wa',meta:['Filter','HOT route','Session'],set:{stage:'st_qualified'},m:[{s:'Score 70+ → tag hot · designer alerted · call within 15 min'},{t:{en:'Perfect, {name} — you\'re exactly who our studio is set up for. {designer} will call you in the next 15 minutes.\n\nMeanwhile, send your floor plan so they can open your layout on the call 📐',hi:'Perfect, {name}! {designer} agle 15 minute mein aapko call karengi.\n\nTab tak apna floor plan bhej dijiye taaki call par aapka layout khula ho 📐'}}],input:'plan',b:[B('📎 Send floor plan (photo)','📎 Floor plan bhejein','@plan'),B('No plan yet','Abhi plan nahi hai','noplan')],desk:[['Designer calls (within 15 min)','hot_call'],['Founder alert (₹25 L+ / plot)','@founder']]},
+hot_call:{ch:'wa',meta:['Human','Designer call','Human'],m:[{s:'Designer call · 7 min · needs and move-in date noted'},{t:{en:'Lovely speaking with you, {name}! As discussed, here are the next slots for your 3D session 👇',hi:'Aapse baat karke achha laga, {name}! Jaise baat hui, 3D session ke slots yeh rahe 👇'}}],go:'slots'},
+warm:{ch:'wa',meta:['Filter','WARM route','Session'],set:{stage:'st_qualified'},m:[{s:'Score 40–69 → tag warm · self-booking'},{t:{en:'Great, {name}! Next step: send your floor plan here (a photo of the builder\'s brochure page is fine). We\'ll prepare your living room and kitchen in 3D before you visit 📐',hi:'Badhiya, {name}! Agla step: apna floor plan yahan bhejiye (builder brochure ki photo bhi chalegi). Aapke aane se pehle living room aur kitchen ka 3D ready hoga 📐'}}],input:'plan',b:[B('📎 Send floor plan (photo)','📎 Floor plan bhejein','@plan'),B('No plan yet','Abhi plan nahi hai','noplan'),B('Send the cost guide first','Pehle cost guide bhejein','guide_sent')],wait:['2 h, no reply','warm_nudge',2]},
+warm_nudge:{ch:'wa',meta:['Follow-up','+2 h nudge','Session'],m:[{t:{en:'Shall I send our 2026 cost guide for a {bhk} in {city}, {name}? 📄',hi:'{city} mein {bhk} ki 2026 cost guide bhej doon, {name}? 📄'}}],b:[B('Yes, send it','Haan, bhejiye','guide_sent'),B('Book a visit instead','Seedha visit book karein','slots')],wait:['24 h, not booked','warm_call',22],desk:[['Designer calls (24 h)','warm_call']]},
+warm_call:{ch:'wa',meta:['Human','Designer call','Human'],m:[{s:'Designer call · interest confirmed'},{t:{en:'Thanks for the chat, {name}! Here are this week\'s studio slots 👇',hi:'Baat karne ke liye shukriya, {name}! Is hafte ke studio slots 👇'}}],go:'slots'},
+cold:{ch:'wa',meta:['Filter','COLD route','Session'],set:{stage:'st_nurture'},m:[{s:'Score <40 → tag cold · guide + nurture'},{doc:'EdgeHomes_2026_Turnkey_Cost_Guide.pdf'},{t:{en:'Thanks, {name}! Here\'s our 2026 cost guide. Most families start interiors 2–3 months before keys — when do you expect possession?',hi:'Shukriya, {name}! Yeh rahi 2026 cost guide. Zyaadatar log chaabi se 2–3 mahine pehle interiors shuru karte hain — possession kab expected hai?'}}],b:[B('Jan–Feb 2027',null,'nurture_set',{eh_possession_month:'Jan–Feb 2027'}),B('Mar–Jun 2027',null,'nurture_set',{eh_possession_month:'Mar–Jun 2027'}),B('Later in 2027',null,'nurture_set',{eh_possession_month:'Late 2027'}),B('Not sure',null,'nurture_set',{eh_possession_month:'Unknown'})]},
+guide_sent:{ch:'wa',meta:['WA-1','Cost guide','Session'],m:[{doc:'EdgeHomes_2026_Turnkey_Cost_Guide.pdf'},{t:{en:'Here you go — per-BHK price bands, a 12-week timeline and a snag checklist. When you\'re ready, send your plan and we\'ll show you your home in 3D 📐',hi:'Yeh rahi guide — BHK-wise price, 12-hafte ki timeline aur snag checklist. Jab ready hon, plan bhejiye aur hum aapka ghar 3D mein dikhayenge 📐'}}],input:'plan',b:[B('📎 Send floor plan (photo)','📎 Floor plan bhejein','@plan'),B('Book a studio visit','Studio visit book karein','slots')]},
+noplan:{ch:'wa',meta:['WA-1','No plan yet','Session'],m:[{t:{en:'No problem — a photo of the builder\'s brochure page works, or we\'ll measure on site. Let\'s book your visit 👇',hi:'Koi baat nahi — builder brochure ki photo chalegi, ya hum site par naap lenge. Visit book karte hain 👇'}}],go:'slots'},
+slots:{ch:'wa',meta:['WA-5','Slot picker','Session'],m:[{t:{en:'Next studio slots (60 min, with {designer}) 👇',hi:'Agle studio slots (60 min, {designer} ke saath) 👇'}}],b:[B('Sat 31 Oct · 11:00 AM','Shanivar 31 Oct · 11 AM','booked',{eh_visit_at:'Sat 31 Oct · 11:00 AM'}),B('Sat 31 Oct · 4:00 PM','Shanivar 31 Oct · 4 PM','booked',{eh_visit_at:'Sat 31 Oct · 4:00 PM'}),B('Sun 1 Nov · 12:00 PM','Ravivar 1 Nov · 12 PM','booked',{eh_visit_at:'Sun 1 Nov · 12:00 PM'}),B('None of these','Inmein se koi nahi','noslot'),B('Studio is too far for me','Studio door hai','far')]},
+noslot:{ch:'wa',meta:['WA-5','Custom slot','Human'],set:{tag:'needs_human'},m:[{t:{en:'No problem — which day and time suit you? {designer} will fix it personally.',hi:'Koi baat nahi — aapko kaunsa din aur time theek rahega? {designer} khud fix karengi.'}}],input:'free',desk:[['Designer fixes a custom slot','booked_custom']]},
+booked_custom:{ch:'wa',meta:['WA-5','Custom slot set','Human'],set:{eh_visit_at:'Wed 4 Nov · 7:00 PM'},untag:'needs_human',go:'booked'},
+far:{ch:'wa',meta:['WA-5','Distance option','Session'],m:[{t:{en:'Understood! We can meet at a live Edge Homes site near you, or our architect can visit your home with the 3D on a tablet.',hi:'Samajh gaye! Aapke paas ki kisi live Edge Homes site par mil sakte hain, ya hamare architect tablet par 3D lekar aapke ghar aa sakte hain.'}}],b:[B('Live site visit near me','Paas ki live site','booked',{eh_visit_at:'Live site · Sun 1 Nov · 11 AM'}),B('Architect home visit','Architect ghar aayein','booked',{eh_visit_at:'Home visit · Mon 2 Nov · 6 PM'})]},
+booked:{ch:'wa',meta:['WA-5','Booking confirmed','Session'],set:{stage:'st_visit_booked',eh_designer:'Aditi'},m:[{loc:1},{t:{en:'Booked ✅ {visit}\n📍 {addr}\n👩‍🎨 Designer: {designer}\n\nPlease bring your floor plan and builder\'s handover sheet. Your layout will be ready on screen.',hi:'Booking ho gayi ✅ {visit}\n📍 {addr}\n👩‍🎨 Designer: {designer}\n\nFloor plan aur builder ki handover sheet saath laayein. Aapka layout screen par ready hoga.'},sig:1},{s:'Calendar invite · sheet row · designer alerted · reminders scheduled'}],b:[B('Add to calendar','Calendar mein add karein','@cal'),B('Change time','Time badlein','slots')],wait:['Day before · 7 PM','rem1',20]},
+rem1:{ch:'wa',meta:['WA-6','Day-before reminder','Utility template'],m:[{s:'Day before · 7:00 PM'},{t:{en:'Hi {name}, see you tomorrow ({visit}) at the Edge Homes studio. {designer} has your layout ready — please bring your floor plan and handover sheet.',hi:'Hi {name}, kal ({visit}) Edge Homes studio mein milte hain. {designer} ne aapka layout ready kar liya hai — floor plan aur handover sheet laayein.'}}],b:[B('Confirm ✅','Confirm ✅','rem1ok'),B('Reschedule','Time badlein','slots')],wait:['No reply · 2 h before','rem2',14]},
+rem1ok:{ch:'wa',meta:['WA-6','Confirmed','Session'],m:[{t:{en:'Perfect — see you tomorrow! 🙌',hi:'Perfect — kal milte hain! 🙌'}}],wait:['2 h before','rem2',14]},
+rem2:{ch:'wa',meta:['WA-6','2-hour reminder','Utility template'],m:[{s:'2 hours before'},{t:{en:'{name}, your 3D session is today ({visit}).\n📍 {addr} · parking at the gate',hi:'{name}, aaj aapka 3D session hai ({visit}).\n📍 {addr} · gate par parking'}}],b:[B('On my way','Aa rahi/raha hoon','otw'),B('Running late','Late ho raha hai','late'),B('Reschedule','Time badlein','slots')],desk:[['Desk: mark visited','visited'],['Desk: no-show (+30 min)','noshow']]},
+otw:{ch:'wa',meta:['WA-6','Reply','Session'],m:[{t:{en:'See you soon! Ask for {designer} at reception 🙂',hi:'Jaldi milte hain! Reception par {designer} ko poochiye 🙂'}}],desk:[['Desk: mark visited','visited'],['Desk: no-show (+30 min)','noshow']]},
+late:{ch:'wa',meta:['WA-6','Reply','Session'],m:[{t:{en:'No problem — we\'ll hold your slot for 20 minutes 🙂',hi:'Koi baat nahi — hum aapka slot 20 minute hold karenge 🙂'}},{s:'Designer alerted'}],desk:[['Desk: mark visited','visited'],['Desk: no-show (+30 min)','noshow']]},
+visited:{ch:'wa',meta:['WA-7','Post-visit recap','Session'],set:{stage:'st_visited'},m:[{s:'Desk tagged st_visited · walk-in counted'},{img:'Your 3D · living room + kitchen · {society}'},{t:{en:'Thank you for visiting today, {name}! Here are your 3D views and the choices you liked (mid finish, handleless kitchen, sliding wardrobes).\n\n{designer} will share your itemised proposal within 48 hours.',hi:'Aaj aane ke liye shukriya, {name}! Yeh rahe aapke 3D views aur pasand ki gayi choices.\n\n{designer} 48 ghante mein itemised proposal share karengi.'}}],wait:['48 h · proposal due','proposal',48],desk:[['Designer sends proposal','proposal']]},
+proposal:{ch:'wa',meta:['WA-7','Proposal','Session'],set:{stage:'st_proposal',eh_value:'₹14.6 L'},m:[{doc:'EdgeHomes_Proposal_{socfile}.pdf'},{t:{en:'Here\'s your itemised proposal, {name}: *₹14.6 lakh*, 12-week timeline, 1-year warranty, weekly site photos.\n\n{dlline}',hi:'Yeh raha aapka itemised proposal, {name}: *₹14.6 lakh*, 12 hafte ki timeline, 1 saal warranty, har hafte site photos.\n\n{dlline}'}}],b:[B('Book a call to discuss','Call book karein','prop_call'),B('I have a question','Mera ek sawaal hai','human')],wait:['+1 day, no reply','prop_q',24]},
+prop_call:{ch:'wa',meta:['WA-7','Call booked','Session'],m:[{t:{en:'Done — {designer} and our founder will call you tomorrow at 7 PM. 📞',hi:'Ho gaya — {designer} aur hamare founder kal 7 PM call karenge. 📞'}}],desk:[['Founder decision call','decision']]},
+prop_q:{ch:'wa',meta:['WA-7','+1 day check','Session'],m:[{t:{en:'Any questions on the proposal, {name}? Most families ask about board grade, hardware brand and timeline — happy to walk you through.',hi:'Proposal par koi sawaal, {name}? Zyaadatar log board grade, hardware aur timeline poochte hain — hum samjha denge.'}}],desk:[['Founder decision call (day 3)','decision']]},
+decision:{ch:'wa',meta:['WA-7','Decision call','Human'],m:[{s:'Founder call · real doubt logged'}],desk:[['Says yes → pay link','paylink'],['Doubt: price','d_price'],['Doubt: timeline','d_time'],['Doubt: trust','d_trust'],['Decide later','later'],['Not going ahead','lost_reason']]},
+d_price:{ch:'wa',meta:['WA-7','Price doubt','Session'],set:{tag:'obj_price'},m:[{img:'Finish levels · essential · signature · luxe'},{t:{en:'Here\'s your home at three finish levels, {name}:\n• Essential — ₹12.4 L\n• Signature — ₹14.6 L (your current choice)\n• Luxe — ₹18.9 L\n\nSame board grade and warranty on all three; the difference is shutters, hardware and lighting.',hi:'Aapka ghar teen finish level mein, {name}:\n• Essential — ₹12.4 L\n• Signature — ₹14.6 L\n• Luxe — ₹18.9 L\n\nTeeno mein same board aur warranty; fark shutters, hardware aur lighting ka hai.'}}],b:[B('Lock Essential','Essential lock karein','paylink',{eh_value:'₹12.4 L'}),B('Keep Signature','Signature rakhein','paylink'),B('Call me','Call karein','callback')],wait:['Season deadline reminder','deadline',72]},
+d_time:{ch:'wa',meta:['WA-7','Timeline doubt','Session'],set:{tag:'obj_timing'},m:[{img:'12-week plan · worked back from your move-in date'},{t:{en:'Here\'s your 12-week plan, {name}: design sign-off week 2, kitchen and wardrobes in production weeks 3–8, finishing 9–11, handover week 12. A delay clause is in the contract.',hi:'Aapka 12-hafte ka plan, {name}: design sign-off hafta 2, kitchen-wardrobe production 3–8, finishing 9–11, handover hafta 12. Contract mein delay clause hai.'}}],b:[B('Works for me — lock it','Theek hai — lock karein','paylink'),B('Call me','Call karein','callback')]},
+d_trust:{ch:'wa',meta:['WA-7','Trust doubt','Session'],set:{tag:'obj_trust'},m:[{img:'▶ Same-developer project walkthrough · 40 sec'},{v:'0:31',cap:{en:'"Hi, this is Mrs Kapoor. Edge Homes did our 3BHK in the same tower layout — finished in 11 weeks, and they sent photos every Saturday."',hi:'"Hi, main Mrs Kapoor. Edge Homes ne hamara same layout ka 3BHK 11 hafte mein kiya, har Saturday photos bheje."'}}],b:[B('Okay, let\'s go ahead','Theek hai, aage badhte hain','paylink'),B('Visit a live site first','Pehle live site dekhni hai','booked',{eh_visit_at:'Live site · Sat 7 Nov · 11 AM'})]},
+deadline:{ch:'wa',meta:['Season','Deadline reminder','Marketing template'],m:[{t:{en:'{name}, a quick reminder: {dlline}\n\nShall we close any open questions on a 20-minute call?',hi:'{name}, ek reminder: {dlline}\n\n20 minute ki call par baaki sawaal clear kar lein?'}}],b:[B('Lock it now','Abhi lock karein','paylink'),B('Call me','Call karein','callback')]},
+paylink:{ch:'wa',meta:['Quick reply','/paylink','Human'],set:{stage:'st_proposal',score_hot:1},m:[{t:{en:'Here\'s your secure booking link — booking amount (design fee), adjusted against execution. You\'ll get a receipt here.',hi:'Yeh raha secure booking link — booking amount (design fee), execution mein adjust hoga. Receipt yahin aayegi.'}}],b:[B('Pay booking amount ↗','Booking amount pay karein ↗','won')],wait:['3 h, not paid','unpaid',3]},
+unpaid:{ch:'wa',meta:['Safety net','Unpaid link','Session'],m:[{t:{en:'Hi {name}, just checking — did the payment link work? UPI, card or bank transfer at the studio are all fine 🙂',hi:'Hi {name}, payment link chala? Studio par UPI, card ya bank transfer bhi chalega 🙂'}}],b:[B('Paid ✅','Pay kar diya ✅','won'),B('Send link again','Link phir bhejein','paylink'),B('Pay at the studio','Studio par pay karunga','@desk')],desk:[['Desk: payment received','won']]},
+won:{ch:'wa',meta:['WA-10','Welcome · won','Utility template'],set:{stage:'st_won',tag:'client_active'},untag:'obj_price',m:[{s:'Payment received · st_won · all sales sequences stop · ads exclude this contact'},{t:{en:'Welcome to the Edge Homes family, {name}! 🎉\n\n{pm} will manage your project. Design sign-off meeting: Tuesday 6 PM.\nYou\'ll get site photos every Saturday right here.',hi:'Edge Homes parivaar mein swagat hai, {name}! 🎉\n\n{pm} aapka project sambhalenge. Design sign-off meeting: Tuesday 6 PM.\nHar Saturday site photos yahin milenge.'},sig:1}],wait:['Week 3 · Saturday','photos',500]},
+photos:{ch:'wa',meta:['WA-11','Weekly site photos','Utility template'],m:[{img:'Week 3 · kitchen carcass installed · false ceiling framing'},{t:{en:'Week 3 update, {name}: kitchen carcass installed, false ceiling framing done. Next: wardrobe installation (week 5). On schedule ✅',hi:'Hafta 3 update, {name}: kitchen carcass lag gaya, false ceiling framing ho gayi. Agla: wardrobe (hafta 5). Schedule par ✅'}}],wait:['Week 12 · handover','handover',1500]},
+handover:{ch:'wa',meta:['WA-10','Handover','Utility template'],m:[{img:'Handover · your finished home'},{t:{en:'Your home is ready, {name}! 🏡 Handover walkthrough done; warranty and care guide sent to your email.',hi:'Aapka ghar ready hai, {name}! 🏡 Handover ho gaya; warranty aur care guide email par bhej di.'},sig:1}],wait:['Day 7','rating',168]},
+rating:{ch:'wa',meta:['WA-10','Rating','Session'],m:[{t:{en:'One week in — how does your new home feel, {name}?',hi:'Ek hafta ho gaya — naya ghar kaisa lag raha hai, {name}?'}}],b:[B('😕 Something\'s not right','😕 Kuch theek nahi','r_bad'),B('🙂 Good','🙂 Achha','r_ok'),B('😍 Love it','😍 Bahut pasand','r_good')]},
+r_bad:{ch:'wa',meta:['WA-10','Low rating','Session'],set:{flag_review:0},m:[{t:{en:'Sorry to hear that — our founder will call you today to fix it.',hi:'Sunkar dukh hua — hamare founder aaj call karke theek karenge.'}},{s:'Founder alert · same-day call'}]},
+r_ok:{ch:'wa',meta:['WA-10','Rating','Session'],m:[{t:{en:'Thank you! Anything you\'d like tweaked, just reply here.',hi:'Shukriya! Kuch badalna ho toh yahin batayein.'}}],wait:['Day 21','referral',336]},
+r_good:{ch:'wa',meta:['WA-10','Review ask','Session'],m:[{t:{en:'That makes our day! 🙌 Would you share a quick Google review? It helps families in {city} find us.',hi:'Bahut khushi hui! 🙌 Kya ek chhota Google review de sakte hain? Isse {city} ke parivaar humein dhoondh paate hain.'}}],b:[B('Write a review ↗','Review likhein ↗','@review')],wait:['Day 21','referral',336]},
+referral:{ch:'wa',meta:['WA-10','Referral','Marketing template'],m:[{t:{en:'Know someone in your society taking possession, {name}? We\'ll do their snag check free — and thank you with a gift voucher when they sign.',hi:'Aapki society mein kisi ko possession mil raha hai, {name}? Hum unka snag check free karenge — aur unke sign karne par aapko gift voucher.'}}],b:[B('Share my invite','Invite share karein','@share'),B('Add a friend\'s number','Dost ka number add karein','@share')]},
+noshow:{ch:'wa',meta:['WA-6','No-show rebook','Utility template'],set:{stage:'st_noshow'},m:[{s:'Not marked visited · +30 min'},{t:{en:'Hi {name}, we missed you today — no worries at all. {designer} still has your layout ready. Pick another time?',hi:'Hi {name}, aaj aap nahi aa paaye — koi baat nahi. {designer} ke paas aapka layout ready hai. Koi aur time chunein?'}}],b:[B('Tomorrow evening','Kal shaam','booked',{eh_visit_at:'Tomorrow · 6:30 PM'}),B('This weekend','Is weekend','booked',{eh_visit_at:'Sat · 12:00 PM'}),B('Visit a live site instead','Live site dekhein','booked',{eh_visit_at:'Live site · Sun 11 AM'})],wait:['No reply · Day 1','nocall',24]},
+nocall:{ch:'wa',meta:['WA-6','Day-1 call','Human'],m:[{s:'Day 1 · designer call task'},{s:'Call outcome: no answer'}],wait:['Day 3','noshow3',48]},
+noshow3:{ch:'wa',meta:['WA-6','Day-3 last try','Marketing template'],m:[{img:'▶ 30-sec reel · a {city} home, plan to keys'},{t:{en:'{name}, your 3D is still saved with us. Here\'s a 30-second look at a {city} home we finished. Want to pick a time?',hi:'{name}, aapka 3D abhi bhi hamare paas save hai. {city} ke ek ghar ki 30-second jhalak dekhiye. Time chunein?'}}],b:[B('Book my session','Session book karein','slots'),B('Not now','Abhi nahi','later')]},
+later:{ch:'wa',meta:['WA-8','Not now','Session'],m:[{t:{en:'No problem at all. When should we pick this up?',hi:'Bilkul theek. Kab baat karein?'}}],b:[B('After Diwali','Diwali ke baad','nurture_set',{eh_possession_month:'Nov 2026'}),B('In January','January mein','nurture_set',{eh_possession_month:'Jan 2027'}),B('After possession','Possession ke baad','nurture_set',{eh_possession_month:'On possession'})]},
+nurture_set:{ch:'wa',meta:['WA-8','Nurture set','Session'],set:{stage:'st_nurture'},m:[{t:{en:'Noted 🙂 We\'ll send one useful update a month, and reach out before your possession. Your 3D offer stays open.',hi:'Noted 🙂 Mahine mein ek kaam ka update bhejenge, aur possession se pehle sampark karenge. 3D offer khula rahega.'}}],wait:['30 days later','monthly',720]},
+monthly:{ch:'wa',meta:['WA-8','Monthly nurture','Marketing template'],m:[{img:'{emoji} This month · a {city} kitchen we just finished'},{t:{en:'This month at Edge Homes {emoji}\nA handleless kitchen + walk-in wardrobe we finished in {city} — and the 3 decisions that kept it on budget.\n\n{offer}\n\nReply STOP to opt out',hi:'Is mahine Edge Homes mein {emoji}\n{city} mein bana ek handleless kitchen + walk-in wardrobe — aur budget mein rakhne ke 3 faisle.\n\n{offer}\n\nUpdates band karne ke liye STOP likhein'}}],b:[B('Book a 3D session','3D session book karein','slots'),B('Stop updates','Updates band karein','optout')],wait:['60 days before possession','react',720]},
+react:{ch:'wa',meta:['WA-8','Pre-possession re-activation','Marketing template'],m:[{t:{en:'{name}, your possession is about 2 months away. Families who design now move in within 3–4 weeks of keys. Shall we plan yours?',hi:'{name}, aapka possession lagbhag 2 mahine door hai. Jo abhi design karte hain, chaabi ke 3–4 hafte mein shift ho jaate hain. Aapka plan karein?'}}],b:[B('Yes, plan my interiors','Haan, plan karein','warm'),B('Not yet','Abhi nahi','nurture_set')]},
+lost_reason:{ch:'wa',meta:['WA-9','Lost reason','Session'],m:[{t:{en:'Thanks for letting us know, {name}. What was the main reason?',hi:'Batane ke liye shukriya, {name}. Main reason kya tha?'}}],b:[B('Price','Price','lost',{eh_lost_reason:'Price'}),B('Went with builder package','Builder package liya','lost',{eh_lost_reason:'Builder package'}),B('Another designer','Doosra designer','lost',{eh_lost_reason:'Another designer'}),B('Timing','Timing','lost',{eh_lost_reason:'Timing'}),B('Family decision','Parivaar ka faisla','lost',{eh_lost_reason:'Family decision'})]},
+lost:{ch:'wa',meta:['WA-9','Closed','Rule'],set:{stage:'st_lost'},m:[{t:{en:'Thank you — that really helps us. Wishing you a beautiful home, {name}! 💛',hi:'Shukriya — isse humein madad milti hai. Aapko sundar ghar ki shubhkamnayein, {name}! 💛'}},{s:'@lostnote'}]},
+wa_price:{ch:'wa',meta:['WA-1','Price card','Session'],m:[{t:PRICE}],b:[B('Get my exact price · 4 taps','Exact price · 4 tap','q_city'),B('Talk to a designer','Designer se baat','human')]},
+human:{ch:'wa',meta:['WA-13','Human takeover','Session → Human'],set:{tag:'needs_human'},m:[{t:{en:'Good question — I\'m passing this to {designer} from our team. They\'ll reply right here within 5 minutes 🙂',hi:'Achha sawaal — main ise {designer} ko de raha hoon. Woh yahin 5 minute mein reply karengi 🙂'}},{s:'@humannote'}],desk:[['Team replies in time','team'],['No reply in 5 min','sla']]},
+team:{ch:'wa',meta:['WA-13','Team reply','Human'],untag:'needs_human',m:[{t:'@teamReply'}],b:[B('Book a 3D session','3D session book karein','q_city'),B('Thanks','Thanks','@end')]},
+sla:{ch:'wa',meta:['WA-13','SLA breach','Rule'],untag:'needs_human',m:[{s:'5 minutes passed · manager alerted'},{t:{en:'Sorry for the slow reply, {name} — that\'s on us. How can I help?',hi:'Der se reply ke liye maafi, {name}. Bataiye, kya madad karein?'}}],b:[B('Book a 3D session','3D session book karein','q_city')]},
+optout:{ch:'wa',meta:['WA-14','Opt-out','Session'],set:{tag:'optout'},m:[{t:{en:'Done — you won\'t get any more updates from us. If you ever want to plan your home with us, just message "Hi" 🙂',hi:'Ho gaya — ab aapko koi update nahi aayega. Kabhi ghar plan karna ho toh bas "Hi" likhiye 🙂'}},{s:'Tag optout · every scheduled sequence cancelled · excluded from ads'}],stop:1},
+callback:{ch:'wa',meta:['Quick reply','/callback','Human'],m:[{t:{en:'Sure — calling you in the next 15 minutes from 98715 22556 📞',hi:'Bilkul — agle 15 minute mein 98715 22556 se call karte hain 📞'}},{s:'Call task created · 15-minute target'}]},
+/* ===== WA ENTRY VARIANTS ===== */
+wa_from_ig:{ch:'wa',meta:['WA-1','Arrives from Instagram','Session'],m:[{u:'@igopen'},{s:'Tag read → source, city and possession carried over from Instagram'},{t:{en:'Hi {name}! 🙌 Picking up from Instagram — we already have your city and possession. Two more taps 👇',hi:'Hi {name}! 🙌 Instagram se aage — city aur possession humare paas hai. Bas do tap aur 👇'}}],go:'q_prop'},
+wa_bio:{ch:'wa',meta:['WA-1','Bio link','Session'],set:{eh_source:'IG-BIO',stage:'st_new'},m:[{u:'Hi Edge Homes! Found you on Instagram 👋 Can you show my flat in 3D?'},{t:WELCOME,sig:1}],b:[B('Start · 4 quick taps','Shuru karein','q_city'),B('See prices','Prices dekhein','wa_price')]},
+qr_soc:{ch:'wa',meta:['WA-2','Society QR','Session'],set:{eh_source:'QR-BPTP77',stage:'st_new',eh_city:'Faridabad',eh_society:'BPTP Parklands (Sec 77–78)'},m:[{u:'Hi Edge Homes! I\'m at your stall in BPTP Parklands [EH-QR-BPTP77]'},{t:{en:'Welcome, Parklands owner! 🏡 We\'ve already designed this layout for families in your society.\n\n{offer}',hi:'Welcome, Parklands owner! 🏡 Aapki society ke parivaaron ke liye hum yeh layout design kar chuke hain.\n\n{offer}'}}],b:[B('Free snag check','Free snag check','snag_book'),B('3D of my layout','Mere layout ka 3D','q_poss'),B('Prices','Prices','wa_price')]},
+snag_book:{ch:'wa',meta:['WA-2','Snag check','Session'],m:[{t:{en:'Our engineer checks plaster, seepage, levels and electricals before you accept keys, and gives you a 1-page report. Free.\n\nWhen should we come?',hi:'Hamare engineer chaabi lene se pehle plaster, seepage, levels aur electricals check karke 1-page report dete hain. Free.\n\nKab aayein?'}}],b:[B('This weekend','Is weekend','snag_done',{eh_snag:'Sat 31 Oct'}),B('Next week','Agle hafte','snag_done',{eh_snag:'Next week'})]},
+snag_done:{ch:'wa',meta:['WA-2','Snag booked','Session'],set:{tag:'snag_check'},m:[{t:{en:'Snag check booked ✅ Our engineer will confirm the time a day before. While we\'re there, shall we also measure for your interiors?',hi:'Snag check book ho gaya ✅ Engineer ek din pehle time confirm karenge. Saath mein interiors ke liye naap bhi le lein?'}}],b:[B('Yes, measure too','Haan, naap bhi','q_poss'),B('Just the snag check','Sirf snag check','@end')]},
+p_ref:{ch:'wa',meta:['WA-3','Partner referral','Session'],set:{eh_source:'PARTNER-RAJESH',stage:'st_new'},m:[{u:'Hi, Rajesh from Square Realty told me about you [EH-P-RAJESH]'},{s:'Partner Rajesh notified · referral tracked'},{t:{en:'Hi {name}! Rajesh speaks very highly of you — welcome 🙏 Let\'s understand your home in 4 quick taps.',hi:'Hi {name}! Rajesh ji ne aapke baare mein bataya — swagat hai 🙏 4 tap mein aapka ghar samajhte hain.'}}],go:'q_city'},
+m_call:{ch:'wa',meta:['WA-4','Missed call','Utility template'],set:{eh_source:'MISSED-CALL',stage:'st_new'},m:[{s:'Missed call on 98715 22556 · 6:12 PM'},{t:{en:'Hi! You called Edge Homes and we couldn\'t pick up — sorry about that. How can we help?',hi:'Hi! Aapne Edge Homes ko call kiya tha, hum utha nahi paaye — maafi. Kya madad karein?'}}],b:[B('Plan my home interiors','Ghar ke interiors','q_city'),B('Prices','Prices','wa_price'),B('Call me back','Call back karein','callback')]},
+hi_lead:{ch:'wa',meta:['WA-1','Hinglish lead','Session'],set:{eh_source:'WA-DIRECT',stage:'st_new'},m:[{u:'Hello, 3bhk ka interior kitna lagega?'}],go:'@mirrorprice'},
+pl_plot:{ch:'wa',meta:['WA-1','Plot owner','Session'],set:{eh_source:'META-CTWA-PWL',stage:'st_new',eh_city:'Palwal',eh_property:'Plot to build'},m:[{u:'Mera Palwal mein 200 gaj ka plot hai, ghar banwana hai'},{s:'Hinglish detected → eh_lang = hi'},{t:{en:'Wonderful! For plots we do everything as one team — architecture, approvals drawings, construction and interiors, at a fixed cost per sq ft.',hi:'Bahut badhiya! Plot ke liye hum sab kuch ek team mein karte hain — architecture, approval drawings, construction aur interiors, fixed per sq ft cost par.'}}],b:[B('Plot size: up to 150 yd','150 gaj tak','pl_floors',{eh_plot:'≤150 yd'}),B('150–250 yd','150–250 gaj','pl_floors',{eh_plot:'150–250 yd'}),B('250 yd+','250 gaj+','pl_floors',{eh_plot:'250 yd+'})],lang:'hi'},
+pl_floors:{ch:'wa',meta:['WA-1','Plot · floors','Session'],m:[{t:{en:'How many floors are you planning?',hi:'Kitni manzil banani hai?'}}],b:[B('G+1',null,'pl_budget',{eh_floors:'G+1'}),B('G+2',null,'pl_budget',{eh_floors:'G+2'}),B('G+3 / stilt',null,'pl_budget',{eh_floors:'G+3'})]},
+pl_budget:{ch:'wa',meta:['WA-1','Plot · start','Session'],m:[{t:{en:'And when do you want to start construction?',hi:'Construction kab shuru karna chahte hain?'}}],b:[B('Within 3 months','3 mahine mein','@score',{eh_possession:'0-3 mo',eh_budget:'25 L+'}),B('3–6 months','3–6 mahine','@score',{eh_possession:'3-6 mo',eh_budget:'25 L+'}),B('Just exploring','Abhi soch rahe hain','@score',{eh_possession:'later',eh_budget:'25 L+'})]},
+c_office:{ch:'wa',meta:['Routing','Commercial','Session → Human'],set:{eh_source:'WA-DIRECT',eh_property:'Office',tag:'commercial'},m:[{u:'Need interiors for a 2,500 sq ft office in Udyog Vihar'},{t:{en:'Great — we\'ve designed 50+ offices and clinics. Our founder handles commercial projects personally and will call you today. Could you share the floor plan and target move-in date?',hi:'Badhiya — humne 50+ offices aur clinics design kiye hain. Commercial projects hamare founder khud dekhte hain, aaj call karenge. Floor plan aur move-in date share karein?'}},{s:'Commercial flow · founder alerted'}],desk:[['Founder calls','hot_call']]},
+r_reno:{ch:'wa',meta:['WA-1','Renovation','Session'],set:{eh_source:'META-CTWA-NOI',stage:'st_new',eh_city:'Noida',eh_society:'Greater Noida West society',eh_possession:'reno'},m:[{u:'My Gaur City flat is 6 years old, want to redo the kitchen and wardrobes'},{t:{en:'Lovely — a kitchen + wardrobe refresh is our most popular renovation. We work floor by floor so you can keep living at home. Two quick taps 👇',hi:'Badhiya — kitchen + wardrobe refresh hamara sabse popular renovation hai. Hum aise kaam karte hain ki aap ghar mein reh sakein. Do tap 👇'}}],go:'q_prop'},
+r_pooja:{ch:'wa',meta:['Routing','Pooja / vastu','Session'],set:{tag:'pooja_vastu'},m:[{img:'Pooja rooms · mirror mosaic · feature walls'},{t:{en:'Pooja rooms and feature walls are something we love doing — including vastu-aligned kitchens and mandirs. {designer} will add a vastu note to your layout.',hi:'Pooja room aur feature walls hamari khaasiyat hai — vastu ke hisaab se kitchen aur mandir bhi. {designer} aapke layout mein vastu note jodengi.'}}],b:[B('Include in my 3D session','3D session mein shaamil karein','q_city')]},
+/* ===== BROADCAST ===== */
+bc_past:{ch:'wa',meta:['WA-12','Past client · referral','Marketing template'],set:{eh_source:'BC-PAST-CLIENT',tag:'client_past',stage:'st_won'},m:[{s:'Broadcast · past clients · consent column ✓'},{t:{en:'Hi {name}, hope you\'re loving your home! 💛 Is anyone in your society taking possession this season? We\'ll do their snag check free — and thank you with a gift voucher when they sign.\n\nReply STOP to opt out',hi:'Hi {name}, umeed hai ghar pasand aa raha hai! 💛 Aapki society mein kisi ko possession mil raha hai? Hum unka snag check free karenge — aur sign karne par aapko gift voucher.\n\nSTOP likhein updates band karne ke liye'}}],b:[B('Yes, I\'ll refer someone','Haan, refer karunga','@share'),B('Not right now','Abhi nahi','@end')]},
+bc_old:{ch:'wa',meta:['WA-12','Old enquiry','Marketing template'],set:{eh_source:'BC-OLD-ENQUIRY',stage:'st_new'},m:[{s:'Broadcast · enquiries from last 18 months · consent ✓'},{t:{en:'Hi {name}, you had asked Edge Homes about interiors earlier this year. {offer}\n\nReply STOP to opt out',hi:'Hi {name}, aapne is saal Edge Homes se interiors ke baare mein poocha tha. {offer}\n\nSTOP likhein updates band karne ke liye'}}],b:[B('Interested','Interested','q_city'),B('Who is this?','Kaun?','bc_who'),B('Not now','Abhi nahi','later')],wait:['No reply · 7 days','bc_old2',168]},
+bc_who:{ch:'wa',meta:['WA-12','Who is this?','Session'],m:[{t:{en:'Edge Homes — architects, interiors and turnkey construction in Delhi NCR. You shared your number with us when you enquired about interiors. Happy to help — or reply STOP and we won\'t message again.',hi:'Edge Homes — Delhi NCR ke architects, interiors aur turnkey construction. Aapne interiors ke liye enquiry karte samay number diya tha. Madad karein — ya STOP likhein, phir message nahi karenge.'}}],b:[B('Okay, show me','Theek hai, dikhaiye','q_city'),B('Stop','Stop','optout')]},
+bc_old2:{ch:'wa',meta:['WA-12','Second (last) message','Marketing template'],m:[{img:'Before → after · a {city} 3 BHK'},{t:{en:'One last note, {name}: here\'s a before/after from a {city} 3 BHK we finished last month. If interiors are on your list, your 3D session is a tap away.\n\nReply STOP to opt out',hi:'Ek aakhri baat, {name}: {city} ke ek 3 BHK ka before/after dekhiye. Interiors plan mein hain toh 3D session bas ek tap door.\n\nSTOP likhein'}},{s:'After this: monthly nurture only'}],b:[B('Book a 3D session','3D session book karein','q_city')]},
+/* ===== FILTER REPLIES ===== */
+f_job:{ch:'wa',meta:['Filter','Careers','Rule'],set:{tag:'careers'},m:[{u:'Hi, are you hiring site supervisors?'},{t:{en:'Thanks for your interest in working with Edge Homes! Please send your CV to our careers email with the role in the subject line. 🙂',hi:'Edge Homes ke saath kaam karne mein ruchi ke liye shukriya! Apna CV careers email par role ke naam ke saath bhejiye. 🙂'}},{s:'Tag careers · excluded from all sales flows'}]},
+f_vendor:{ch:'wa',meta:['Filter','Vendor','Rule'],set:{tag:'vendor'},m:[{u:'We supply premium laminates and hardware, can we meet?'},{t:{en:'Thanks for reaching out! Please email your catalogue and price list to our procurement email — the team reviews vendors every month.',hi:'Sampark ke liye shukriya! Catalogue aur price list procurement email par bhejiye — team har mahine vendors review karti hai.'}},{s:'Tag vendor · excluded from all sales flows'}]},
+f_small:{ch:'wa',meta:['Filter','Small scope','Session'],set:{tag:'small_scope'},m:[{u:'I only need one wardrobe made'},{t:{en:'We focus on full rooms and turnkey homes, so a single wardrobe is below our minimum project size. Many families pair a wardrobe with the kitchen — that we\'d love to do. Shall we look at it?',hi:'Hum poore room aur turnkey ghar par focus karte hain, isliye ek wardrobe hamare minimum project se chhota hai. Kai log wardrobe ke saath kitchen bhi karwate hain — woh hum zaroor karenge. Dekhein?'}}],b:[B('Kitchen + wardrobe package','Kitchen + wardrobe package','q_city'),B('Just the wardrobe','Sirf wardrobe','@end')]},
+f_out:{ch:'wa',meta:['Filter','Out of area','Session'],set:{tag:'out_of_area'},m:[{u:'Need interiors for my flat in Jaipur'}],go:'f_out_r'},
+f_out_r:{ch:'wa',meta:['Filter','Out of area','Session'],set:{tag:'out_of_area'},m:[{t:{en:'Thank you! Our execution teams work across Delhi NCR — Faridabad, Gurugram, Noida and Palwal. For other cities we offer architecture and design-only consultations.',hi:'Shukriya! Hamari execution teams Delhi NCR mein kaam karti hain — Faridabad, Gurugram, Noida aur Palwal. Baaki shehron ke liye design-only consultation dete hain.'}}],b:[B('Design-only consultation','Design-only consultation','human'),B('Okay, thanks','Theek hai','@end')]},
+f_client:{ch:'wa',meta:['WA-11','Client care','Session'],set:{tag:'client_active',stage:'st_won',eh_source:'CLIENT'},m:[{s:'Known contact: active client → never the sales flow'},{u:'Hi, any update on my site this week?'},{img:'Latest site photos · Thursday'}],go:'client_r'},
+client_r:{ch:'wa',meta:['WA-11','Client update','Session'],m:[{t:{en:'Here are Thursday\'s photos, {name}. Next milestone: wardrobe installation on Monday. {pm} will add any details within 2 hours.',hi:'Yeh rahe Thursday ke photos, {name}. Agla milestone: Monday ko wardrobe installation. {pm} 2 ghante mein details denge.'}}],desk:[['PM replies','team']]},
+f_discount:{ch:'wa',meta:['Routing','Discount ask','Session → Human'],m:[{u:'What\'s the best price if I sign today?'}],go:'@disc'},
+f_struct:{ch:'wa',meta:['Routing','Structural question','Session → Human'],m:[{u:'Can we remove the wall between kitchen and living room?'}],go:'@struct'},
+f_complaint:{ch:'wa',meta:['Routing','Complaint','Session → Human'],set:{tag:'client_active',stage:'st_won'},m:[{s:'Known contact: active client'},{u:'Work hasn\'t started on site for 5 days, what is happening?'}],go:'@complaint'},
+f_stop:{ch:'wa',meta:['WA-14','STOP','Session'],m:[{u:'STOP'}],go:'optout'},
+
+/* ===== INSTAGRAM ===== */
+ig_cmt:{ch:'ig',meta:['IG-1','Comment trigger','IG auto'],set:{eh_source:'IG-CMT-3D',stage:'st_new'},m:[{cm:'3D'},{s:'Private reply sent (Instagram allows one until they respond)'},{t:{en:'Hey {name}! 👋 Thanks for your comment.\n\nYour "3D of your flat" invite is ready — tap below 👇',hi:'Hey {name}! 👋 Comment ke liye shukriya.\n\nAapka "flat ka 3D" invite ready hai — neeche tap karein 👇'}}],b:[B('Show me 📐','Dikhaiye 📐','ig_menu')],wait:['24 h, no tap','ig_silent',24]},
+ig_silent:{ch:'ig',meta:['IG-1','—','Rule'],m:[{s:'No tap → Instagram allows no more messages. The lead stays a comment-only contact until their next comment or DM. That\'s why the opening DM has one big button.'}]},
+ig_menu:{ch:'ig',meta:['IG-1','Menu','IG auto'],m:[{t:{en:'Welcome to *Edge Homes* — architects, interiors and turnkey builders across Faridabad, Gurugram, Noida and Palwal {emoji}\n\nWhat would you like?',hi:'*Edge Homes* mein swagat — Faridabad, Gurugram, Noida aur Palwal ke architects, interiors aur turnkey builders {emoji}\n\nKya dekhna chahenge?'}}],b:[B('3D of my flat','Mere flat ka 3D','ig_city'),B('Prices','Prices','ig_price'),B('Free snag check','Free snag check','ig_snag'),B('See projects','Projects dekhein','ig_proj')]},
+ig_price:{ch:'ig',meta:['IG-1','Price card','IG auto'],set:{eh_interest:'price'},m:[{t:PRICE}],b:[B('Get my exact price','Exact price','ig_city'),B('Talk to a designer','Designer se baat','ig_human')]},
+ig_snag:{ch:'ig',meta:['IG-1','Snag check','IG auto'],set:{eh_interest:'snag'},m:[{t:{en:'Before you accept keys, our engineer checks plaster, seepage, levels and electricals — and gives you a 1-page report. Free for homeowners in our cities.',hi:'Chaabi lene se pehle hamare engineer plaster, seepage, levels aur electricals check karke 1-page report dete hain. Free.'}}],b:[B('Book my snag check','Snag check book karein','ig_city')]},
+ig_proj:{ch:'ig',meta:['IG-1','Projects','IG auto'],m:[{img:'Projects · Faridabad · Gurugram · Noida · Palwal'},{t:{en:'Mirror-mosaic pooja walls, handleless kitchens, full turnkey homes. Want to see yours in 3D?',hi:'Mirror-mosaic pooja walls, handleless kitchens, poore turnkey ghar. Apna 3D mein dekhna hai?'}}],b:[B('Yes, 3D of my flat','Haan, mera 3D','ig_city')]},
+ig_city:{ch:'ig',meta:['IG-1','City','IG auto'],m:[{t:{en:'Which city is your home in?',hi:'Aapka ghar kis shehar mein hai?'}}],b:CITY.map(function(c){return B(c,c,'ig_poss',{eh_city:c})}).concat([B('Other',null,'f_out_r',{eh_city:'Other'})])},
+ig_poss:{ch:'ig',meta:['IG-1','Possession','IG auto'],m:[{t:{en:'When do you get possession?',hi:'Possession kab mil raha hai?'}}],b:withTo(POSS,'ig_phone')},
+ig_phone:{ch:'ig',meta:['IG-1','Phone capture','IG auto · User input'],input:'phone',m:[{t:{en:'Lovely! Share your WhatsApp number and {designer} will send your 3D session slots there.\n\n(We\'ll only message you about your home — reply STOP anytime.)',hi:'Badhiya! Apna WhatsApp number dijiye, {designer} wahan 3D session ke slots bhejengi.\n\n(Sirf aapke ghar ke baare mein message karenge — kabhi bhi STOP.)'}},{s:'Type a 10-digit number — or try a wrong one'}],b:[B('Skip','Skip','ig_hand')]},
+ig_hand:{ch:'ig',meta:['IG-1','Hand-off','IG auto'],m:[{t:{en:'Done ✅ Tap below — we continue on WhatsApp in under a minute.',hi:'Ho gaya ✅ Neeche tap karein — WhatsApp par 1 minute mein.'}}],b:[B('Continue on WhatsApp ↗','WhatsApp par continue ↗','wa_from_ig')],wait:['30 min, no tap','ig_nudge',0.5]},
+ig_nudge:{ch:'ig',meta:['IG-1','+30 min nudge','IG auto'],m:[{t:{en:'Still keen, {name}? 💛 This week\'s studio slots are filling up — one tap and you\'re in.',hi:'Abhi bhi interested, {name}? 💛 Is hafte ke slots bhar rahe hain — bas ek tap.'}}],b:[B('Book on WhatsApp ↗','WhatsApp par book ↗','wa_from_ig'),B('Ask a question','Sawaal poochein','ig_human')],wait:['~22 h, still nothing','ig_last',21.5]},
+ig_last:{ch:'ig',meta:['IG-1','Last allowed message','IG auto'],m:[{t:{en:'Before I forget, {name} — want me to hold a 3D session slot for you this week?',hi:'{name}, ek baat — is hafte ke liye aapka 3D slot hold kar doon?'}},{s:'Last automatic message Instagram allows inside the 24-hour window'}],b:[B('Yes, hold it','Haan, hold karein','@hold'),B('No thanks','Nahi, thanks','ig_close')],wait:['24 h window closes','ig_window',2]},
+ig_window:{ch:'ig',meta:['IG-1','Window closed','Rule'],m:[{s:'24-hour window closed → no more automatic Instagram messages. Phone given → WhatsApp re-engage template next day. No phone → wait for their next comment or DM.'}],desk:[['Phone was given → WhatsApp template','wa_reengage']]},
+ig_close:{ch:'ig',meta:['IG-1','Close','IG auto'],m:[{t:{en:'No problem, {name} — whenever you\'re ready, just comment "3D" on any post 💛',hi:'Koi baat nahi, {name} — jab mann ho, kisi bhi post par "3D" comment kar dena 💛'}}]},
+wa_reengage:{ch:'wa',meta:['Safety net','Re-engage next day','Marketing template'],m:[{s:'Lead gave phone on Instagram, never opened WhatsApp · next day'},{t:{en:'Hi {name}, you asked Edge Homes about a 3D of your flat on Instagram. Your session is still available — pick a time?\n\nReply STOP to opt out',hi:'Hi {name}, aapne Instagram par Edge Homes se flat ke 3D ke baare mein poocha tha. Session abhi bhi available hai — time chunein?\n\nSTOP likhein'}}],b:[B('Pick a time','Time chunein','q_prop'),B('Not now','Abhi nahi','later')]},
+ig_dm:{ch:'ig',meta:['IG-2','New DM','IG auto · Default reply'],set:{eh_source:'IG-DM',stage:'st_new'},m:[{u:'Hi, how much for 3BHK interiors?'},{t:PRICE},{t:{en:'Want the exact price for your plan, {name}?',hi:'Aapke plan ka exact price chahiye, {name}?'}}],b:[B('Yes — 3D + exact price','Haan — 3D + exact price','ig_city'),B('Talk to a designer','Designer se baat','ig_human')]},
+ig_voice:{ch:'ig',meta:['IG-2','Voice note','IG auto → Human'],set:{eh_source:'IG-DM',tag:'needs_human'},m:[{u:'🎤 Voice note · 0:24'},{t:{en:'Got it 🙂 A designer will listen and reply right here shortly.',hi:'Mil gaya 🙂 Designer sunkar yahin reply karengi.'}}],desk:[['Team replies (human agent)','ig_team']]},
+ig_human:{ch:'ig',meta:['IG-2','Human','IG auto → Human'],set:{tag:'needs_human'},m:[{t:{en:'Sure — {designer} will reply right here within a few minutes 🙂 Our team is online 9 AM – 9 PM.',hi:'Bilkul — {designer} yahin kuch minute mein reply karengi 🙂'}}],desk:[['Team replies (human agent)','ig_team']]},
+ig_team:{ch:'ig',meta:['IG-2','Team reply','Human agent'],untag:'needs_human',m:[{t:{en:'Hi {name}, {designer} here 👋 Yes — we can do that, and I\'d love to show you on your actual layout. Shall I send you studio slots on WhatsApp?',hi:'Hi {name}, main {designer} 👋 Haan, ho jaayega — aapke layout par dikhana chahungi. WhatsApp par slots bhejun?'}}],b:[B('Yes, on WhatsApp','Haan, WhatsApp par','ig_phone')]},
+ig_story:{ch:'ig',meta:['IG-3','Story reply','IG auto'],set:{eh_source:'IG-STORY-POOJA',stage:'st_new'},m:[{s:'Replied to your story · Mirror mosaic pooja wall'},{u:'🔥🔥 this pooja wall is stunning'},{t:{en:'Thank you, {name}! 🙏 Want something like this in your home?',hi:'Shukriya, {name}! 🙏 Apne ghar mein aisa kuch chahiye?'}}],b:[B('Yes, 3D of my flat','Haan, mera 3D','ig_city'),B('Prices','Prices','ig_price')]},
+ig_mention:{ch:'ig',meta:['IG-4','Client mention','IG auto'],set:{tag:'client_past',stage:'st_won'},m:[{s:'{name} mentioned @edgehomes_architects in their story'},{t:{en:'You just made our day, {name}! 💛 Resharing this now. Enjoy every corner of your home.',hi:'Aapne humara din bana diya, {name}! 💛 Abhi reshare kar rahe hain.'},sig:1}],desk:[['Team reshares the story','@reshare']],wait:['Day 7 (via WhatsApp)','referral',168]},
+ig_follow:{ch:'ig',meta:['IG-5','New follower','IG auto'],set:{eh_source:'IG-FOLLOW',stage:'st_new'},m:[{s:'{name} started following you'},{t:{en:'Welcome to Edge Homes, {name}! {emoji} Taking possession soon? Get our free 2026 turnkey cost guide 👇',hi:'Edge Homes mein swagat, {name}! {emoji} Possession milne wala hai? Free 2026 cost guide lijiye 👇'}}],b:[B('Send the guide','Guide bhejein','ig_menu'),B('Just browsing','Bas dekh raha hoon','ig_close')]},
+ig_ad:{ch:'ig',meta:['IG-6','Instagram ad','IG auto · Ad'],set:{eh_source:'IG-AD-MUHURAT-1',stage:'st_new'},m:[{s:'Tapped "Send message" on the muhurat ad'},{t:{en:'Hi {name}! 👋 You found us through our "move in by your muhurat" ad.\n\n{offer}',hi:'Hi {name}! 👋 Aap hamare "muhurat tak shift" ad se aaye hain.\n\n{offer}'}}],b:[B('3D of my flat','Mere flat ka 3D','ig_city'),B('See projects','Projects dekhein','ig_proj')]},
+ig_night:{ch:'ig',meta:['IG-2','After hours','IG auto'],night:1,set:{eh_source:'IG-DM',stage:'st_new'},m:[{s:'11:40 PM'},{u:'Do you do kitchens only?'},{t:{en:'Thanks for your message! 🌙 Our studio team is offline right now and will reply by 10 AM.\n\nYou can already book a 3D session on WhatsApp 👇',hi:'Message ke liye shukriya! 🌙 Team abhi offline hai, 10 AM tak reply karegi.\n\nWhatsApp par 3D session abhi book kar sakte hain 👇'}}],b:[B('Book on WhatsApp ↗','WhatsApp par book ↗','wa_from_ig')],desk:[['Morning team reply','ig_team']]},
+ig_oldkw:{ch:'ig',meta:['Season','Old keyword','IG auto'],set:{eh_source:'IG-CMT-DIWALI',stage:'st_new'},m:[{cm:'DIWALI'},{t:{en:'Hey {name}! Our Diwali offer has ended — but here\'s what\'s live now {emoji}\n\n{offer}',hi:'Hey {name}! Diwali offer khatam ho gaya — par abhi yeh chal raha hai {emoji}\n\n{offer}'}}],b:[B('Show me 📐','Dikhaiye 📐','ig_menu')]},
+
+/* ===== META ADS ===== */
+mt_ctwa:{ch:'wa',meta:['MT-1','Click-to-WhatsApp','Session · free 72 h'],set:{eh_source:'META-CTWA-FBD',stage:'st_new',eh_city:'Faridabad'},ctwa:1,m:[{s:'Tapped click-to-WhatsApp ad · Faridabad · "layout proof" angle · free 72-hour window starts'},{u:'Hi! Can I get more info on this?'},{t:{en:'Hi {name}! 👋 You found us through our Faridabad ad — we\'ve already designed layouts in BPTP, M3M, DLF and Emaar projects.\n\n{offer}\n\nWhich society are you in?',hi:'Hi {name}! 👋 Aap hamare Faridabad ad se aaye hain — hum BPTP, M3M, DLF aur Emaar ke layouts design kar chuke hain.\n\n{offer}\n\nAap kis society mein hain?'}}],go:'q_soc'},
+mt_form:{ch:'wa',meta:['MT-2','Lead form · hot','Utility template'],set:{eh_source:'META-FORM-GGN',stage:'st_new',eh_city:'Gurugram',eh_society:'Dwarka Expressway society',eh_possession:'keys',eh_property:'4 BHK+',eh_budget:'25 L+',consent:'yes'},m:[{s:'Meta lead form: {name} · Gurugram · keys in hand · 4 BHK+ · ₹25 L+ · WhatsApp consent ✓'},{s:'Pre-scored from form answers · email with cost guide sent'},{t:{en:'Hi {name}, thanks for your enquiry with Edge Homes! You mentioned a 4 BHK in Gurugram with keys in hand — {designer} will call you within 15 minutes to plan your 3D session.',hi:'Hi {name}, Edge Homes mein enquiry ke liye shukriya! Aapne Gurugram mein 4 BHK aur chaabi mil gayi bataya — {designer} 15 minute mein call karengi.'}}],score:1,desk:[['Designer calls (15 min)','hot_call'],['No answer → email series','em_d2']]},
+mt_noconsent:{ch:'em',meta:['MT-2','Form · no consent','Email + call'],set:{eh_source:'META-FORM-NOI',stage:'st_new',eh_city:'Noida',eh_possession:'3-6 mo',eh_property:'3 BHK',eh_budget:'8-15 L',consent:'no'},m:[{s:'Meta lead form · WhatsApp consent NOT ticked → no WhatsApp message is sent'},{email:{subj:'Your 2026 turnkey interior cost guide',from:'Edge Homes',body:{en:'Hi {name},\n\nThanks for your enquiry. Attached is our 2026 cost guide for Noida, with price bands for a 3 BHK (₹10–15 L), a 12-week timeline and a snag checklist.\n\nOur designer will call you today. Prefer WhatsApp? Tap below.\n\n— Team Edge Homes',hi:'Hi {name},\n\nEnquiry ke liye shukriya. 2026 cost guide attached hai.\n\nHamare designer aaj call karenge. WhatsApp pasand hai? Neeche tap karein.\n\n— Team Edge Homes'}}}],score:1,b:[B('Chat on WhatsApp ↗','WhatsApp par baat ↗','wa_from_em')],desk:[['Designer calls','warm_call'],['No answer → email series','em_d2']]},
+mt_noreply:{ch:'wa',meta:['MT-2','Form · no reply','Utility template'],set:{eh_source:'META-FORM-FBD',stage:'st_new',eh_city:'Faridabad',eh_possession:'0-3 mo',eh_property:'3 BHK',eh_budget:'8-15 L',consent:'yes'},m:[{s:'Meta lead form · consent ✓'},{t:{en:'Hi {name}, thanks for your enquiry with Edge Homes! When would you like to see your flat in 3D at our studio?',hi:'Hi {name}, enquiry ke liye shukriya! Studio mein apna flat 3D mein kab dekhna chahenge?'}}],score:1,b:[B('This weekend','Is weekend','slots'),B('Next week','Agle hafte','slots')],wait:['24 h, no reply','mt_call',24]},
+mt_call:{ch:'wa',meta:['MT-2','Call attempt','Human'],m:[{s:'Designer call · no answer'},{s:'Lead moved to email series (EM-2) + retargeting audience "qualified, not booked"'}],desk:[['Open email series','em_d2']]},
+
+/* ===== EMAIL ===== */
+em_guide:{ch:'em',meta:['EM-1','Guide download','Email'],set:{eh_source:'WEB-GUIDE',stage:'st_new'},m:[{s:'Website: cost guide downloaded · email + WhatsApp consent ✓'},{email:{subj:'Your 2026 turnkey interior cost guide (Faridabad · Gurugram · Noida · Palwal)',from:'Edge Homes',body:{en:'Hi {name},\n\nHere\'s your guide 📄 — per-BHK price bands, a 12-week plan-to-keys timeline and a snag checklist.\n\n{offer}\n\nReply to this email or chat with us on WhatsApp.\n\n— Team Edge Homes',hi:'Hi {name},\n\nYeh rahi aapki guide 📄 — BHK-wise price, 12-hafte ki timeline aur snag checklist.\n\n{offer}\n\n— Team Edge Homes'}},doc:'EdgeHomes_2026_Turnkey_Cost_Guide.pdf'}],b:[B('Chat on WhatsApp ↗','WhatsApp par baat ↗','wa_from_em')],wait:['Day 2','em_d2',48]},
+em_d2:{ch:'em',meta:['EM-2','Day 2 · snag list','Email'],m:[{email:{subj:'Check these 12 things before you accept your keys',from:'Edge Homes',body:{en:'Hi {name},\n\nPlaster cracks, seepage near windows, slope in balconies, earthing in the kitchen… here are the 12 checks our engineers do on every possession.\n\nWant us to do yours free? Reply "SNAG".\n\n— Team Edge Homes',hi:'Hi {name},\n\nChaabi lene se pehle yeh 12 cheezein check karein.\n\nFree snag check chahiye? "SNAG" reply karein.'}}}],b:[B('Book a free snag check','Free snag check','wa_from_em')],wait:['Day 5','em_d5',72]},
+em_d5:{ch:'em',meta:['EM-2','Day 5 · case study','Email'],m:[{email:{subj:'How a {city} family moved in 11 weeks after possession',from:'Edge Homes',body:{en:'Hi {name},\n\nThe Sharmas got their keys in August. Eleven weeks later they did their griha pravesh in a finished 3 BHK — handleless kitchen, sliding wardrobes, a mirror-mosaic pooja wall.\n\nHere\'s exactly how the 11 weeks went.',hi:'Hi {name},\n\nSharma parivaar ko August mein chaabi mili. 11 hafte baad unhone ready 3 BHK mein griha pravesh kiya.'}},img:'Case study · before → after'}],wait:['Day 9','em_d9',96]},
+em_d9:{ch:'em',meta:['EM-2','Day 9 · cost breakdown','Email'],m:[{email:{subj:'What a 3 BHK actually costs, line by line',from:'Edge Homes',body:{en:'Hi {name},\n\nKitchen 28% · wardrobes 24% · ceilings and lighting 14% · flooring and walls 18% · furniture and décor 16%.\n\nHere\'s a real ₹13.8 L 3 BHK, line by line — and where families usually save.',hi:'Hi {name},\n\nEk asli ₹13.8 L 3 BHK ka line-by-line hisaab.'}}}],wait:['Day 14','em_d14',120]},
+em_d14:{ch:'em',meta:['EM-2','Day 14 · studio invite','Email'],m:[{email:{subj:'See your flat in 3D before we build it — this week {emoji}',from:'Edge Homes',body:{en:'Hi {name},\n\n{offer}\n\nPick a slot on WhatsApp — it takes 20 seconds.\n\n— Team Edge Homes',hi:'Hi {name},\n\n{offer}\n\nWhatsApp par slot chunein — 20 second lagenge.'}}}],b:[B('Book on WhatsApp ↗','WhatsApp par book ↗','wa_from_em')],wait:['Monthly newsletter','em_news',720]},
+em_news:{ch:'em',meta:['EM-2','Monthly newsletter','Email'],m:[{email:{subj:'{emoji} This month at Edge Homes',from:'Edge Homes',body:{en:'Hi {name},\n\n3 new handovers in {city}, a kitchen trend we love, and this month\'s offer:\n{offer}\n\nUnsubscribe anytime.',hi:'Hi {name},\n\n{city} mein 3 naye handover, aur is mahine ka offer:\n{offer}'}}}],b:[B('Book on WhatsApp ↗','WhatsApp par book ↗','wa_from_em')]},
+wa_from_em:{ch:'wa',meta:['WA-1','Arrives from email','Session'],m:[{u:'Hi! Got your email [EH-EM]'},{s:'Tag read → eh_source keeps the original + email touch logged'},{t:{en:'Hi {name}! 🙌 Glad the guide helped. Let\'s plan your 3D session — 4 quick taps 👇',hi:'Hi {name}! 🙌 Guide kaam aayi, achha laga. 3D session plan karte hain — 4 tap 👇'}}],go:'q_city'},
+em_inbound:{ch:'em',meta:['EM-6','Inbound email','Auto-reply'],set:{eh_source:'EMAIL',stage:'st_new'},m:[{emailout:{subj:'Interiors for my new flat',from:'{name}',body:'Hi, we are getting possession of a 3 BHK in Sector 150 Noida in December. Can you share your process and rough costs?'}},{email:{subj:'Re: Interiors for my new flat',from:'Edge Homes (auto-reply)',body:{en:'Hi {name},\n\nThanks for writing to Edge Homes — our team will reply within 2 hours (9 AM – 9 PM).\n\nFor the fastest answer, message us on WhatsApp — or see our 2026 cost guide (attached).\n\n— Team Edge Homes',hi:'Hi {name},\n\nEdge Homes ko likhne ke liye shukriya — team 2 ghante mein reply karegi.\n\nSabse jaldi jawab ke liye WhatsApp karein.'}},doc:'EdgeHomes_2026_Turnkey_Cost_Guide.pdf'}],b:[B('Chat on WhatsApp ↗','WhatsApp par baat ↗','wa_from_em')],desk:[['Team replies within 2 h','em_team']]},
+em_team:{ch:'em',meta:['EM-6','Team reply','Human'],m:[{email:{subj:'Re: Interiors for my new flat',from:'Aditi · Edge Homes',body:{en:'Hi {name},\n\nCongratulations on your Sector 150 home! For a 3 BHK, our turnkey interiors usually land at ₹10–15 L depending on finishes. Our process: design weeks 1–6, execution weeks 7–16, handover with warranty.\n\nCould you send your floor plan? I\'ll prepare your living room and kitchen in 3D for a studio visit.\n\nWarmly,\nAditi',hi:'Hi {name},\n\nSector 150 ke naye ghar ki badhai! 3 BHK ke liye ₹10–15 L. Floor plan bhejiye, main 3D ready karungi.\n\nAditi'}}}],b:[B('Reply with floor plan','Floor plan bhejein','@plan_em'),B('Move to WhatsApp ↗','WhatsApp par ↗','wa_from_em')]},
+em_proposal:{ch:'em',meta:['EM-4','Proposal email','Email'],set:{stage:'st_proposal',eh_value:'₹14.6 L',eh_city:'Faridabad',eh_society:'BPTP Parklands (Sec 77–78)'},m:[{email:{subj:'Your Edge Homes proposal for {society}',from:'Aditi · Edge Homes',body:{en:'Hi {name},\n\nAttached is your itemised proposal: ₹14.6 lakh, 12-week timeline, 1-year warranty.\n\n{dlline}\n\nI\'ve also added a one-page checklist so you can compare quotes like for like.\n\nWarmly,\nAditi',hi:'Hi {name},\n\nAapka itemised proposal attached hai: ₹14.6 lakh, 12 hafte, 1 saal warranty.\n\n{dlline}'}},doc:'EdgeHomes_Proposal_BPTP_Parklands.pdf'}],wait:['+2 days · FAQ email','em_faq',48]},
+em_faq:{ch:'em',meta:['EM-4','Proposal FAQ','Email'],m:[{email:{subj:'Board grade, hardware and warranty — your questions answered',from:'Edge Homes',body:{en:'Hi {name},\n\nThe 6 questions families ask most before signing — BWP vs MR ply, hinge brands, what the warranty covers, payment schedule, delays and site supervision.',hi:'Hi {name},\n\nSign karne se pehle sabse zyada pooche jaane wale 6 sawaal.'}}}],b:[B('Book a decision call','Decision call book karein','prop_call')]},
+
+/* ===== SEASON SCENARIOS ===== */
+s_quiet:{ch:'wa',meta:['Season','Festival-day greeting','Marketing template · no offer'],set:{tag:'client_past',stage:'st_won'},m:[{s:'Quiet day · clients only · no offer, no buttons'},{t:'@quiet',sig:1}]},
+s_xmas:{ch:'wa',meta:['Season','Christmas · past client','Marketing template'],season:'xmas',set:{tag:'client_past',stage:'st_won'},m:[{s:'Season set to Christmas · broadcast to past clients'},{t:{en:'Merry Christmas from all of us at Edge Homes, {name}! 🎄 Thank you for letting us build your home. If a friend is planning theirs, we\'d love to look after them — and we\'ll thank you with a gift voucher.\n\nReply STOP to opt out',hi:'Edge Homes ki poori team ki taraf se Merry Christmas, {name}! 🎄 Koi dost ghar plan kar raha ho toh hum unka khayal rakhenge — aur aapko gift voucher.\n\nSTOP likhein'}}],b:[B('Refer a friend','Dost ko refer karein','@share'),B('Merry Christmas! 🎄','Merry Christmas! 🎄','@end')]},
+s_ny:{ch:'em',meta:['Season','New Year email','Email'],season:'ny',set:{stage:'st_nurture',eh_city:'Gurugram'},m:[{s:'Season set to New Year · nurture segment · 2 Jan'},{email:{subj:'Your home, finished by spring ✨',from:'Edge Homes',body:{en:'Hi {name},\n\nIf your possession landed in 2026, January is the month to design. Here\'s how a 3 BHK goes from plan to move-in in 12 weeks — and how to keep 2026 prices if you sign by 15 Jan.\n\n— Team Edge Homes',hi:'Hi {name},\n\n2026 mein possession mila hai toh January design ka mahina hai. 15 Jan tak sign karne par 2026 ke price.'}}}],b:[B('Book on WhatsApp ↗','WhatsApp par book ↗','wa_from_em')]},
+s_old:{ch:'ig',meta:['Season','Old DIWALI comment in January','IG auto'],season:'ny',go:'ig_oldkw'},
+
+/* ===== UNIVERSAL LISTENER (channel-agnostic) ===== */
+g_new:{meta:['WA-15','Greeting · new contact','Session'],set:{stage:'st_new'},m:[{t:WELCOME,sig:1}],bf:function(){return [B('Start · 4 quick taps','Shuru karein · 4 tap',st.ch==='ig'?'ig_city':'q_city'),B('See prices','Prices dekhein','price_a'),B('Talk to a designer','Designer se baat','human_req'),B('Call me','Call karein','call_req')]}},
+g_back_q:{meta:['WA-15','Welcome back · mid-flow','Session'],m:[{t:{en:'Welcome back, {name}! 👋 You were 2 taps away from your 3D session. Shall we continue?',hi:'Welcome back, {name}! 👋 Aap 3D session se bas 2 tap door the. Aage badhein?'}}],bf:function(){return [B('Continue','Aage badhein','@resume'),B('Start over','Shuru se','q_city'),B('Talk to a designer','Designer se baat','human_req')]}},
+g_booked:{meta:['WA-15','Greeting · visit booked','Session'],m:[{t:{en:'Hi {name}! 👋 Your 3D session is on *{visit}* with {designer}. How can I help?',hi:'Hi {name}! 👋 Aapka 3D session *{visit}* ko {designer} ke saath hai. Kya madad karein?'}}],b:[B('Directions','Raasta','loc_info'),B('Change time','Time badlein','slots'),B('Ask a question','Sawaal poochein','human_req')]},
+g_prop:{meta:['WA-15','Greeting · proposal stage','Session'],m:[{t:{en:'Hi {name}! 👋 {designer} has your proposal for {society} ({value}). Want to go through it?',hi:'Hi {name}! 👋 {designer} ke paas {society} ka proposal ({value}) ready hai. Dekh lein?'}}],b:[B('Call me','Call karein','call_req'),B('I have a question','Mera sawaal hai','human_req'),B('I\'ve decided','Faisla ho gaya','decided')]},
+decided:{meta:['WA-15','Decision','Session'],m:[{t:{en:'Lovely! Which way are you going, {name}?',hi:'Badhiya! Kya faisla kiya, {name}?'}}],b:[B('Yes, let\'s start 🎉','Haan, shuru karein 🎉','paylink'),B('Not going ahead','Aage nahi badhenge','lost_reason')]},
+g_client:{meta:['WA-11','Greeting · active client','Session'],m:[{s:'Known contact: active client → client care, never sales'},{img:'Latest site photos · Thursday'},{t:{en:'Hi {name}! 👋 Here are this week\'s site photos. Next milestone: wardrobe installation on Monday. {pm} has been notified and will reply within 2 hours.',hi:'Hi {name}! 👋 Is hafte ke site photos. Agla milestone: Monday ko wardrobe installation. {pm} 2 ghante mein reply karenge.'}}],b:[B('Talk to my PM','PM se baat','human_req'),B('Payment schedule','Payment schedule','emi_a')]},
+g_past:{meta:['WA-15','Greeting · past client','Session'],m:[{t:{en:'Lovely to hear from you, {name}! 💛 How\'s the home? What can we help with?',hi:'Aapse sunkar achha laga, {name}! 💛 Ghar kaisa hai? Kya madad karein?'}}],b:[B('A new project','Naya project',st&&st.ch==='ig'?'ig_city':'q_city'),B('Service / warranty','Service / warranty','warranty_svc'),B('Refer a friend','Dost ko refer karein','@share')]},
+g_return:{meta:['WA-15','Welcome back · 30+ days','Session'],m:[{t:{en:'Welcome back, {name}! 👋 Last time you were planning for *{month}*. Still on?',hi:'Welcome back, {name}! 👋 Pichhli baar aap *{month}* ke liye plan kar rahe the. Abhi bhi?'}}],b:[B('Yes, plan now','Haan, abhi plan karein','warm'),B('Not yet','Abhi nahi','nurture_set'),B('Something changed','Kuch badla hai','human_req')]},
+warranty_svc:{meta:['WA-11','Service request','Session → PM'],set:{tag:'service'},m:[{t:{en:'Sorry something needs attention, {name} — {pm} will call you today. Could you send a photo of the issue? 📷',hi:'Maaf kijiye, {name} — {pm} aaj call karenge. Problem ki ek photo bhej denge? 📷'}},{s:'Service ticket created · PM notified · 24-h target'}],desk:[['PM replies','team']]},
+human_req:{meta:['WA-15','Human request','Session → Human'],set:{tag:'needs_human'},m:[{t:'@humanReq'},{s:'@humannote'}],b:[B('Call me instead','Call kar lijiye','call_req')],desk:[['Team replies in time','team'],['No reply in 5 min','sla']]},
+call_req:{meta:['WA-16','Call request','Session'],set:{tag:'call_requested'},m:[{t:'@callReq'}],bf:function(){return st.night?[B('Tomorrow 10 AM','Kal 10 AM','call_sched_ok',{eh_callback:'Tomorrow 10 AM'}),B('Tomorrow 12 PM','Kal 12 PM','call_sched_ok',{eh_callback:'Tomorrow 12 PM'}),B('Tomorrow 6 PM','Kal 6 PM','call_sched_ok',{eh_callback:'Tomorrow 6 PM'})]:[B('Call me now · within 10 min','Abhi call karein · 10 min','call_now'),B('Pick a time','Time chunein','call_pick'),B('I\'ll call you','Main call karunga','call_num')]}},
+ig_call:{meta:['WA-16','Call · ask number','IG auto · User input'],input:'phone',set:{tag:'call_requested'},m:[{t:{en:'Happy to call you, {name}! 📞 What\'s the best number to reach you on?',hi:'Zaroor call karenge, {name}! 📞 Kis number par call karein?'}},{s:'Instagram has no phone number yet → ask first'}]},
+call_now:{meta:['WA-16','Call now','Session → Human'],set:{eh_callback:'Now (≤10 min)'},m:[{t:{en:'Calling you within 10 minutes from +91 98715 22556 📞 {designer} will have your details ready.',hi:'10 minute mein +91 98715 22556 se call aayega 📞 {designer} ke paas aapki details ready hongi.'}},{s:'Call task created · 10-minute target · designer alerted'}],desk:[['Designer calls','hot_call'],['Call not answered','call_missed']]},
+call_pick:{meta:['WA-16','Pick a time','Session'],m:[{t:{en:'When suits you best?',hi:'Kab theek rahega?'}}],b:[B('Today 5 PM','Aaj 5 PM','call_sched_ok',{eh_callback:'Today 5 PM'}),B('Today 7 PM','Aaj 7 PM','call_sched_ok',{eh_callback:'Today 7 PM'}),B('Tomorrow 11 AM','Kal 11 AM','call_sched_ok',{eh_callback:'Tomorrow 11 AM'})]},
+call_sched_ok:{meta:['WA-16','Call scheduled','Session'],m:[{t:{en:'Done ✅ {designer} will call you *{cb}*. We\'ll remind you 15 minutes before.',hi:'Ho gaya ✅ {designer} aapko *{cb}* call karengi. 15 minute pehle reminder aayega.'}},{s:'Call task scheduled · reminder set'}],desk:[['Designer calls','hot_call'],['Call not answered','call_missed']]},
+call_num:{meta:['WA-16','Our number','Session'],m:[{t:{en:'📞 +91 98715 22556 — tap to call. We answer 9 AM – 9 PM; if we miss you, we call back within 15 minutes.',hi:'📞 +91 98715 22556 — tap karke call karein. 9 AM – 9 PM; miss hua toh 15 minute mein call back.'}}],bf:function(){return RB().concat([B('Call me instead','Aap call karein','call_now'),BOOK()])}},
+call_missed:{meta:['WA-16','Call missed','Session'],m:[{t:{en:'Tried calling you just now, {name} — when\'s a good time?',hi:'Abhi call kiya tha, {name} — kab theek rahega?'}}],b:[B('In 30 minutes','30 minute mein','call_sched_ok',{eh_callback:'In 30 minutes'}),B('This evening','Aaj shaam','call_sched_ok',{eh_callback:'This evening'}),B('Tomorrow morning','Kal subah','call_sched_ok',{eh_callback:'Tomorrow morning'})]},
+avail:{meta:['WA-15','Availability','Session'],m:[{t:'@avail'}],bf:function(){return st.night?[B('Pick a call-back time','Call-back time chunein','call_req'),B('Ask here — I\'ll reply','Yahin poochein','help_card')]:[B('Call me','Call karein','call_req'),B('Chat here','Yahin baat','human_req'),BOOK()]}},
+contact_info:{meta:['WA-17','Contact card','Session'],m:[{t:{en:'📞 +91 98715 22556 (call or WhatsApp)\n✉️ {email}\n🌐 edgehomesarchitects.in\n🕙 Chat & calls: 9 AM – 9 PM · Studio visits: {hours}',hi:'📞 +91 98715 22556 (call ya WhatsApp)\n✉️ {email}\n🌐 edgehomesarchitects.in\n🕙 Chat & call: 9 AM – 9 PM · Studio visit: {hours}'}}],bf:function(){return RB().concat([B('Call me','Call karein','call_req'),B('Location','Location','loc_info'),BOOK()])}},
+loc_info:{meta:['WA-17','Location','Session'],m:[{loc:1},{t:{en:'📍 {addr}\n🚗 Parking at the gate\n🕙 Studio visits: {hours}\n\nFar from you? Our architect can visit your home, or meet you at a live site nearby.',hi:'📍 {addr}\n🚗 Gate par parking\n🕙 Studio visit: {hours}\n\nDoor hai? Architect aapke ghar aa sakte hain, ya paas ki live site par mil sakte hain.'}}],bf:function(){return RB().concat([BOOK(),B('Too far — home visit','Door hai — home visit','far'),B('Call me','Call karein','call_req')])}},
+timings:{meta:['WA-17','Timings','Session'],m:[{t:{en:'🕙 Studio visits: {hours}\n💬 Chat & calls: 9 AM – 9 PM, every day',hi:'🕙 Studio visit: {hours}\n💬 Chat & call: 9 AM – 9 PM, roz'}}],bf:function(){return RB().concat([BOOK(),B('Location','Location','loc_info')])}},
+bot_q:{meta:['WA-15','"Are you a bot?"','Session'],m:[{t:{en:'I\'m Edge Homes\' assistant 🤖 — I handle the quick things so our designers can focus on your home. A real person is one tap away.',hi:'Main Edge Homes ka assistant hoon 🤖 — chhoti cheezein main sambhalta hoon taaki designers aapke ghar par dhyaan dein. Asli insaan bas ek tap door.'}}],bf:function(){return [B('Talk to a person','Insaan se baat','human_req')].concat(RB().length?RB():[B('Continue','Aage badhein',st.ch==='ig'?'ig_menu':'q_city')])}},
+price_a:{meta:['WA-15','Side question · price','Session'],m:[{t:PRICE}],bf:function(){return RB().concat([B('Get my exact price','Mera exact price',st.ch==='ig'?'ig_city':(st.f.eh_budget?'slots':'q_city')),B('Call me','Call karein','call_req')])}},
+timeline_a:{meta:['WA-15','Side question · timeline','Session'],m:[{t:{en:'⏱ Typical timeline: design weeks 1–6 · execution weeks 7–16 · handover with warranty. A 2 BHK can be 45–90 days.\n\nTell us your move-in or muhurat date and we\'ll plan backwards.',hi:'⏱ Aam timeline: design hafte 1–6 · execution 7–16 · warranty ke saath handover. 2 BHK 45–90 din.\n\nApni move-in ya muhurat date batayein, hum peeche se plan karenge.'}}],bf:function(){return RB().concat([BOOK(),B('Talk to a designer','Designer se baat','human_req')])}},
+emi_a:{meta:['WA-15','Side question · payments','Session'],m:[{t:{en:'💳 Payments are milestone-linked: booking amount (design fee, adjusted later) → stages through execution → final on handover. For EMI or home-loan top-ups, {designer} will guide you on options.',hi:'💳 Payment milestones ke hisaab se: booking amount (design fee, baad mein adjust) → execution ke stages → handover par final. EMI ya home-loan top-up ke liye {designer} guide karengi.'}}],bf:function(){return RB().concat([B('Ask {designer}'.replace('{designer}','a designer'),'Designer se poochein','human_req'),BOOK()])}},
+warranty_a:{meta:['WA-15','Side question · warranty','Session'],m:[{t:{en:'🛡 1-year warranty on our workmanship, brand warranties on hardware and appliances, and a care guide at handover. Clients get service through their project manager.',hi:'🛡 Hamare kaam par 1 saal warranty, hardware aur appliances par brand warranty, aur handover par care guide.'}}],bf:function(){return RB().concat([BOOK()])}},
+services_a:{meta:['WA-15','Side question · services','Session'],m:[{t:'@services'}],bf:function(){return RB().concat([B('3D of my flat','Mere flat ka 3D',st.ch==='ig'?'ig_city':'q_city'),B('Talk to a designer','Designer se baat','human_req')])}},
+portfolio_a:{meta:['WA-15','Side question · portfolio','Session'],m:[{img:'Projects · {city} · kitchens · wardrobes · pooja walls'},{doc:'EdgeHomes_Portfolio_2026.pdf'},{t:{en:'Here\'s a selection from {city} and nearby, plus our portfolio PDF. Want to see yours in 3D?',hi:'{city} aur aas-paas ke kuch projects, saath mein portfolio PDF. Apna 3D mein dekhna hai?'}}],bf:function(){return RB().concat([B('Yes, 3D of my flat','Haan, mera 3D',st.ch==='ig'?'ig_city':'q_city')])}},
+referral_a:{meta:['WA-15','Referral mention','Session'],set:{tag:'referred'},m:[{t:{en:'Welcome! 🙏 Lovely that someone sent you our way — we\'ll make sure to thank them. Let\'s look at your home 👇',hi:'Swagat hai! 🙏 Achha laga ki kisi ne humein suggest kiya — hum unka shukriya zaroor karenge. Aapka ghar dekhte hain 👇'}},{s:'Referrer captured from message · partner/referrer tagged when named'}],go:'q_city'},
+help_card:{meta:['WA-15','Help card','Session'],m:[{t:{en:'Happy to help, {name}! Pick one 👇',hi:'Zaroor, {name}! Ek chunein 👇'}}],bf:function(){return RB().concat([B('See prices','Prices','price_a'),BOOK(),B('Call me','Call karein','call_req'),B('Talk to a person','Insaan se baat','human_req')])}},
+thanks_a:{meta:['WA-15','Thanks','Session'],m:[{t:'@thanks'}],bf:function(){return RB()}},
+bye_a:{meta:['WA-15','Bye','Session'],m:[{t:{en:'Take care, {name}! 👋 We\'re here whenever you need us — just say hi.',hi:'Apna khayal rakhiye, {name}! 👋 Jab chahein, bas hi likhiye.'}},{s:'Conversation stays open · scheduled follow-ups continue'}]},
+ack_a:{meta:['WA-15','Acknowledgement','Session'],m:[{t:{en:'👍 Noted, {name}! Anything else I can help with?',hi:'👍 Noted, {name}! Aur kuch madad?'}}],bf:function(){return RB().concat([B('See prices','Prices','price_a'),B('Call me','Call karein','call_req')])}},
+no_a:{meta:['WA-15','"No" without a question','Session'],m:[{t:{en:'No problem, {name} 🙂 Whenever you\'re ready, I\'m right here.',hi:'Koi baat nahi, {name} 🙂 Jab ready hon, main yahin hoon.'}}],bf:function(){return RB()}},
+love_a:{meta:['WA-15','Emoji · love','Session'],m:[{t:{en:'Thank you, {name}! 💛 Want to see your own home like this — in 3D?',hi:'Shukriya, {name}! 💛 Apna ghar bhi aisa 3D mein dekhna hai?'}}],bf:function(){return RB().length?RB():[BOOK(),B('See projects','Projects','portfolio_a')]}},
+angry_a:{meta:['WA-15','Upset / urgent','Session → Human (priority)'],set:{tag:'needs_human'},m:[{t:{en:'I\'m really sorry, {name} — that\'s not the experience we want for you. I\'m getting {designer} (and our founder if needed) to you right now.',hi:'Bahut maafi, {name} — hum aisa anubhav nahi chahte. Abhi {designer} (aur zaroorat ho toh founder) aapse baat karenge.'}},{s:'Priority hand-off · founder alerted · 30-min target'}],desk:[['Team replies in time','team'],['No reply in 5 min','sla']]},
+brief_h:{meta:['WA-15','Long message → brief','Session → Human'],set:{tag:'needs_human'},m:[{t:{en:'Thank you for the detail, {name} — that\'s exactly what {designer} needs 🙏 I\'ve passed your brief on; they\'ll reply here within 5 minutes with next steps.',hi:'Itni detail ke liye shukriya, {name} — {designer} ko yahi chahiye 🙏 Brief unhe de diya; woh 5 minute mein reply karengi.'}}],b:[B('Call me instead','Call kar lijiye','call_req')],desk:[['Team replies in time','team'],['No reply in 5 min','sla']]},
+burst_a:{meta:['WA-15','Burst answered once','Session'],m:[{t:PRICE},{loc:1},{t:{en:'📍 {addr} · 🕙 {hours}',hi:'📍 {addr} · 🕙 {hours}'}}],bf:function(){return [BOOK(),B('Call me','Call karein','call_req')]}},
+media_photo:{meta:['WA-15','Photo received','Session'],m:[{t:{en:'Thanks for the photo, {name}! 📷 Is this your floor plan, or a photo of the site?',hi:'Photo ke liye shukriya, {name}! 📷 Yeh floor plan hai ya site ki photo?'}}],b:[B('Floor plan','Floor plan','@planok'),B('Site photo','Site photo','site_photo'),B('Something else','Kuch aur','human_req')]},
+site_photo:{meta:['WA-15','Site photo','Session → Human'],set:{tag:'needs_human'},m:[{t:{en:'Got it — {designer} will look at the site photo and reply with what\'s possible 📐',hi:'Mil gaya — {designer} site photo dekhkar batayengi kya ho sakta hai 📐'}}],desk:[['Team replies','team']]},
+media_pdf:{meta:['WA-15','PDF received','Session'],m:[{t:{en:'Thanks! 📄 What\'s in the PDF?',hi:'Shukriya! 📄 PDF mein kya hai?'}}],b:[B('Floor plan','Floor plan','@planok'),B('Builder\'s handover sheet','Builder handover sheet','snag_book'),B('Another designer\'s quote','Doosre designer ka quote','quote_cmp')]},
+quote_cmp:{meta:['WA-15','Competitor quote','Session → Human'],set:{tag:'needs_human',tag2:'compare'},m:[{t:{en:'Smart move. {designer} will compare it line by line — board grade, hardware, warranty — and reply within 2 hours. No pressure 🙂',hi:'Samajhdaari. {designer} line-by-line compare karengi — board, hardware, warranty — 2 ghante mein reply. Koi pressure nahi 🙂'}}],desk:[['Team replies','team']]},
+media_voice:{meta:['WA-15','Voice note','Session → Human'],set:{tag:'needs_human'},m:[{t:{en:'Got your voice note 🎤 {designer} will listen and reply here within 5 minutes.',hi:'Voice note mil gaya 🎤 {designer} sunkar 5 minute mein reply karengi.'}},{s:'Transcript attached where available'}],desk:[['Team replies in time','team'],['No reply in 5 min','sla']]},
+media_video:{meta:['WA-15','Video','Session → Human'],set:{tag:'needs_human'},m:[{t:{en:'Thanks for the video 🎥 {designer} will review it and reply with next steps.',hi:'Video ke liye shukriya 🎥 {designer} dekhkar batayengi.'}}],desk:[['Team replies','team']]},
+media_loc:{meta:['WA-15','Location pin','Session'],set:{eh_city:'Faridabad',eh_area:'Sector 86 (from pin)'},m:[{t:{en:'Thanks! 📍 You\'re about 6 km from our studio (sample). Would you like to visit, or shall our architect come to you?',hi:'Shukriya! 📍 Aap studio se lagbhag 6 km door hain (sample). Studio aayenge, ya architect aapke paas aayein?'}}],bf:function(){return [B('Visit the studio','Studio aaunga',st.f.eh_budget?'slots':'q_soc'),B('Home visit','Home visit','far'),B('Call me','Call karein','call_req')]}},
+media_contact:{meta:['WA-15','Contact card','Session'],m:[{t:{en:'Thanks! 👤 Is this a friend we should help, or another number for you?',hi:'Shukriya! 👤 Yeh koi dost hai jinki madad karein, ya aapka doosra number?'}}],b:[B('A friend to refer','Dost hai','ref_saved'),B('My other number','Mera doosra number','alt_saved')]},
+ref_saved:{meta:['WA-15','Referral saved','Session'],set:{tag:'referrer'},m:[{t:{en:'Lovely — we\'ll reach out to them gently and mention you. If they sign, there\'s a gift voucher for you 🎁',hi:'Badhiya — hum unse aaram se sampark karenge aur aapka naam batayenge. Sign karne par aapko gift voucher 🎁'}},{s:'New contact created · source REFERRAL-{name} · consent asked in first message'}]},
+alt_saved:{meta:['WA-15','Alternate number','Session'],set:{alt_phone:'+91 98xxx xxx21'},m:[{t:{en:'Saved as your alternate number ✅',hi:'Aapka doosra number save ho gaya ✅'}}],bf:function(){return RB()}}
+};
+
+var SC=[
+ ['Every message heard · greetings by status',[['New lead · just "hi"','#new|hi'],['New lead · only 👋','#new|👋'],['Left halfway · says "hi"','#mid|hi'],['Visit booked · "hello"','#booked|hello'],['Proposal stage · sends "?"','#proposal|?'],['Active client · "hi"','#client|hi'],['Past client · "hi"','#past|hi'],['Back after 40 days · "hi"','#return|hi'],['Opted out · "hi"','#optout|hi'],['Opted out · any other text','#optout|price?']]],
+ ['Every message heard · call & human',[['"anyone available for a quick call?"','#new|anyone available for a quick call?'],['"available?"','#new|available?'],['"anyone available to talk on call?"','#mid|anyone available to talk on call?'],['"anyone available?"','#new|anyone available?'],['"can someone call me?" after 11 PM','#new|can someone call me?|wa|night'],['Call request on Instagram (no number)','#new|anyone available for a quick call?|ig'],['"I want to talk to a human"','#mid|I want to talk to a human'],['"koi insaan hai? kisi se baat karni hai"','#new|koi insaan hai? kisi se baat karni hai'],['"connect me to your manager"','#booked|connect me to your manager'],['"are you a bot?"','#new|are you a bot?'],['"hello??" while waiting for a person','#waiting|hello??'],['Asks for a human again while waiting','#waiting|talk to a real person please']]],
+ ['Every message heard · questions',[['"phone number?"','#new|phone number?'],['"location?" mid-flow (answers, then resumes)','#mid|location?'],['"office kahan hai?"','#new|office kahan hai?'],['"are you open on Sunday?"','#new|are you open on sunday?'],['"how long will it take?" mid-flow','#mid|how long will it take?'],['"EMI available?"','#new|EMI available?'],['"warranty?"','#new|what about warranty?'],['"do you do painting?"','#new|do you do painting?'],['"only modular kitchen?"','#new|do you do modular kitchen only?'],['"brochure please"','#new|brochure please'],['"my friend referred you"','#new|my friend referred you'],['"wrong number"','#new|wrong number']]],
+ ['Every message heard · short replies & emoji',[['👍 mid-flow (taken as yes)','#mid|👍'],['"ok" at a reminder (confirms)','#booked|ok'],['"2" picks option 2','#mid|2'],['"no" mid-flow','#mid|no'],['❤️ / 🔥','#new|❤️🔥'],['😡 angry emoji','#booked|😡'],['🤔','#new|🤔'],['"thanks"','#booked|thanks'],['"bye"','#mid|bye'],['GIF / sticker','#mid|[gif]']]],
+ ['Every message heard · media & edge cases',[['📷 Photo mid-flow','#mid|[photo]'],['📄 PDF sent','#new|[pdf]'],['🎤 Voice note','#new|[voice]'],['🎥 Video','#new|[video]'],['📍 Location pin','#new|[loc]'],['👤 Contact card','#past|[contact]'],['3 messages at once','#new|burst'],['Same message twice','#mid|price?||price?'],['Long message (a full brief)','#new|long'],['Unclear twice ("asdf", "qwerty")','#mid|asdf||qwerty'],['Abusive message','#booked|this is useless, fraud company']]],
+ ['Free chat',[['Free chat · WhatsApp (status from settings)','free'],['Free chat · Instagram (status from settings)','free_ig']]],
+ ['WhatsApp · full journey',[['WA-1 · "Hi" → qualify → book (try hot, warm, cold)','wa_direct'],['WA-6 · Reminders → walk-in','rem1'],['WA-6 · No-show path','noshow'],['WA-7 · Post-visit → proposal → decision','visited'],['WA-7 · Price doubt → finish levels','d_price'],['WA-10 · Won → updates → handover → review','won'],['WA-8 · Not now → nurture → re-activate','later'],['WA-9 · Lost with reason','lost_reason']]],
+ ['WhatsApp · entry doors',[['Bio link from Instagram','wa_bio'],['WA-2 · Society QR at BPTP Parklands','qr_soc'],['WA-3 · Partner referral','p_ref'],['WA-4 · Missed call','m_call'],['Hinglish lead (mirror)','hi_lead'],['Plot owner · Palwal design-build','pl_plot'],['Renovation · 6-year-old flat','r_reno'],['Commercial · office','c_office']]],
+ ['Instagram',[['IG-1 · Comment "3D" → WhatsApp','ig_cmt'],['IG-2 · DM asking price','ig_dm'],['IG-2 · Voice note → human','ig_voice'],['IG-2 · DM after 11 PM','ig_night'],['IG-3 · Story reply','ig_story'],['IG-4 · Client mentions you','ig_mention'],['IG-5 · New follower','ig_follow'],['IG-6 · Instagram ad','ig_ad'],['24-hour rule · window closes','ig_last']]],
+ ['Meta ads',[['MT-1 · Click-to-WhatsApp (72 h free)','mt_ctwa'],['MT-2 · Lead form · hot lead','mt_form'],['MT-2 · Lead form · no WhatsApp consent','mt_noconsent'],['MT-2 · Lead form · no reply','mt_noreply']]],
+ ['Email',[['EM-1/2 · Guide → 14-day series','em_guide'],['EM-6 · Inbound email','em_inbound'],['EM-4 · Proposal email + FAQ','em_proposal']]],
+ ['Filters & safety',[['Job seeker','f_job'],['Vendor pitch','f_vendor'],['Single wardrobe only','f_small'],['Outside service area','f_out'],['Active client asks for update','f_client'],['Discount ask → human','f_discount'],['Structural question → architect','f_structural'],['Client complaint → founder','f_complaint'],['Bot doesn\'t understand (type "asdf" ×2)','@confused'],['Invalid phone number','@badphone'],['Human misses 5-min SLA','@sla'],['Broadcast · old enquiry ("Who is this?")','bc_old'],['Broadcast · past client referral','bc_past'],['STOP, then "hi"','f_stop']]],
+ ['Seasons',[['Festival-day greeting (uses season setting)','s_quiet'],['Christmas · past clients','s_xmas'],['New Year · nurture email','s_ny'],['Old DIWALI comment in January','s_old'],['Monthly nurture (uses season setting)','monthly'],['Proposal deadline (uses season setting)','deadline']]]
+];
+N.f_structural=N.f_struct;
+
+/* ---------- state ---------- */
+var st,chatEl,ctlEl,logEl,hintEl,busy=0,$=function(i){return document.getElementById(i)};
+function S(){return SEAS[st.season]}
+function reset(){
+ st={season:$('seasonI').value,lang:'en',ch:'wa',node:null,miss:0,phoneTries:0,name:($('nameI').value.trim()||'Neha'),night:$('nightT').checked,f:{eh_lang:'en'},tags:{},stage:'—',score:0,why:'',stopped:false,clock:10,lastUser:-999,ctwa:-999,igLast:-999,lastIntent:'gen',resume:null,waitMsgs:0,lastText:'',svc:'',notes:0,lastButtons:null};
+ if($('forceHi').checked){st.lang='hi';st.f.eh_lang='hi'}
+ chatEl.innerHTML='';ctlEl.innerHTML='';hintEl.textContent='';logEl.innerHTML='';busy=0;renderIns();}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fill(s){var se=S(),L=st.lang;
+ var soc=st.f.eh_society||'your society';
+ var dl=se.deadline?(L==='hi'?('Aapke proposal par '+se.label+' benefit '+se.deadline+' ko khatam ho raha hai.'):('The '+se.label+' benefit on your proposal ends on '+se.deadline+'.')):(L==='hi'?'Aapka price 30 din tak valid hai.':'Your price is valid for 30 days.');
+ return s.replace(/\{greet\}/g,se.greet[L]||se.greet.en).replace(/\{offer\}/g,se.offer[L]||se.offer.en).replace(/\{emoji\}/g,se.emoji).replace(/\{dlline\}/g,dl)
+ .replace(/\{name\}/g,st.name).replace(/\{designer\}/g,DESIGNER).replace(/\{pm\}/g,PM).replace(/\{addr\}/g,ADDR)
+ .replace(/\{society\}/g,soc).replace(/\{socfile\}/g,soc.replace(/[^A-Za-z0-9]+/g,'_')).replace(/\{city\}/g,st.f.eh_city&&st.f.eh_city!=='Other'?st.f.eh_city:'NCR')
+ .replace(/\{value\}/g,st.f.eh_value||'ready').replace(/\{month\}/g,st.f.eh_possession_month||'later').replace(/\{hours\}/g,HOURS).replace(/\{email\}/g,EMAIL).replace(/\{cb\}/g,st.f.eh_callback||'soon')
+ .replace(/\{bhk\}/g,st.f.eh_property||'home').replace(/\{visit\}/g,st.f.eh_visit_at||'Sat 31 Oct · 11:00 AM')
+ .replace(/\{socline\}/g,st.f.eh_society?(L==='hi'?(st.f.eh_society+' — yeh layout hum achhe se jaante hain 🏡\n\n'):(st.f.eh_society+' — a layout we know well 🏡\n\n')):'');}
+function T(x){if(typeof x==='string')return x;return st.lang==='hi'&&x.hi?x.hi:x.en}
+function rich(s){s=esc(fill(s));s=s.replace(/\*([^*\n]+)\*/g,'<b>$1</b>');return s.replace(/\n/g,'<br>')}
+function clk(){var h=st.clock,d=Math.floor(h/24)+1,hr=Math.floor(h%24),mn=Math.round((h%1)*60);return 'Day '+d+', '+(hr<10?'0':'')+hr+':'+(mn<10?'0':'')+mn}
+function now(){if(st.night)return '11:4'+(Math.floor(Math.random()*9))+' PM';var hr=Math.floor(st.clock%24),mn=Math.floor((st.clock%1)*60)+Math.floor(Math.random()*5);return ((hr%12)||12)+':'+(mn<10?'0':'')+mn+(hr<12?' AM':' PM')}
+function scroll(){chatEl.scrollTop=chatEl.scrollHeight}
+function log(t){var li=document.createElement('li');li.innerHTML=t;logEl.insertBefore(li,logEl.firstChild)}
+function skin(){var s=$('scr');s.className='scr '+st.ch;
+ $('tpname').innerHTML=st.ch==='ig'?'edgehomes_architects<small>Designing Dreams, Building Realties</small>':st.ch==='em'?'Mail · Inbox<small>'+esc(st.name.toLowerCase())+'@gmail.com</small>':'Edge Homes<small>Business account · replies in minutes</small>';
+ $('compose').placeholder=st.ch==='ig'?'Message…':st.ch==='em'?'Write a reply…':'Type a message'}
+function bubble(cls,html,meta){var d=document.createElement('div');d.className='bb '+cls;d.innerHTML=html;chatEl.appendChild(d);if(meta&&$('showIds').checked){var c=document.createElement('div');c.className='mtag';c.textContent=meta;chatEl.appendChild(c)}scroll();return d}
+function sys(t){var d=document.createElement('div');d.className='sysm';d.textContent=fill(t);chatEl.appendChild(d);scroll()}
+function typing(cb){var d=document.createElement('div');d.className='bb in typing';d.innerHTML='<i></i><i></i><i></i>';chatEl.appendChild(d);scroll();setTimeout(function(){d.remove();cb()},380)}
+function userBubble(html){st.lastUser=st.clock;if(st.ch==='ig')st.igLast=st.clock;return bubble('out',html+'<span class="ft">'+now()+(st.ch==='wa'?' ✓✓':'')+'</span>')}
+function botText(item,meta){var t=item.t,h;
+ if(t==='@quiet'){t=S().quiet}
+ if(t==='@humanReq')t=st.night?{en:'Of course, {name}. Our team is offline right now (9 PM – 9 AM) 🌙 — {designer} will reply first thing by 10 AM. Want a call-back instead?',hi:'Bilkul, {name}. Team abhi offline hai (9 PM – 9 AM) 🌙 — {designer} subah 10 baje tak reply karengi. Call-back chahiye?'}:{en:'Of course — connecting you to {designer} now. They\'ll reply right here within 5 minutes 🙂',hi:'Bilkul — abhi {designer} se jod rahe hain. Woh yahin 5 minute mein reply karengi 🙂'};
+ if(t==='@callReq')t=st.night?{en:'Our team is offline right now 🌙 Pick a call-back time and {designer} will ring you:',hi:'Team abhi offline hai 🌙 Call-back ka time chunein, {designer} call karengi:'}:{en:'Sure, {name}! 📞 How would you like it?',hi:'Zaroor, {name}! 📞 Kaise chahenge?'};
+ if(t==='@avail')t=st.night?{en:'Our team is offline right now (back at 9 AM) 🌙 I can still help here — or pick a call-back time.',hi:'Team abhi offline hai (9 AM se wapas) 🌙 Main yahin madad kar sakta hoon — ya call-back time chunein.'}:{en:'Yes, we\'re here 🙂 {designer} is online now. Chat here, or would you like a quick call?',hi:'Haan, hum yahin hain 🙂 {designer} abhi online hain. Yahin baat karein ya ek quick call?'};
+ if(t==='@thanks')t=st.stage==='st_visit_booked'?{en:'Anytime, {name}! 😊 See you on {visit}.',hi:'Koi baat nahi, {name}! 😊 {visit} ko milte hain.'}:{en:'Anytime, {name}! 😊 I\'m here whenever you need anything.',hi:'Koi baat nahi, {name}! 😊 Jab bhi zaroorat ho, main yahin hoon.'};
+ if(t==='@services')t=SVCMAP[svcKey(st.svc)]||SVCMAP.other;
+ if(t==='@teamReply'){t={disc:{en:'Hi {name}, {designer} here 👋 Our prices are already set per finish level, so we don\'t discount — but if you sign by {deadline} the season benefit applies, and I can show you the Essential level to bring the number down. Shall I?',hi:'Hi {name}, main {designer} 👋 Hum discount nahi dete, par season benefit milega, aur Essential level se budget kam ho sakta hai. Dikhaun?'},
+  struct:{en:'Hi {name}, {designer} here 👋 Whether a wall can go depends on whether it\'s load-bearing. Our architect will check your structural drawings and confirm before we design around it.',hi:'Hi {name}, main {designer} 👋 Deewar hat sakti hai ya nahi, yeh load-bearing hone par nirbhar hai. Hamare architect structural drawings check karke batayenge.'},
+  complaint:{en:'Hi {name}, this is the founder of Edge Homes. I\'m sorry — you should never have to chase us. Your site team restarts tomorrow at 9 AM; I\'ll send you photos myself by 6 PM.',hi:'Hi {name}, main Edge Homes ka founder. Maafi chahta hoon. Kal 9 AM se kaam dobara shuru hoga; 6 PM tak main khud photos bhejunga.'},
+  gen:{en:'Hi {name}, {designer} here 👋 Happy to help — what would you like to know?',hi:'Hi {name}, main {designer} 👋 Bataiye, kya jaanna hai?'}}[st.lastIntent]||{en:'Hi {name}, {designer} here 👋 How can I help?'}}
+ t=T(t).replace(/\{deadline\}/g,S().deadline||'the end of the month');
+ h='<span>'+rich(t)+'</span>';if(item.sig&&S().sig)h+='<span class="sig">'+S().sig+'</span>';h+='<span class="ft">'+now()+'</span>';bubble('in',h,meta)}
+function emailCard(e,out,meta){var body=out?e.body:T(e.body);var h='<div class="mh"><b>'+esc(fill(e.subj))+'</b>From: '+esc(fill(e.from))+' · '+now()+'</div><span>'+rich(body)+'</span>';bubble(out?'out':'in',h,meta);if(out){st.lastUser=st.clock}}
+function renderItem(item,meta,done){
+ if(item.s){var s=item.s;if(s==='@lostnote')s=(/Price|Timing/.test(st.f.eh_lost_reason||''))?'Tagged st_lost · win-back scheduled at 90 and 180 days':'Tagged st_lost · reason saved · newsletter only';if(s==='@humannote')s='Automation paused · designer notified · 5-minute timer started';sys(s);return done()}
+ if(item.u){var u=item.u==='@igopen'?'Hi Edge Homes! Continue my 3D session ['+(st.f.eh_source||'IG-CMT-3D')+']':item.u;userBubble('<span>'+rich(u)+'</span>');return setTimeout(done,240)}
+ if(item.emailout){emailCard(item.emailout,true,null);return setTimeout(done,260)}
+ if(item.cm){var c=document.createElement('div');c.className='cmts';c.innerHTML='<div class="cmh">Comments · Reel · Mirror mosaic pooja wall</div><div class="cmr"><span class="a2"></span><div><b>'+esc(st.name.toLowerCase())+'.homes</b> '+esc(item.cm)+'<small>now · Reply</small></div></div><div class="cmr rep"><span class="av sm">EH</span><div><b>edgehomes_architects</b> '+esc(st.lang==='hi'?'DM check karein 📩':'Sent you the details in DM 📩')+'<small>now · auto-reply (rotates 5 variants)</small></div></div>';chatEl.appendChild(c);scroll();st.igLast=st.clock;st.lastUser=st.clock;return setTimeout(done,320)}
+ typing(function(){
+  if(item.email){emailCard(item.email,false,meta);if(item.doc)bubble('in','<span class="doc"><i>PDF</i>'+esc(item.doc)+'</span>',null);if(item.img)bubble('in','<span class="media">'+esc(fill(item.img))+'</span>',null)}
+  else if(item.img)bubble('in','<span class="media">'+esc(fill(item.img))+'</span>',null);
+  else if(item.doc)bubble('in','<span class="doc"><i>PDF</i>'+esc(fill(item.doc))+'</span><span class="ft">'+now()+'</span>',null);
+  else if(item.loc)bubble('in','<span class="media loc">📍 Edge Homes studio · location pin</span>',null);
+  else if(item.v)bubble('in','<span class="voice"><span class="pl">▶</span><span class="wv"></span><span>'+item.v+'</span></span><span style="display:block;font-size:11.5px;color:#666;margin-top:6px;font-style:italic">'+rich(T(item.cap))+'</span>',meta);
+  else botText(item,meta);
+  done()})}
+function runItems(items,meta,cb){var i=0;(function nx(){if(i>=items.length)return cb();var it=items[i++];renderItem(it,(it.t||it.v||it.email)?meta:null,nx)})()}
+function applySet(set){for(var k in set){var v=set[k];if(k==='stage')st.stage=v;else if(k==='tag')st.tags[v]=1;else if(k==='score_hot'){}else st.f[k]=v}}
+function computeScore(){var f=st.f,s=0,w=[];
+ var p=f.eh_possession;if(p==='keys'||p==='0-3 mo'){s+=30;w.push('possession +30')}else if(p==='3-6 mo'||p==='reno'){s+=20;w.push('possession +20')}
+ var b=f.eh_budget;if(b==='25 L+'||f.eh_property==='Plot to build'){s+=35;w.push('budget/plot +35')}else if(b==='15-25 L'){s+=30;w.push('budget +30')}else if(b==='8-15 L'){s+=20;w.push('budget +20')}
+ if(CITY.indexOf(f.eh_city)>-1){s+=10;w.push('target city +10')}
+ if(f.plan==='received'){s+=15;w.push('floor plan +15')}
+ if(p&&b&&st.clock-st.qStart<1){s+=5;w.push('answered fast +5')}
+ st.score=Math.min(100,s);st.why=w.join(' · ')||'—';
+ delete st.tags.hot;delete st.tags.warm;delete st.tags.cold;st.tags[st.score>=70?'hot':st.score>=40?'warm':'cold']=1;return st.score}
+function go(id){
+ if(id.charAt(0)==='@')return special(id);
+ var n=N[id];if(!n)return;
+ if(n.season){st.season=n.season;$('seasonI').value=n.season;sys('Season → '+S().label)}
+ st.node=id;st.miss=0;if(RESUMABLE[id])st.resume=id;if(CLEARRES[id])st.resume=null;if(!(n.set&&n.set.tag==='needs_human'))st.waitMsgs=0;
+ if(n.night)st.night=true;
+ if(n.ch&&n.ch!==st.ch){st.ch=n.ch;skin();sys(n.ch==='wa'?'— WhatsApp · +91 98715 22556 —':n.ch==='ig'?'— Instagram DM —':'— Email —')}
+ if(n.lang){st.lang=n.lang;st.f.eh_lang=n.lang}
+ if(n.ctwa)st.ctwa=st.clock;
+ if(id==='q_city'||id==='q_soc'||id==='q_poss'||id==='q_prop')if(st.qStart==null)st.qStart=st.clock;
+ if(n.set)applySet(n.set);
+ if(n.untag)delete st.tags[n.untag];
+ if(n.stop)st.stopped=true;
+ if(n.score){st.qStart=st.clock;computeScore();log('<b>Score</b> '+st.score+' <span>'+st.why+'</span>')}
+ if(n.go&&!n.m){return go(n.go)}
+ var meta=n.meta[1]+' · '+n.meta[2];
+ log('<b>'+n.meta[0]+'</b> '+esc(n.meta[1])+' <span>'+esc(n.meta[2])+'</span>');
+ ctlEl.innerHTML='';busy=1;
+ runItems(n.m||[],meta,function(){busy=0;if(n.go)return go(n.go);controls(n);renderIns()});renderIns()}
+function controls(n){ctlEl.innerHTML='';
+ var bs=n.bf?n.bf():n.b;st.lastButtons=(bs&&bs.length)?bs:null;
+ if(bs){var w=document.createElement('div');w.className=st.ch==='ig'?'qbs':'wbs';bs.forEach(function(b){var e=document.createElement('button');e.textContent=st.lang==='hi'?b.hi:b.en;e.onclick=function(){if(busy)return;choose(b)};w.appendChild(e)});chatEl.appendChild(w);scroll()}
+ var acts=[];if(n.wait&&!st.stopped)acts.push(['⏱ '+n.wait[0],n.wait[1],'t',n.wait[2]]);
+ if(n.desk)n.desk.forEach(function(d){acts.push(['🧑‍💼 '+d[0],d[1],'d',0])});
+ acts.forEach(function(a){var e=document.createElement('button');e.className='act '+a[2];e.textContent=a[0];e.onclick=function(){if(busy)return;if(a[2]==='t'){st.clock+=a[3]||0;sys('⏱ '+a[0].slice(2))}else sys('Team: '+a[0].replace('🧑‍💼 ',''));go(a[1])};ctlEl.appendChild(e)});
+ hintEl.textContent=n.input==='phone'?'Type a phone number — or something wrong.':n.input==='plan'?'Tap "Send floor plan", or type anything to test the bot.':(acts.length?'Use the chat buttons, type anything, or use the time / team actions below.':'Type anything to test the bot, or pick another scenario.')}
+function choose(b,silent){if(!silent)userBubble('<span>'+esc(st.lang==='hi'?b.hi:b.en)+'</span>');if(b.f)applySet(b.f);renderIns();setTimeout(function(){if(b.to)go(b.to)},200)}
+function special(id){
+ if(id==='@score'){computeScore();var t=st.score>=70?'hot':st.score>=40?'warm':'cold';sys('Lead score '+st.score+' → '+t.toUpperCase()+' ('+st.why+')');log('<b>Score</b> '+st.score+' <span>'+t+'</span>');renderIns();return go(t)}
+ if(id==='@plan'){userBubble('<span class="doc"><i>JPG</i>FloorPlan_'+(st.f.eh_society||'flat').replace(/[^A-Za-z0-9]+/g,'_')+'.jpg</span>');st.f.plan='received';st.tags.plan_received=1;var old=st.score;computeScore();sys('Floor plan received · score '+old+' → '+st.score+' · designer prepares 3D');renderIns();return setTimeout(function(){go('slots')},300)}
+ if(id==='@plan_em'){emailCard({subj:'Re: Interiors for my new flat',from:'{name}',body:'Attached — our floor plan. Weekend works for us.'},true,null);bubble('out','<span class="doc"><i>PDF</i>FloorPlan_Sec150.pdf</span>');st.f.plan='received';st.f.eh_city='Noida';st.f.eh_property='3 BHK';st.f.eh_possession='0-3 mo';st.f.eh_budget='8-15 L';computeScore();renderIns();return setTimeout(function(){go('wa_from_em')},300)}
+ if(id==='@resume'){var r=st.resume||(st.ch==='ig'?'ig_menu':'q_city');sys('↩ Back to where we left off');return go(r)}
+ if(id==='@planok'){st.f.plan='received';st.tags.plan_received=1;var o=st.score;computeScore();sys('Floor plan received · score '+o+' → '+st.score+' · designer prepares 3D');renderIns();return go(st.f.eh_budget?'slots':(st.resume&&st.resume!=='slots'?st.resume:'q_city'))}
+ if(id==='@hold'){return st.f.phone?go('wa_reengage'):go('ig_phone')}
+ if(id==='@mirrorprice'){mirrorOn();return go('wa_price')}
+ if(id==='@disc'){st.lastIntent='disc';return go(st.ch==='ig'?'ig_human':'human')}
+ if(id==='@struct'){st.lastIntent='struct';return go(st.ch==='ig'?'ig_human':'human')}
+ if(id==='@complaint'){st.lastIntent='complaint';sys('Complaint → founder within 30 min');return go('human')}
+ if(id==='@confused'){go('wa_direct');setTimeout(function(){hintEl.textContent='Type something random (e.g. "asdf") — then again.'},1400);return}
+ if(id==='@badphone'){return go('ig_cmt')}
+ if(id==='@sla'){st.lastIntent='gen';go('human');setTimeout(function(){hintEl.textContent='Now press "No reply in 5 min".'},1400);return}
+ if(id==='@founder'){sys('Founder alerted: high-value lead');return}
+ var msgs={'@cal':'Adds the visit to the phone calendar','@review':'Opens the Google review box for Edge Homes','@share':'Opens WhatsApp share with a personal invite link (tagged EH-REF)','@reshare':'Story reshared on @edgehomes_architects','@end':'Conversation closed — no further messages','@desk':'Desk notified: pay at studio'};
+ sys(msgs[id]||'Done');renderIns()}
+var HI=/[ऀ-ॿ]|\b(hai|kya|kitn\w*|kaise|chahiye|karna|mujhe|aapka|nahi|haan|theek|batao|bataiye|kab|kahan|lagega|ghar|banwana)\b/i;
+function mirrorOn(){if(st.lang!=='hi'){st.lang='hi';st.f.eh_lang='hi';sys('Hindi / Hinglish detected → eh_lang = hi · Mirror on');renderIns()}}
+function onTextOld(raw){var t=raw.trim();if(!t||busy)return;
+ if(st.ch==='em')emailCard({subj:'Re: Edge Homes',from:'{name}',body:t},true,null);else userBubble('<span>'+esc(t)+'</span>');
+ var n=N[st.node]||{};
+ setTimeout(function(){
+  if(st.stopped&&!/^(hi|hello|hey|namaste)\b/i.test(t)){sys('Opted out — automation stays silent. Only "Hi" restarts the conversation.');return}
+  if(st.stopped){st.stopped=false;delete st.tags.optout;sys('Contact re-subscribed by messaging Hi')}
+  if(/^\s*(stop|unsubscribe)\s*$/i.test(t))return go(st.ch==='ig'?'ig_close':'optout');
+  if(HI.test(t))mirrorOn();
+  if(n.input==='phone'){var d=t.replace(/\D/g,'');if(/^(91)?[6-9]\d{9}$/.test(d)){st.f.phone='+91 '+d.slice(-10);st.tags.wa_optin=1;sys('Phone saved · WhatsApp consent captured');renderIns();return go('ig_hand')}
+   st.phoneTries++;if(st.phoneTries<=2){typing(function(){botText({t:{en:'Hmm, that doesn\'t look like a 10-digit mobile number. Could you try again?',hi:'Yeh 10-digit mobile number nahi lag raha. Ek baar phir try karein?'}},'Safety · invalid phone');log('<b>Safety</b> invalid phone <span>retry '+st.phoneTries+'/2</span>')});return}
+   sys('2 failed tries → continue without phone, stay on Instagram');return go('ig_hand')}
+  if(n.input==='free'){sys('Saved for the designer');return}
+  if(st.ch==='em'){st.lastIntent='gen';sys('Email reply → assigned to designer · 2-hour SLA');return go('em_team')}
+  if(/hiring|job|internship|vacanc|career/i.test(t))return goReply('f_job');
+  if(/supply|supplier|vendor|dealer of|distributor/i.test(t))return goReply('f_vendor');
+  if(/discount|best price|kam kar|negotiat|less price|cheaper/i.test(t)){st.lastIntent='disc';return go(st.ch==='ig'?'ig_human':'human')}
+  if(/wall|column|beam|structur|seepage|leak|crack/i.test(t)){st.lastIntent='struct';return go(st.ch==='ig'?'ig_human':'human')}
+  if(/not started|delay|complain|refund|worst|pathetic/i.test(t)){st.lastIntent='complaint';return go('human')}
+  if(/update|status|my site|progress/i.test(t)&&st.tags.client_active)return go('client_r');
+  if(/only (need|want)|just (a|one)|sirf/i.test(t)&&/wardrobe|bed|table|tv unit|almirah/i.test(t))return goReply('f_small');
+  if(/jaipur|mumbai|bangalore|bengaluru|lucknow|chandigarh|pune|hyderabad|dehradun/i.test(t))return go('f_out_r');
+  if(/vastu|pooja|puja|mandir|temple/i.test(t))return go('r_pooja');
+  if(/office|clinic|shop|showroom|restaurant|commercial/i.test(t))return goReply('c_office');
+  if(/plot|gaj|yard|construct|banwana|build a house/i.test(t))return goReply('pl_plot');
+  if(/not interested|no thanks|nahi chahiye|don'?t want/i.test(t))return go(st.ch==='ig'?'ig_close':'lost_reason');
+  if(/price|cost|kitn|rate|budget|charges|lagega|quote|estimate/i.test(t))return go(st.ch==='ig'?'ig_price':'wa_price');
+  if(/plan|3d|design|visit|book|appointment|meet/i.test(t))return go(st.ch==='ig'?'ig_city':(n.input==='plan'?'slots':'q_city'));
+  if(/snag|inspection|check/i.test(t))return go(st.ch==='ig'?'ig_snag':'snag_book');
+  if(/^(hi|hello|hey|namaste|hii+)\b/i.test(t))return go(st.ch==='ig'?'ig_menu':'wa_direct');
+  st.miss++;
+  if(st.miss===1){typing(function(){botText({t:{en:'Sorry, I didn\'t catch that 🙈 Tap one of the options above — or type *TEAM* to talk to a designer.',hi:'Maaf kijiye, samajh nahi aaya 🙈 Upar se option chunein — ya designer ke liye *TEAM* likhein.'}},'Safety · not understood');log('<b>Safety</b> not understood <span>1/2</span>')});return}
+  sys('2nd unrecognised message → human takeover');st.lastIntent='gen';go(st.ch==='ig'?'ig_human':'human')},260)}
+/* ===================== UNIVERSAL LISTENER ENGINE ===================== */
+var HOURS='Mon–Sat 10 AM – 7 PM, Sunday by appointment (to confirm)', EMAIL='studio email (to confirm)';
+var RESUMABLE={q_city:1,q_soc:1,q_poss:1,q_prop:1,q_budget:1,q_unsure:1,hot:1,warm:1,slots:1,guide_sent:1,ig_menu:1,ig_city:1,ig_poss:1,ig_phone:1,pl_floors:1,pl_budget:1,proposal:1,d_price:1,rem1:1,rem2:1,snag_book:1};
+var CLEARRES={booked:1,won:1,lost:1,optout:1,nurture_set:1,visited:1,hot_call:0};
+var STATUSLABEL={new:'New',mid:'Mid-qualification',booked:'Visit booked',proposal:'Proposal stage',client:'Active client',past:'Past client',nurture:'Nurture',return:'Back after 30+ days',optout:'Opted out'};
+var SVCMAP={
+ paint:{en:'Yes — painting, textures and wall finishes are part of our turnkey work. We do them as part of a room or full-home project rather than painting alone.',hi:'Haan — painting, texture aur wall finish hamare turnkey kaam ka hissa hain, room ya poore ghar ke project ke saath.'},
+ ceiling:{en:'Yes — false ceilings, cove lighting and POP work are included in our turnkey interiors.',hi:'Haan — false ceiling, cove lighting aur POP hamare turnkey interiors mein shaamil hain.'},
+ kitchen:{en:'Yes — modular kitchens are our most-requested work, on their own or with wardrobes. We price it on your actual layout at the studio.',hi:'Haan — modular kitchen hamara sabse popular kaam hai, akela ya wardrobes ke saath. Price aapke layout par studio mein.'},
+ furniture:{en:'Yes — bespoke furniture is designed and built by our own team, usually as part of a room or full-home project.',hi:'Haan — custom furniture hamari team banati hai, aam taur par room ya poore ghar ke saath.'},
+ construction:{en:'Yes — we\'re architects and builders too: plot-to-keys construction at a fixed cost per sq ft.',hi:'Haan — hum architects aur builders bhi hain: plot se chaabi tak construction, fixed per sq ft cost.'},
+ reno:{en:'Yes — renovations are a big part of our work, planned so you can keep living at home where possible.',hi:'Haan — renovation hamara bada kaam hai, aise plan karte hain ki aap ghar mein reh sakein.'},
+ mep:{en:'Yes — flooring, lighting, electrical and plumbing are all handled in-house as part of turnkey projects.',hi:'Haan — flooring, lighting, electrical aur plumbing sab turnkey project mein hum khud karte hain.'},
+ other:{en:'Yes, we can help with that as part of your home project — {designer} can confirm the details.',hi:'Haan, aapke ghar ke project mein yeh ho jaayega — {designer} details confirm karengi.'}};
+function svcKey(s){s=(s||'').toLowerCase();if(/paint/.test(s))return'paint';if(/ceiling|pop/.test(s))return'ceiling';if(/kitchen/.test(s))return'kitchen';if(/furniture|sofa|bed/.test(s))return'furniture';if(/construct/.test(s))return'construction';if(/renovat/.test(s))return'reno';if(/tile|floor|light|electric|plumb/.test(s))return'mep';return'other'}
+function RB(){return st&&st.resume?[B('↩ Continue where we left off','↩ Jahan ruke the wahin se','@resume')]:[]}
+function BOOK(){return st.ch==='ig'?B('Book a 3D session','3D session book karein','ig_city'):B('Book a 3D session','3D session book karein',st.f.eh_budget?'slots':'q_city')}
+function status(prev){if(st.tags.optout||st.stopped)return'optout';if(st.tags.client_active)return'client';if(st.tags.client_past)return'past';var g=st.stage;
+ if(g==='st_proposal'||g==='st_visited')return'proposal';if(g==='st_visit_booked')return'booked';
+ if((g==='st_nurture'||g==='st_lost')&&st.clock-(prev==null?st.lastUser:prev)>=720)return'return';if(g==='st_nurture'||g==='st_lost')return'nurture';
+ if(st.resume)return'mid';return'new'}
+function greet(prev){var s=status(prev);log('<b>Listener</b> greeting <span>status: '+STATUSLABEL[s]+'</span>');
+ return go({new:st.ch==='ig'?'ig_menu':'g_new',mid:'g_back_q',booked:'g_booked',proposal:'g_prop',client:'g_client',past:'g_past',return:'g_return',nurture:'g_return'}[s]||'g_new')}
+var R={
+ stop:/^\s*(stop|unsubscribe|don'?t message( me)?|band karo|mat bhejo)\s*[.!]*\s*$/i,
+ call:/\b(call|calling|ring me|phone me|phone kar|call kar|callback|call back|on (a )?call|quick call|talk on (the )?phone|baat ho sakti|baat kar sakte|phone pe)\b/i,
+ notcall:/\b(called you|i will call|i'?ll call|missed call)\b/i,
+ human:/\b(human|real person|actual person|live person|agent|executive|representative|someone from (your|the) team|speak (to|with) (someone|somebody|a person|your team)|talk (to|with) (someone|somebody|a person|you guys|your team|a human)|available to (talk|chat|speak)|connect me|manager|owner|founder|not a bot|stop (the )?bot|insaan|koi (insaan|banda|aadmi)|kisi se baat|customer care|support team|baat karni hai)\b/i,
+ avail:/^\s*(available|avail|any ?one available|any ?one (there|here|online)|anybody (there|available|online)|is any ?one (there|available|online)|someone (there|available)|are you there|u there|you there|koi hai|online( ho)?|anyone)\s*\?*\s*$/i,
+ chase:/^\s*(\?+|hello+\s*\?+|hi+\s*\?+|hey+\s*\?+|anyone\s*\?+|koi hai\s*\?+|reply\s*\?*|plz reply|please reply)\s*$/i,
+ contact:/\b(phone|contact|mobile|whats ?app|cell)\s*(no|number|num|nmbr|details|nbr)\b|\byour (number|no\.?)\b|\bnumber (do|de|dijiye|please|pls|share)\b|\bemail( id| address)?\b|\bmail id\b/i,
+ loc:/\b(location|locate|address|where (are|is) (you|your|the)|directions?|google map|map link|kahan (hai|ho)|kaha hai|kidhar|reach you|studio kahan|office kahan)\b/i,
+ open:/\b(timings?|working hours|opening hours|closing time|close at|open (today|now|on|tomorrow)|are you open|sunday|kab tak khula|kab khulta)\b/i,
+ bot:/\b(are you|is this|r u|you are|you r) (a |an )?(bot|robot|ai|machine|automated|computer|real)\b|\bbot hai\b|\bis this automated\b/i,
+ timeline:/how (long|much time|many (days|weeks|months))|kitne din|kitna time|time lagega|duration|when can (i|we) (move|shift)|kab tak ho jaayega/i,
+ emi:/\b(emi|loan|finance|financing|instal+ments?|payment (plan|terms|schedule)|advance (kitna|amount|payment))\b/i,
+ warr:/\b(warranty|guarantee|after.?sales|servicing)\b/i,
+ svc:/\b(painting|paint|false ceiling|pop|ceiling|modular kitchen|kitchen only|furniture|sofa|construction|renovat\w*|tiles|flooring|lighting|electrical|plumbing)\b/i,
+ port:/\b(brochure|catalog(ue)?|portfolio|photos|pictures|pics|previous work|past work|your projects|samples?|work done|designs? you)\b/i,
+ ref:/\b(referred|reference|told me about|recommended (you|your)|suggested you|friend (said|told))\b/i,
+ wrong:/wrong number|who is this|who are you|kaun (hai|ho)|aap kaun/i,
+ thanks:/^\s*(thanks?|thank you|thx|ty|thanku|shukriya|dhanyavad|dhanyawad)\b/i,
+ bye:/^\s*(bye|good ?night|gn|see you|ok bye|tata|alvida)\b/i,
+ yes:/^\s*(ok+|okay|k+|yes|yeah|yep|ya|yup|haan|ha|han|ji|ji haan|sure|done|fine|alright|cool|great|perfect|theek|thik|chalo|confirm(ed)?)\s*[.!]*\s*$/i,
+ no:/^\s*(no|nope|nahi|nahin|na|not now|later|abhi nahi|no thanks)\s*[.!]*\s*$/i,
+ abuse:/\b(idiot|stupid|fraud|scam|chor|bakwas|useless|cheat(er|ing)?|fuck|shit)\b/i,
+ greet:/^\s*(hi+|hello+|hey+|hlo|helo|namaste|namaskar|good (morning|afternoon|evening)|hola|yo|sup|hii+)\b/i,
+ job:/hiring|job|internship|vacanc|career/i,vendor:/\bsupply|supplier|vendor|distributor\b/i,disc:/discount|best price|kam kar|negotiat|less price|cheaper|final price/i,
+ struct:/\b(wall|column|beam|structur\w*|seepage|leak\w*|crack\w*)\b/i,compl:/not started|delay|complain|refund|worst|pathetic|no one (is )?(coming|working)/i,
+ update:/update|status|my site|progress/i,small:/only (need|want)|just (a|one)|sirf/i,item:/wardrobe|bed|table|tv unit|almirah/i,
+ city:/jaipur|mumbai|bangalore|bengaluru|lucknow|chandigarh|pune|hyderabad|dehradun|kolkata|chennai/i,pooja:/vastu|pooja|puja|mandir|temple/i,
+ office:/office|clinic|shop|showroom|restaurant|commercial/i,plot:/\bplot|gaj|\byard|build a house|ghar banwana/i,
+ notint:/not interested|nahi chahiye|don'?t want|no need/i,price:/price|cost|kitn|rate|budget|charges|lagega|quote|estimate/i,
+ plan:/\b(plan|3d|design|visit|book|appointment|meet)\b/i,snag:/snag|inspection/i};
+var EMO=/^[\s\u200d\ufe0f\u{1F3FB}-\u{1F3FF}\p{Extended_Pictographic}]+$/u;
+function onText(raw){var t=(raw||'').trim();if(!t)return;if(busy){setTimeout(function(){onText(raw)},350);return}
+ var prev=st.lastUser;
+ if(st.ch==='em')emailCard({subj:'Re: Edge Homes',from:'{name}',body:t},true,null);else userBubble('<span>'+esc(t)+'</span>');
+ var n=N[st.node]||{},low=t.toLowerCase();
+ var repeat=!!st.lastText&&low===st.lastText&&!R.yes.test(t)&&!EMO.test(t)&&!R.greet.test(t);st.lastText=low;
+ setTimeout(function(){route(t,low,n,prev,repeat)},260)}
+function lg(intent){log('<b>Listener</b> '+esc(intent))}
+function route(t,low,n,prev,repeat){
+ if(R.stop.test(t)){lg('stop');return go(st.ch==='ig'?'ig_close':'optout')}
+ if(st.stopped||st.tags.optout){if(R.greet.test(t)||/👋/.test(t)){st.stopped=false;delete st.tags.optout;sys('Opted-out contact messaged first → re-subscribed');lg('re-subscribe');return greet(prev)}sys('Opted out — automation stays silent. A greeting like "Hi" re-subscribes them.');lg('silent (opted out)');return}
+ if(HI.test(t))mirrorOn();
+ var digits=t.replace(/\D/g,'');
+ if(n.input==='phone'&&digits.length>=6){if(/^(91)?[6-9]\d{9}$/.test(digits)){st.f.phone='+91 '+digits.slice(-10);st.tags.wa_optin=1;sys('Phone saved · WhatsApp consent captured');renderIns();return go(st.node==='ig_call'?'call_now':'ig_hand')}
+  st.phoneTries++;if(st.phoneTries<=2){typing(function(){botText({t:{en:'Hmm, that doesn\'t look like a 10-digit mobile number. Could you try again?',hi:'Yeh 10-digit mobile number nahi lag raha. Ek baar phir try karein?'}},'Safety · invalid phone')});lg('invalid phone '+st.phoneTries+'/2');return}
+  sys('2 failed tries → continue without phone');return go(st.node==='ig_call'?'human_req':'ig_hand')}
+ if(st.ch==='em'){st.lastIntent='gen';sys('Email reply → assigned to designer · 2-hour SLA');return go('em_team')}
+ /* 2–3 · call / human, and waiting-for-human */
+ if(R.call.test(t)&&!R.notcall.test(t)){lg('call request');return (st.ch==='ig'&&!st.f.phone)?go('ig_call'):go('call_req')}
+ if(R.human.test(t)){lg('human request');if(st.tags.needs_human){sys('Asked for a person again while waiting → escalated to manager');return go('sla')}st.lastIntent='gen';return go('human_req')}
+ if(st.tags.needs_human){if(R.chase.test(t)||st.waitMsgs>=2||repeat){sys('Chasing while waiting for a person → manager alerted');lg('escalate');return go('sla')}
+  st.waitMsgs++;st.notes++;lg('waiting for human · noted');typing(function(){botText({t:{en:'Noted — {designer} will see this too 🙂',hi:'Noted — {designer} yeh bhi dekhengi 🙂'}},'WA-15 · While waiting');sys('Bot otherwise stays quiet · message added to the designer\'s thread');renderIns()});return}
+ if(R.avail.test(t)){lg('availability');return go('avail')}
+ /* 4 · urgent */
+ if(R.abuse.test(t)||(EMO.test(t)&&/😡|😠|🤬|😤|💢/.test(t))){lg('upset / urgent');st.lastIntent=st.tags.client_active?'complaint':'gen';return go('angry_a')}
+ if(R.compl.test(t)){lg('complaint');st.lastIntent='complaint';sys('Complaint → founder within 30 min');return go('human_req')}
+ if(repeat){sys('Same message twice → a person takes over');lg('repeat');st.lastIntent='gen';return go('human_req')}
+ if(t.split(/\s+/).length>40)return brief(t);
+ /* 7 · short replies, numbers, emoji */
+ if(EMO.test(t))return emoji(t,prev);
+ if(/^\s*\d\s*$/.test(t)&&st.lastButtons&&st.lastButtons[+t-1]){var bn=st.lastButtons[+t-1];sys('Read "'+t.trim()+'" as option '+t.trim()+' → '+(st.lang==='hi'?bn.hi:bn.en));lg('number pick');return choose(bn,true)}
+ if(R.yes.test(t))return yesPath(t);
+ if(R.no.test(t))return noPath();
+ if(R.thanks.test(t)){lg('thanks');return go('thanks_a')}
+ if(R.bye.test(t)){lg('bye');return go('bye_a')}
+ if(R.bot.test(t)){lg('bot question');return go('bot_q')}
+ /* 6 · side questions */
+ if(R.contact.test(t)){lg('contact number');return go('contact_info')}
+ if(R.loc.test(t)){lg('location');return go('loc_info')}
+ if(R.open.test(t)){lg('timings');return go('timings')}
+ if(R.timeline.test(t)){lg('timeline');return go('timeline_a')}
+ if(R.emi.test(t)){lg('payments / EMI');return go('emi_a')}
+ /* 9 · filters & routing */
+ if(R.job.test(t))return goReply('f_job');
+ if(R.vendor.test(t))return goReply('f_vendor');
+ if(R.disc.test(t)){st.lastIntent='disc';lg('discount');return go(st.ch==='ig'?'ig_human':'human')}
+ if(R.struct.test(t)){st.lastIntent='struct';lg('structural');return go(st.ch==='ig'?'ig_human':'human')}
+ if(R.update.test(t)&&st.tags.client_active)return go('g_client');
+ if(R.small.test(t)&&R.item.test(t))return goReply('f_small');
+ if(R.city.test(t))return go('f_out_r');
+ if(R.pooja.test(t))return go('r_pooja');
+ if(R.office.test(t))return goReply('c_office');
+ if(R.plot.test(t))return goReply('pl_plot');
+ if(R.warr.test(t)){lg('warranty');return (st.tags.client_active||st.tags.client_past)?go('warranty_svc'):go('warranty_a')}
+ var sv=low.match(R.svc);if(sv){st.svc=sv[0];lg('services: '+sv[0]);return go('services_a')}
+ if(R.port.test(t)){lg('portfolio');return go('portfolio_a')}
+ if(R.ref.test(t)){lg('referral');return go('referral_a')}
+ if(R.wrong.test(t)){lg('wrong number / who');return go('bc_who')}
+ if(R.notint.test(t))return go(st.ch==='ig'?'ig_close':'lost_reason');
+ if(R.price.test(t)){lg('price');return go('price_a')}
+ if(R.snag.test(t))return go(st.ch==='ig'?'ig_snag':'snag_book');
+ if(R.plan.test(t)){lg('book / 3D');return go(st.ch==='ig'?'ig_city':(st.f.eh_budget?'slots':'q_city'))}
+ if(R.greet.test(t))return greet(prev);
+ /* 10 · fallback ladder */
+ st.miss++;st.notes++;
+ if(st.miss===1){lg('unclear 1/2 · noted');typing(function(){botText({t:{en:'Got it — I\'ve noted that for {designer} 📝 Meanwhile, here\'s where we were 👇',hi:'Samajh gaya — {designer} ke liye note kar liya 📝 Tab tak, hum yahan the 👇'}},'WA-15 · Unclear (1st)');var cur=N[st.node];if(st.lastButtons&&cur){controls(cur)}else{go('help_card')}renderIns()});return}
+ sys('2nd unclear message → a person takes over (never a 3rd "didn\'t understand")');lg('unclear 2/2 → human');st.lastIntent='gen';go(st.ch==='ig'?'ig_human':'human_req')}
+function yesPath(t){var b0=st.lastButtons&&st.lastButtons[0];if(b0&&b0.to&&b0.to.charAt(0)!=='@'){sys('Read "'+t+'" as yes → '+(st.lang==='hi'?b0.hi:b0.en));lg('short yes → main button');return choose(b0,true)}lg('acknowledgement');return go('ack_a')}
+function noPath(){var nb=st.lastButtons&&st.lastButtons.filter(function(b){return /not now|later|abhi nahi|no thanks|nahi|not yet/i.test(b.en+' '+b.hi)})[0];if(nb){sys('Read as "not now" → '+(st.lang==='hi'?nb.hi:nb.en));lg('short no');return choose(nb,true)}
+ if(st.resume&&st.stage!=='st_new'){lg('no → not now');return go('later')}lg('no (nothing pending)');return go('no_a')}
+function emoji(t,prev){
+ if(/👋/.test(t)){lg('emoji 👋 → greeting');return greet(prev)}
+ if(/❤|😍|🔥|👏|🥰|💯|😘|🤩|💛/.test(t)){lg('emoji love');return go('love_a')}
+ if(/👎/.test(t))return noPath();
+ if(/❓|🤔|❔|🧐/.test(t)){lg('emoji question');return go('help_card')}
+ if(/👍|👌|✅|🙏|☺|🙂|😊|🤝|💪/.test(t))return yesPath(t);
+ lg('other emoji');if(st.lastButtons)return yesPath(t);return go('help_card')}
+function brief(t){var f=st.f;CITY.forEach(function(c){if(new RegExp(c,'i').test(t))f.eh_city=c});if(/noida|sector 150/i.test(t))f.eh_city='Noida';
+ var b=t.match(/(\d)\s?bhk/i);if(b)f.eh_property=b[1]+' BHK';var l=t.match(/(\d+)\s?(lakh|lac|l)\b/i);if(l){var v=+l[1];f.eh_budget=v>=25?'25 L+':v>=15?'15-25 L':v>=8?'8-15 L':'5-8 L'}
+ if(/possession|got (the )?keys|just got/i.test(t))f.eh_possession='keys';var m=t.match(/(january|february|march|april|may|june|december|november)/i);if(m)f.eh_possession_month=m[1];
+ st.notes++;computeScore();sys('Long message saved as a brief → '+[f.eh_city,f.eh_property,f.eh_budget,f.eh_possession_month].filter(Boolean).join(' · ')+' · score '+st.score);lg('long message → brief');st.lastIntent='gen';renderIns();return go('brief_h')}
+function onMedia(type){if(busy){setTimeout(function(){onMedia(type)},350);return}var prev=st.lastUser;
+ var lab={photo:'<span class="media" style="min-height:90px">📷 IMG_2041.jpg</span>',pdf:'<span class="doc"><i>PDF</i>Document.pdf</span>',voice:'<span class="voice"><span class="pl">▶</span><span class="wv"></span><span>0:19</span></span>',video:'<span class="media" style="min-height:90px">🎥 VID_0412.mp4</span>',loc:'<span class="media loc">📍 Shared location</span>',contact:'<span class="doc"><i>VCF</i>Contact · Amit Sharma</span>',gif:'<span class="media" style="min-height:70px">GIF · thumbs up</span>'}[type];
+ userBubble(lab);
+ setTimeout(function(){
+  if(st.stopped||st.tags.optout){sys('Opted out — automation stays silent.');return}
+  if(type==='gif')return emoji('👍',prev);
+  if(st.tags.needs_human&&type!=='voice'){st.notes++;sys('Waiting for a person · media added to the designer\'s thread');return}
+  lg('media: '+type);
+  if(type==='voice'){st.lastIntent='gen';return go(st.ch==='ig'?'ig_voice':'media_voice')}
+  go({photo:'media_photo',pdf:'media_pdf',video:'media_video',loc:'media_loc',contact:'media_contact'}[type])},260)}
+function applyStatus(s){var f=st.f,ctx='';
+ if(s==='mid'){f.eh_source='META-CTWA-FBD';f.eh_city='Faridabad';f.eh_society='BPTP Parklands (Sec 77–78)';f.eh_possession='0-3 mo';st.stage='st_qualifying';st.lastUser=st.clock-20;ctx='Context: lead answered city, society and possession yesterday, then went quiet at Q3'}
+ if(s==='booked'||s==='proposal'){f.eh_source='META-CTWA-FBD';f.eh_city='Faridabad';f.eh_society='BPTP Parklands (Sec 77–78)';f.eh_possession='0-3 mo';f.eh_property='3 BHK';f.eh_budget='15-25 L';f.plan='received';f.eh_visit_at='Sat 31 Oct · 11:00 AM';f.eh_designer='Aditi';st.stage='st_visit_booked';st.qStart=st.clock;computeScore();ctx='Context: 3D session booked for Sat 31 Oct, 11 AM'}
+ if(s==='proposal'){st.stage='st_proposal';f.eh_value='₹14.6 L';ctx='Context: visited Sat, proposal ₹14.6 L sent Mon'}
+ if(s==='client'){st.tags.client_active=1;st.stage='st_won';f.eh_city='Gurugram';f.eh_society='Dwarka Expressway society';f.eh_value='₹18.2 L';ctx='Context: active client, week 4 of execution'}
+ if(s==='past'){st.tags.client_past=1;st.stage='st_won';f.eh_city='Faridabad';ctx='Context: project handed over in March'}
+ if(s==='return'){st.stage='st_nurture';f.eh_city='Noida';f.eh_society='Godrej Nest (Sec 150)';f.eh_property='3 BHK';f.eh_possession_month='Jan–Feb 2027';st.clock+=960;st.lastUser=st.clock-960;ctx='Context: in nurture, last message 40 days ago'}
+ if(s==='optout'){st.tags.optout=1;st.stopped=true;ctx='Context: contact replied STOP last month'}
+ if(s==='waiting'){st.tags.needs_human=1;st.stage='st_qualified';f.eh_city='Gurugram';st.node='human';st.lastIntent='gen';ctx='Context: asked a question 3 minutes ago, waiting for a designer'}
+ if(ctx)sys(ctx);renderIns()}
+function sendSeq(arr,i){i=i||0;if(i>=arr.length)return;if(busy){return setTimeout(function(){sendSeq(arr,i)},300)}
+ var x=arr[i];var m=x.match(/^\[(photo|pdf|voice|video|loc|contact|gif)\]$/);if(m)onMedia(m[1]);else onText(x);
+ setTimeout(function(){sendSeq(arr,i+1)},1300)}
+var LONG='Hi, we have just got possession of a 3BHK in Sector 150 Noida, about 1,650 sq ft. We want a modular kitchen, wardrobes in all three bedrooms, a pooja unit and a false ceiling in the living room. My parents will live with us so one room needs to be easy for them to use. Budget is around 15 lakh and we would like to move in by February. Can you help, and what is the process?';
+function startCase(id){var p=id.slice(1).split('|'),s=p[0],text=p[1],ch=p[2]||'wa',night=p[3]==='night';
+ reset();st.qStart=null;st.ch=ch;if(night){st.night=true}skin();applyStatus(s);
+ if(s==='mid'){go(ch==='ig'?'ig_poss':'q_prop')}
+ if(s==='booked'&&text==='ok'){go('rem1')}
+ var run=function(){if(text==='burst'){userBubble('<span>hi</span>');userBubble('<span>price?</span>');userBubble('<span>where is your studio?</span>');sys('3 messages in 10 s → grouped and answered once, in order');lg('burst grouped');return setTimeout(function(){go('burst_a')},300)}
+  if(text==='long')return sendSeq([LONG]);sendSeq(text.split('||'))};
+ var wait=function(){if(busy)return setTimeout(wait,250);setTimeout(run,450)};wait()}
+function startFree(id){reset();st.qStart=null;st.ch=id==='free_ig'?'ig':'wa';skin();applyStatus($('statusI').value);
+ if($('statusI').value==='mid')go(st.ch==='ig'?'ig_poss':'q_prop');
+ sys('Free chat · type anything, or tap a message below');hintEl.textContent='Type anything, or tap a sample message below.';renderIns()}
+function buildChips(){var box=$('chips');var T1=['hi','👋','👍','❤️','😡','2','ok','no','thanks','anyone available for a quick call?','available?','anyone available to talk on call?','anyone available?','phone number?','location?','I want to talk to a human','koi insaan hai?','are you a bot?','call me','kitna lagega?','how long will it take?','EMI available?','warranty?','do you do painting?','brochure please','my friend referred you','wrong number','hello??','bye','asdf','STOP'];
+ var M=[['📷 Photo','photo'],['📄 PDF','pdf'],['🎤 Voice note','voice'],['🎥 Video','video'],['📍 Location pin','loc'],['👤 Contact card','contact'],['GIF / sticker','gif']];
+ T1.forEach(function(x){var b=document.createElement('button');b.className='chip';b.textContent=x;b.onclick=function(){onText(x)};box.appendChild(b)});
+ M.forEach(function(x){var b=document.createElement('button');b.className='chip m';b.textContent=x[0];b.onclick=function(){onMedia(x[1])};box.appendChild(b)})}
+window.addEventListener('DOMContentLoaded',function(){buildChips()});
+
+function goReply(id){var n=N[id];var items=(n.m||[]).filter(function(i){return !i.u});var copy={};for(var k in n)copy[k]=n[k];copy.m=items;N['_r']=copy;N._r.meta=n.meta;return go('_r')}
+function winRow(label,open,txt){return '<div><span>'+label+'</span><b class="'+(open?'open':'shut')+'">'+txt+'</b></div>'}
+function renderIns(){var n=N[st.node];
+ $('iFlow').textContent=n?n.meta[0]:'—';$('iMsg').textContent=n?n.meta[1]:'—';$('iType').textContent=n?n.meta[2]:'—';
+ $('sNum').textContent=st.score;var bar=$('sBar');bar.style.width=st.score+'%';bar.style.background=st.score>=70?'var(--lime)':st.score>=40?'var(--butter)':'var(--quiet)';
+ var tier=$('sTier');var tt=st.tags.hot?'HOT':st.tags.warm?'WARM':st.tags.cold?'COLD':'—';tier.textContent=tt;tier.className='tier '+(st.tags.hot?'hot':st.tags.warm?'warm':'');
+ $('sWhy').textContent=st.why?('Why: '+st.why):'Answer the 4 questions to score the lead.';
+ var igAge=st.clock-st.igLast,waAge=st.clock-st.lastUser,cAge=st.clock-st.ctwa;
+ $('iWin').innerHTML=winRow('Instagram (auto)',igAge<24,igAge<24?('open · '+Math.max(0,(24-igAge)).toFixed(1)+' h left'):'closed')
+  +winRow('Instagram (human agent)',igAge<168,igAge<168?'open · up to 7 days':'closed')
+  +winRow('WhatsApp session',waAge<24,waAge<24?('free-form · '+Math.max(0,(24-waAge)).toFixed(1)+' h left'):'templates only')
+  +winRow('Click-to-WhatsApp free window',cAge<72,cAge<72?('free · '+Math.max(0,(72-cAge)).toFixed(0)+' h left'):'n/a');
+ $('iClock').textContent='Sim time: '+clk()+' · Season: '+S().label;
+ var tags=Object.keys(st.tags);var rows=[['Channel',st.ch==='ig'?'Instagram':st.ch==='em'?'Email':'WhatsApp'],['eh_lang',st.f.eh_lang||'en'],['Stage',st.stage],['Contact status',STATUSLABEL[status(st.lastUser)]||'—'],['Resume point',st.resume],['eh_callback',st.f.eh_callback],['Notes for designer',st.notes?String(st.notes):null],['eh_source',st.f.eh_source],['phone',st.f.phone],['consent',st.f.consent],['eh_city',st.f.eh_city],['eh_society',st.f.eh_society],['eh_possession',st.f.eh_possession],['eh_property',st.f.eh_property],['eh_budget',st.f.eh_budget],['eh_plot · floors',st.f.eh_plot?(st.f.eh_plot+' · '+(st.f.eh_floors||'—')):null],['plan',st.f.plan],['eh_visit_at',st.f.eh_visit_at],['eh_designer',st.f.eh_designer],['eh_value',st.f.eh_value],['eh_possession_month',st.f.eh_possession_month],['eh_lost_reason',st.f.eh_lost_reason],['eh_season',st.season],['Tags',tags.length?tags.join(' · '):'—']];
+ $('iCard').innerHTML=rows.map(function(r){return'<div><span>'+r[0]+'</span><b class="'+(r[1]?'':'nil')+'">'+esc(r[1]||'—')+'</b></div>'}).join('')}
+function presetFor(id){
+ if(['rem1','noshow','visited','d_price','deadline'].indexOf(id)>-1){st.f.eh_city='Faridabad';st.f.eh_society='BPTP Parklands (Sec 77–78)';st.f.eh_possession='0-3 mo';st.f.eh_property='3 BHK';st.f.eh_budget='15-25 L';st.f.plan='received';st.f.eh_visit_at='Sat 31 Oct · 11:00 AM';st.f.eh_designer='Aditi';st.f.eh_source='META-CTWA-FBD';st.stage='st_visit_booked';st.qStart=st.clock;computeScore();}
+ if(['d_price','deadline'].indexOf(id)>-1){st.stage='st_proposal';st.f.eh_value='₹14.6 L'}
+ if(id==='won'){st.f.eh_city='Gurugram';st.f.eh_society='Dwarka Expressway society';st.f.eh_value='₹18.2 L';st.f.eh_source='GOOGLE-GGN'}
+ if(id==='later'||id==='lost_reason'||id==='monthly'){st.f.eh_city='Noida';st.f.eh_society='Godrej Nest (Sec 150)';st.f.eh_property='3 BHK';st.f.eh_source='META-FORM-NOI'}
+ if(id==='ig_last'){st.f.eh_source='IG-CMT-3D';st.f.eh_city='Gurugram';st.igLast=st.clock;st.lastUser=st.clock}
+ if(id==='s_quiet'){st.f.eh_city='Faridabad'}}
+function build(){var list=$('scen');SC.forEach(function(g){var h=document.createElement('div');h.className='sg';h.textContent=g[0];list.appendChild(h);g[1].forEach(function(s){var b=document.createElement('button');b.className='sb';b.textContent=s[0];b.dataset.id=s[1];b.onclick=function(){document.querySelectorAll('.sb').forEach(function(x){x.classList.remove('on')});b.classList.add('on');start(s[1])};list.appendChild(b)})});
+ $('find').addEventListener('input',function(){var q=this.value.toLowerCase();document.querySelectorAll('.sb').forEach(function(b){b.style.display=b.textContent.toLowerCase().indexOf(q)>-1?'':'none'})})}
+function start(id){if(id.charAt(0)==='#')return startCase(id);if(id==='free'||id==='free_ig')return startFree(id);reset();st.qStart=null;var n=N[id]||{};st.ch=n.ch||(id.charAt(0)==='@'?'wa':'wa');if(id==='@badphone'||id==='s_old')st.ch='ig';skin();presetFor(id);go(id)}
+window.addEventListener('DOMContentLoaded',function(){chatEl=$('chat');ctlEl=$('ctl');logEl=$('log');hintEl=$('hint');build();
+ $('send').onclick=function(){onText($('compose').value);$('compose').value=''};
+ $('compose').addEventListener('keydown',function(e){if(e.key==='Enter'){onText($('compose').value);$('compose').value=''}});
+ $('resetB').onclick=function(){var on=document.querySelector('.sb.on');start(on?on.dataset.id:'wa_direct')};
+ $('nameI').addEventListener('change',function(){st.name=this.value.trim()||'Neha'});
+ $('seasonI').addEventListener('change',function(){st.season=this.value;sys('Season → '+S().label+' (new messages use it)');renderIns()});
+ $('nightT').addEventListener('change',function(){st.night=this.checked});
+ $('forceHi').addEventListener('change',function(){st.lang=this.checked?'hi':'en';st.f.eh_lang=st.lang;sys('eh_lang = '+st.lang+' (forced)');renderIns()});
+ $('showIds').addEventListener('change',function(){document.body.classList.toggle('noids',!this.checked)});
+ reset();var first=document.querySelector('.sb');first.classList.add('on');start(first.dataset.id)});
+})();
+</script>
+</body>
+</html>
