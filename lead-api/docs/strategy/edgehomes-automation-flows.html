@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edge Homes — Automation Flows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Barlow+Condensed:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#160C24;--bg2:#1E1230;--plum:#2A1A42;--plum2:#352255;--edge:#47336B;
+  --butter:#f3e3a0;--lime:#c6e35a;--ink:#EEE8F7;--muted:#AFA3C4;--quiet:#7F7298;
+  --rose:#F29C8B;--r:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 Manrope,system-ui,sans-serif}
+a{color:var(--lime)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+h1,h2,h3{margin:0}
+h1,h2{font-family:'Big Shoulders Display',Impact,sans-serif;font-weight:800;text-transform:uppercase;line-height:.92;letter-spacing:.005em}
+h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:var(--butter);margin-bottom:8px}
+.eyebrow,.kick,.lbl,nav.toc a,th,.pill,.tag,.chip,.btn{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+
+/* hero */
+header.hero{position:relative;overflow:hidden;padding:70px 0 54px;background:
+ radial-gradient(520px 520px at 88% 18%,rgba(243,227,160,.18),transparent 60%),
+ radial-gradient(380px 380px at 10% 110%,rgba(198,227,90,.12),transparent 60%),var(--bg)}
+.orb{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6cf,var(--butter) 45%,#d9c26d 100%)}
+.o1{width:220px;height:220px;right:-40px;top:40px;opacity:.9}.o2{width:44px;height:44px;right:290px;top:150px}.o3{width:26px;height:26px;right:120px;top:300px;background:var(--lime)}
+.bars{position:absolute;right:250px;bottom:0;display:flex;gap:14px;align-items:flex-end}
+.bars i{display:block;width:22px;background:var(--lime);opacity:.85}
+.brand{display:flex;align-items:center;gap:14px}
+.mono{width:50px;height:50px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--butter);border-radius:6px;font-family:'Big Shoulders Display';font-weight:900;font-size:24px;color:var(--butter)}
+.brand b{font-family:'Big Shoulders Display';font-weight:800;font-size:24px;letter-spacing:.04em;color:var(--butter)}
+.brand small{display:block;font-family:'Barlow Condensed';font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{display:flex;align-items:center;gap:10px;margin:40px 0 18px;font-size:14px;font-weight:700;letter-spacing:.32em;color:var(--lime)}
+.eyebrow::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--butter)}
+h1{font-size:clamp(60px,10.5vw,138px);color:var(--ink);max-width:900px;position:relative}
+h1 span{color:var(--butter)}h1 em{font-style:normal;color:var(--lime)}
+.sub{font-size:clamp(16px,1.7vw,19px);color:var(--muted);max-width:760px;margin:22px 0 0}
+.stats{display:flex;gap:48px;flex-wrap:wrap;margin-top:40px;padding-top:24px;border-top:1px solid var(--edge);max-width:820px}
+.stats b{display:block;font-family:'Big Shoulders Display';font-weight:800;font-size:54px;line-height:1;color:var(--butter)}
+.stats span{font-family:'Barlow Condensed';font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.meta{margin-top:30px;font-size:13px;color:var(--quiet)}
+.meta b{color:var(--ink)}
+@media(max-width:860px){.bars,.o2,.o3{display:none}.o1{width:140px;height:140px;opacity:.5}}
+
+nav.toc{position:sticky;top:0;z-index:9;background:rgba(22,12,36,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--edge)}
+nav.toc .wrap{display:flex;gap:22px;overflow-x:auto;white-space:nowrap;padding-top:13px;padding-bottom:13px}
+nav.toc a{font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--muted);text-decoration:none}
+nav.toc a:hover{color:var(--butter)}
+
+section{padding:62px 0 50px;border-bottom:1px solid #2a1c40}
+section:nth-of-type(even){background:var(--bg2)}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:1.5px solid var(--butter);padding-bottom:12px;margin-bottom:10px}
+h2{font-size:clamp(34px,4.8vw,56px)}
+.num{color:var(--lime);margin-right:14px}
+.kick{font-size:13px;font-weight:700;letter-spacing:.26em;color:var(--butter);padding-bottom:6px}
+.lead{font-size:16.5px;color:var(--ink);margin:16px 0 26px;max-width:880px}
+.lead b{color:var(--butter)}
+.lbl{font-size:13.5px;font-weight:700;letter-spacing:.24em;color:var(--lime);margin:32px 0 12px}
+
+.grid{display:grid;gap:14px}.grid>*{min-width:0}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--plum);border:1px solid var(--edge);border-radius:var(--r);padding:18px}
+.card.b{border-top:3px solid var(--butter)}.card.l{border-top:3px solid var(--lime)}
+.card.sol{background:var(--butter);color:#24163A;border:0}.card.sol h3{color:#24163A}
+.card.lim{background:var(--lime);color:#1e2a05;border:0}.card.lim h3{color:#1e2a05}
+.card p{margin:0 0 6px}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+
+.tbl{overflow-x:auto;border:1px solid var(--edge);border-radius:var(--r);background:var(--plum)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--edge);vertical-align:top}
+th{background:#120a1e;color:var(--butter);font-size:13px;letter-spacing:.16em;font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+td code,.card code,p code,li code{font-size:12px;background:#120a1e;color:var(--lime);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+.ok{color:var(--lime);font-weight:700}.no{color:var(--rose);font-weight:700}
+
+.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;padding:3px 10px;border-radius:99px;margin:0 4px 4px 0;white-space:nowrap;background:#120a1e;color:var(--butter);border:1px solid var(--edge)}
+.tag.ig{color:#c9b6ff}.tag.wa{color:var(--lime)}.tag.mt{color:var(--butter)}.tag.em{color:#9fd4ff}.tag.g{color:#ffc9a8}.tag.h{color:var(--rose)}
+
+/* flows */
+.flow{background:var(--plum);border:1px solid var(--edge);border-radius:var(--r);padding:18px 20px;margin:0 0 14px}
+.fh{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:12px}
+.fh h3{margin:0}
+.fid{font-family:'Big Shoulders Display';font-weight:800;font-size:28px;color:var(--lime);line-height:1}
+.tr{flex-basis:100%;font-size:13px;color:var(--muted)}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.chain.br{margin-top:9px;padding-left:12px;border-left:2px solid var(--butter)}
+.n{font-size:13px;padding:6px 11px;border-radius:7px;line-height:1.3}
+.n.a{background:#3a2a5c;color:#efe7ff}
+.n.h{background:#5a3a2e;color:#ffe2d6}
+.n.o{background:var(--butter);color:#24163A;font-weight:600}
+.n.g{background:var(--lime);color:#1e2a05;font-weight:600}
+.ar{color:var(--butter);font-weight:800}
+.if{font-size:12.5px;color:var(--lime);font-style:italic}
+.spec{font-size:13.5px;color:var(--muted);margin-top:12px}
+.spec b{color:var(--ink)}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin:0 0 16px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+
+.callout{background:#120a1e;border:1px solid var(--edge);border-left:4px solid var(--lime);border-radius:var(--r);padding:16px 20px;margin:22px 0;font-size:14.5px}
+.callout b{color:var(--butter)}.callout em{color:var(--lime);font-style:normal}
+
+.msg{background:#0f2a1c;border:1px solid #23503a;border-radius:14px 14px 14px 3px;padding:12px 14px;font-size:14px;white-space:pre-line;color:#e7f5ea}
+.msg.ig{background:#24184a;border-color:#3d2c78;color:#ece6ff;border-radius:16px}
+.msg.em{background:#14243a;border-color:#2a4466;color:#e3eefc;border-radius:8px}
+.msg .sig{display:block;margin-top:8px;font-style:italic;color:var(--butter)}
+.msg small{display:block;color:var(--muted);font-size:12px;margin-bottom:6px;font-family:'Barlow Condensed';letter-spacing:.14em;text-transform:uppercase}
+
+/* score */
+.meter{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.meter{grid-template-columns:1fr}}
+.meter div{border-radius:var(--r);padding:16px}
+.meter b{display:block;font-family:'Big Shoulders Display';font-size:40px;line-height:1}
+.hot{background:var(--lime);color:#1e2a05}.warm{background:var(--butter);color:#24163A}.cold{background:var(--plum2);color:var(--ink);border:1px solid var(--edge)}
+
+/* seasons */
+.seasons{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 18px}
+.btn{cursor:pointer;border:1px solid var(--edge);background:var(--plum);color:var(--muted);font-size:14px;font-weight:700;letter-spacing:.14em;padding:9px 16px;border-radius:99px}
+.btn.on{background:var(--butter);color:#24163A;border-color:var(--butter)}
+.spanel{display:none}.spanel.on{display:block}
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:900px){.timeline{grid-template-columns:1fr 1fr}}
+.tl{border-radius:var(--r);padding:14px;background:var(--plum);border:1px solid var(--edge)}
+.tl .d{font-family:'Barlow Condensed';font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);font-weight:700}
+.tl h3{font-family:'Big Shoulders Display';font-size:24px;letter-spacing:.02em;color:var(--butter);margin:4px 0 6px;text-transform:uppercase}
+.tl p{font-size:13px;color:var(--muted);margin:0}
+
+ul.clean,ol.clean{margin:8px 0 0;padding-left:20px}
+ul.clean li,ol.clean li{margin:5px 0}
+ul.clean li::marker,ol.clean li::marker{color:var(--lime)}
+ul.check{list-style:none;padding:0;margin:8px 0 0}
+ul.check li{padding-left:28px;position:relative;margin:7px 0;font-size:14px}
+ul.check li::before{content:"";position:absolute;left:0;top:3px;width:16px;height:16px;border:1.5px solid var(--lime);border-radius:4px}
+
+footer{padding:34px 0 54px;font-size:13px;color:var(--quiet);background:#100819}
+footer b{color:var(--butter);font-family:'Big Shoulders Display';font-size:22px;letter-spacing:.04em;display:block;margin-bottom:6px}
+@media print{nav.toc{display:none}section{page-break-inside:avoid}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <div class="bars"><i style="height:210px"></i><i style="height:160px"></i><i style="height:110px"></i></div>
+  <div class="wrap">
+    <div class="brand"><div class="mono">EH</div><div><b>EDGEHOMES</b><small>Architects · Interiors · Constructions</small></div></div>
+    <div class="eyebrow">Automation Flows · v1.0</div>
+    <h1>Every Chat,<br><span>Filtered</span> &amp; <em>Followed.</em></h1>
+    <p class="sub">The complete automation system for Edge Homes — Instagram, WhatsApp, Meta ads, email and follow-ups — built to sort hundreds of conversations into the few that are ready for a studio visit, and to keep every other lead warm through Diwali, the muhurat season, Christmas and New Year.</p>
+    <div class="stats">
+      <div><b>5</b><span>Channels</span></div>
+      <div><b>32</b><span>Flows</span></div>
+      <div><b>4</b><span>Questions to qualify</span></div>
+      <div><b>5 MIN</b><span>Human reply SLA</span></div>
+    </div>
+    <div class="meta">Prepared by <b>4SYSTMS</b> · Build in ManyChat (Instagram + WhatsApp) with an email tool (Brevo / Mailchimp / Zoho) · WhatsApp +91 98715 22556 · As of 25 Oct 2026</div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#map">01 · Map</a><a href="#entry">02 · Entry points</a><a href="#qualify">03 · Filter &amp; score</a><a href="#listen">03B · Every message</a><a href="#ig">04 · Instagram</a><a href="#wa">05 · WhatsApp</a><a href="#meta">06 · Meta ads</a><a href="#email">07 · Email</a><a href="#follow">08 · Follow-ups</a><a href="#inbox">09 · Many chats</a><a href="#season">10 · Seasons</a><a href="#copy">11 · Copy library</a><a href="#rules">12 · Routing &amp; guardrails</a><a href="#data">13 · Data</a><a href="#go">14 · Go-live</a>
+</div></nav>
+
+<!-- 01 MAP -->
+<section id="map"><div class="wrap">
+  <div class="sh"><h2><span class="num">01</span>The map</h2><span class="kick">Five channels · one desk</span></div>
+  <p class="lead">Every lead, whatever door they use, becomes <b>one contact with a source, a score and a next step</b>. Instagram and ads capture; WhatsApp qualifies and books; email carries long content and seasonal campaigns; people only step in where judgement or money is involved.</p>
+  <div class="grid g4">
+    <div class="card l"><h3>Capture</h3><ul class="clean small"><li>Instagram comments, DMs, stories, ads</li><li>Meta lead forms, click-to-WhatsApp</li><li>Google, website, QR at societies</li><li>Calls, email, referrals</li></ul></div>
+    <div class="card b"><h3>Filter</h3><ul class="clean small"><li>4 button questions</li><li>Lead score 0–100</li><li>Hot / Warm / Cold</li><li>Spam &amp; job filters</li></ul></div>
+    <div class="card l"><h3>Convert</h3><ul class="clean small"><li>Floor plan → 3D studio visit</li><li>Reminders → walk-in</li><li>Proposal → decision</li><li>Booking amount → won</li></ul></div>
+    <div class="card b"><h3>Keep</h3><ul class="clean small"><li>Nurture by possession date</li><li>Seasonal campaigns</li><li>Project updates &amp; handover</li><li>Reviews &amp; referrals</li></ul></div>
+  </div>
+  <div class="callout"><b>The one rule:</b> no contact is ever without a next step. Every contact is always in exactly one stage — <em>new, qualifying, qualified, visit booked, visited, proposal, won, nurture, lost (with reason), opted out</em>. A 9 PM check finds anything that slipped.</div>
+  <div class="legend">
+    <span><i style="background:#3a2a5c"></i>Automation</span>
+    <span><i style="background:#5a3a2e"></i>Human (team)</span>
+    <span><i style="background:var(--butter)"></i>Lead action / outcome</span>
+    <span><i style="background:var(--lime)"></i>Conversion step</span>
+  </div>
+</div></section>
+
+<!-- 02 ENTRY -->
+<section id="entry"><div class="wrap">
+  <div class="sh"><h2><span class="num">02</span>Every entry point</h2><span class="kick">How each door is caught and tagged</span></div>
+  <p class="lead">Each door writes its own <b>source tag</b> the moment the lead arrives, so every walk-in and every signed project can be traced back to the post, ad, society or partner that produced it.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Source</th><th>The person…</th><th>Caught by</th><th>eh_source</th><th>First reply</th><th>Flow</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag ig">Instagram</span></td><td>Comments a keyword (3D, PRICE, SNAG, KITCHEN, POOJA, PLOT, DIWALI)</td><td>Comment trigger</td><td><code>IG-CMT-{keyword}</code></td><td>Public reply + DM with one button</td><td>IG-1</td></tr>
+      <tr><td><span class="tag ig">Instagram</span></td><td>Sends a DM / taps Message</td><td>Default reply (once / 24 h)</td><td><code>IG-DM</code></td><td>Greeting + 4 options</td><td>IG-2</td></tr>
+      <tr><td><span class="tag ig">Instagram</span></td><td>Replies to a story</td><td>Story-reply trigger</td><td><code>IG-STORY-{name}</code></td><td>Thanks + offer</td><td>IG-3</td></tr>
+      <tr><td><span class="tag ig">Instagram</span></td><td>Mentions Edge Homes (client or friend)</td><td>Mention trigger</td><td>—</td><td>Thank-you, no selling</td><td>IG-4</td></tr>
+      <tr><td><span class="tag ig">Instagram</span></td><td>New follower</td><td>Follow trigger (where available) or welcome on first DM</td><td><code>IG-FOLLOW</code></td><td>Soft welcome with guide</td><td>IG-5</td></tr>
+      <tr><td><span class="tag ig">Instagram</span></td><td>Taps bio WhatsApp link</td><td>Pre-filled text "Found you on Instagram"</td><td><code>IG-BIO</code></td><td>Offer + 4 questions</td><td>WA-1</td></tr>
+      <tr><td><span class="tag mt">Meta ads</span></td><td>Instagram ad "Send message"</td><td>Ad trigger, one flow per ad</td><td><code>IG-AD-{ad}</code></td><td>Ad-specific greeting</td><td>IG-6</td></tr>
+      <tr><td><span class="tag mt">Meta ads</span></td><td>Click-to-WhatsApp ad</td><td>Ad referral data + city tag</td><td><code>META-CTWA-{city}</code></td><td>Offer + 4 questions</td><td>MT-1</td></tr>
+      <tr><td><span class="tag mt">Meta ads</span></td><td>Instant lead form</td><td>Form → webhook → ManyChat + email tool</td><td><code>META-FORM-{city}</code></td><td>WhatsApp template in 60 s + email</td><td>MT-2</td></tr>
+      <tr><td><span class="tag g">Google</span></td><td>Search ad / website / Maps WhatsApp link</td><td>Pre-filled text with <code>[EH-G-…]</code> / <code>[EH-WEB]</code> / <code>[EH-GMB]</code></td><td><code>GOOGLE-{city}</code></td><td>Offer + 4 questions</td><td>WA-1</td></tr>
+      <tr><td><span class="tag g">Website</span></td><td>Downloads the cost guide / fills form</td><td>Form with WhatsApp consent → webhook</td><td><code>WEB-GUIDE</code></td><td>Email with guide + WhatsApp template</td><td>EM-1</td></tr>
+      <tr><td><span class="tag wa">WhatsApp</span></td><td>Messages directly</td><td>Default reply</td><td><code>WA-DIRECT</code></td><td>Welcome menu</td><td>WA-1</td></tr>
+      <tr><td><span class="tag wa">WhatsApp</span></td><td>Scans society QR at a camp</td><td>Pre-filled <code>[EH-QR-{society}]</code></td><td><code>QR-{society}</code></td><td>Society-specific welcome</td><td>WA-2</td></tr>
+      <tr><td><span class="tag wa">WhatsApp</span></td><td>Partner referral link</td><td>Pre-filled <code>[EH-P-{name}]</code></td><td><code>PARTNER-{name}</code></td><td>Personal welcome naming partner</td><td>WA-3</td></tr>
+      <tr><td><span class="tag wa">Phone</span></td><td>Missed call on 98715 22556</td><td>Call provider webhook / hourly check</td><td><code>MISSED-CALL</code></td><td>Template in 60 s + call-back</td><td>WA-4</td></tr>
+      <tr><td><span class="tag em">Email</span></td><td>Writes to the studio email</td><td>Mailbox auto-responder</td><td><code>EMAIL</code></td><td>Auto-reply with WhatsApp link</td><td>EM-6</td></tr>
+      <tr><td><span class="tag h">Broadcast</span></td><td>Past client / old enquiry (with consent)</td><td>CSV import with segment</td><td><code>BC-{segment}</code></td><td>Marketing template</td><td>WA-12</td></tr>
+    </tbody></table></div>
+</div></section>
+
+<!-- 03 QUALIFY -->
+<section id="qualify"><div class="wrap">
+  <div class="sh"><h2><span class="num">03</span>Filter &amp; score</h2><span class="kick">Many chats in · few studio visits out</span></div>
+  <p class="lead">Four tap-to-answer questions and two signals give every lead a <b>score from 0 to 100</b>. The score decides who gets a designer call in 15 minutes, who books themselves, and who goes to nurture — so the team only spends time on chats that can become projects.</p>
+  <div class="grid g2">
+    <div class="card l"><h3>The 4 questions (buttons, never typing)</h3><ol class="clean">
+      <li><b>City &amp; society</b> — Faridabad / Gurugram / Noida / Palwal / Other → society list</li>
+      <li><b>Possession</b> — Keys in hand / Within 3 months / 3–6 months / Later / Renovating my home</li>
+      <li><b>Property</b> — 2 BHK / 3 BHK / 4 BHK+ / Builder floor / Villa / Plot to build / Office</li>
+      <li><b>Budget</b> — ₹5–8 L / ₹8–15 L / ₹15–25 L / ₹25 L+ / Not sure yet</li>
+    </ol><p class="small muted" style="margin-top:10px">"Not sure yet" opens a mini price card by BHK, then asks again — budget is never left blank.</p></div>
+    <div class="card b"><h3>Score card</h3><div class="tbl" style="border:0;background:none"><table>
+      <tbody>
+        <tr><td>Keys in hand / within 3 months</td><td class="r">+30</td></tr>
+        <tr><td>3–6 months · Renovating</td><td class="r">+20</td></tr>
+        <tr><td>Budget ₹25 L+ · Plot to build</td><td class="r">+35</td></tr>
+        <tr><td>Budget ₹15–25 L</td><td class="r">+30</td></tr>
+        <tr><td>Budget ₹8–15 L</td><td class="r">+20</td></tr>
+        <tr><td>Target city (Fbd / Ggn / Noida / Palwal)</td><td class="r">+10</td></tr>
+        <tr><td>Floor plan sent</td><td class="r">+15</td></tr>
+        <tr><td>Answered all 4 within 1 hour</td><td class="r">+5</td></tr>
+        <tr><td>Budget ₹5–8 L · Possession "Later"</td><td class="r">0</td></tr>
+      </tbody></table></div></div>
+  </div>
+  <div class="lbl">What each score band triggers</div>
+  <div class="meter">
+    <div class="hot"><b>HOT · 70+</b>Tag <code style="background:#1e2a05;color:var(--lime)">hot</code>. Designer calls within 15 min (9 AM–9 PM). Two studio slots offered at once. Founder alerted for ₹25 L+ or plots.</div>
+    <div class="warm"><b>WARM · 40–69</b>Self-booking: floor plan request → slot picker. Cost guide sent. Designer call within 24 h if not booked.</div>
+    <div class="cold"><b>COLD · &lt;40</b>Guide + monthly nurture by possession month. Re-scored automatically when they reply, send a plan or their possession date nears.</div>
+  </div>
+  <div class="lbl">Filters that run before scoring</div>
+  <div class="tbl"><table><thead><tr><th>If the chat…</th><th>Example</th><th>Goes to</th><th>Tag</th></tr></thead><tbody>
+    <tr><td>asks for a job / internship</td><td>"Hiring site supervisors?"</td><td>Careers reply with email; no sales flows</td><td><code>careers</code></td></tr>
+    <tr><td>is a vendor / supplier pitch</td><td>"We supply laminates"</td><td>Vendor reply with email; no sales flows</td><td><code>vendor</code></td></tr>
+    <tr><td>wants a single item only</td><td>"Only need a wardrobe"</td><td>Small-works reply: minimum project size; offer full kitchen + wardrobe package</td><td><code>small_scope</code></td></tr>
+    <tr><td>is outside service area</td><td>"Project in Jaipur"</td><td>Polite decline or architecture-only consultation</td><td><code>out_of_area</code></td></tr>
+    <tr><td>is an existing client</td><td>"Update on my site?"</td><td>Client care flow (WA-11) — never the sales pitch</td><td><code>client_active</code></td></tr>
+    <tr><td>is spam / unclear twice</td><td>"asdf", random links</td><td>One fallback, then human or close</td><td><code>spam</code></td></tr>
+  </tbody></table></div>
+</div></section>
+
+<!-- 03B LISTENER -->
+<section id="listen"><div class="wrap">
+  <div class="sh"><h2><span class="num">03B</span>Every message heard</h2><span class="kick">The universal listener · no lead missed</span></div>
+  <p class="lead">Before any menu, one <b>universal listener</b> reads every incoming message — words, emoji, a number, a photo, a voice note, a location pin — checks <b>who the contact is and where they are in the flow</b>, answers <i>that</i>, and brings them back to their next step. Nothing is ignored, nothing loops: <b>the second miss always goes to a person.</b></p>
+
+  <div class="lbl">Priority stack · checked top to bottom on every message</div>
+  <div class="tbl"><table><thead><tr><th>#</th><th>Check</th><th>What happens</th></tr></thead><tbody>
+    <tr><td>1</td><td>STOP / unsubscribe / "don't message"</td><td>Opt-out, all sequences cancelled</td></tr>
+    <tr><td>2</td><td>Already waiting for a person?</td><td>First message: "Noted — {designer} will see this too." A "?" or "hello??" while waiting escalates to the manager</td></tr>
+    <tr><td>3</td><td>Asks for a human or a call — any phrasing</td><td>Immediate hand-off or call options; bot never argues or re-asks</td></tr>
+    <tr><td>4</td><td>Urgent: complaint, angry emoji, safety words</td><td>Apology + founder / designer within 30 min</td></tr>
+    <tr><td>5</td><td>Media: photo, PDF, voice, video, location pin, contact card</td><td>Handled by type (table below)</td></tr>
+    <tr><td>6</td><td>Side question: price, location, timings, number, timeline, EMI, warranty, services, portfolio</td><td>Answer it, then <em>"↩ Continue where we left off"</em></td></tr>
+    <tr><td>7</td><td>Short reply: ok / yes / no / 👍 / a number</td><td>Applied to the step they are on</td></tr>
+    <tr><td>8</td><td>Greeting (hi, hello, 👋, namaste)</td><td>Reply by contact status (table below)</td></tr>
+    <tr><td>9</td><td>Filters: job, vendor, out of area, wrong number</td><td>Their own replies, no sales flow</td></tr>
+    <tr><td>10</td><td>Still unclear</td><td>Miss 1: "Noted for {designer}" + re-show the step · Miss 2: person takes over</td></tr>
+  </tbody></table></div>
+
+  <div class="lbl">Same "hi", different person · greeting by contact status</div>
+  <div class="tbl"><table><thead><tr><th>Contact is…</th><th>Sends "hi", 👋, "?" or anything vague</th><th>Buttons</th></tr></thead><tbody>
+    <tr><td>Brand new</td><td>Welcome + season offer + 4 taps</td><td>Start · Prices · Talk to a designer · Call me</td></tr>
+    <tr><td>Mid-qualification (left halfway)</td><td>"Welcome back, {name}! You were 2 taps from your 3D session."</td><td>Continue · Start over · Talk to a designer</td></tr>
+    <tr><td>Visit booked</td><td>"Your 3D session is on {date} with {designer}."</td><td>Directions · Change time · Ask a question</td></tr>
+    <tr><td>Visited / proposal stage</td><td>"{designer} has your proposal — want to go through it?"</td><td>Call me · I have a question · I've decided</td></tr>
+    <tr><td>Active client</td><td>Latest site photos + next milestone; PM notified</td><td>Talk to my PM · Payment schedule</td></tr>
+    <tr><td>Past client</td><td>"Lovely to hear from you! How's the home?"</td><td>New project · Service / warranty · Refer a friend</td></tr>
+    <tr><td>Nurture / lost, back after 30+ days</td><td>"Welcome back! Last time you were planning for {month}. Still on?"</td><td>Plan now · Not yet · Something changed</td></tr>
+    <tr><td>Opted out</td><td>Re-subscribed, then the greeting for their status</td><td>—</td></tr>
+    <tr><td>Wrong number / invalid</td><td>Nothing sent</td><td>—</td></tr>
+  </tbody></table></div>
+
+  <div class="lbl">Intent catalogue · how people actually write</div>
+  <div class="tbl"><table><thead><tr><th>Intent</th><th>They might write</th><th>Reply (gist)</th><th>Next step</th></tr></thead><tbody>
+    <tr><td><b>Human</b></td><td>talk to a human · real person · agent · executive · someone from your team · can I speak to someone · manager / owner · not a bot · stop the bot · koi insaan hai? · kisi se baat karni hai</td><td>"Of course — connecting you to {designer} now. They'll reply here within 5 minutes." Bot pauses</td><td>Human inbox · 5-min timer · "Prefer a call?" button</td></tr>
+    <tr><td><b>Call request</b></td><td>anyone available for a quick call? · anyone available to talk on call? · can you call me · call me · call back · ring me · call pe baat ho sakti hai? · phone kar do</td><td>9 AM–9 PM: "Sure! 📞 Call you now (within 10 min), pick a time, or call us on 98715 22556." After hours: call-back time picker</td><td>Call task, 10-min target · missed → retry + WhatsApp</td></tr>
+    <tr><td><b>Availability</b></td><td>available? · anyone available? · anyone there? · hello?? · are you there · koi hai? · online ho?</td><td>"Yes, we're here 🙂 {designer} is online. Chat here or prefer a call?" Offline: hours + call-back picker</td><td>Chat · Call me · Book 3D session</td></tr>
+    <tr><td><b>Contact number</b></td><td>phone number? · your number · contact no · mobile number · WhatsApp number · email id · number do</td><td>Contact card: 📞 +91 98715 22556 · ✉️ studio email · 🌐 site · hours</td><td>Call me · Location · Book visit</td></tr>
+    <tr><td><b>Location</b></td><td>location? · address · where is your studio/office · directions · map · office kahan hai · near me?</td><td>📍 Map pin + address + parking + visiting hours</td><td>Book a visit · Call me · Home visit if far</td></tr>
+    <tr><td><b>Timings</b></td><td>open today? · Sunday open? · timings · what time do you close</td><td>Studio hours + chat hours (9 AM–9 PM)</td><td>Book a visit</td></tr>
+    <tr><td><b>Bot question</b></td><td>are you a bot? · is this automated? · real person?</td><td>Honest: "I'm Edge Homes' assistant — a designer is one tap away."</td><td>Talk to a person · Continue</td></tr>
+    <tr><td><b>Price</b></td><td>price · cost · rate · kitna lagega · estimate · quote · budget</td><td>Price bands by BHK</td><td>Exact price for my plan · Resume</td></tr>
+    <tr><td><b>Timeline</b></td><td>how long · kitne din · time lagega · when can I move in</td><td>Design 1–6 weeks, execution 7–16; 2 BHK 45–90 days</td><td>Plan to my muhurat · Resume</td></tr>
+    <tr><td><b>EMI / payment</b></td><td>EMI · loan · installments · payment plan · advance kitna</td><td>Milestone-linked schedule; financing questions go to the designer</td><td>Designer · Resume</td></tr>
+    <tr><td><b>Warranty</b></td><td>warranty · guarantee · after-sales · service</td><td>1-year warranty, care guide; service requests for clients go to PM</td><td>Resume / PM</td></tr>
+    <tr><td><b>Services</b></td><td>do you do painting / false ceiling / kitchen only / furniture / construction / renovation / office</td><td>Yes / package answer; single items → minimum-scope reply</td><td>Matching flow</td></tr>
+    <tr><td><b>Portfolio</b></td><td>brochure · catalogue · photos · previous work · projects · sample</td><td>Gallery by their city + PDF</td><td>3D of my flat</td></tr>
+    <tr><td><b>Referral</b></td><td>my friend referred me · X told me about you</td><td>Warm welcome naming the referrer if known</td><td>Qualify</td></tr>
+    <tr><td><b>Wrong number</b></td><td>wrong number · who is this · kaun?</td><td>Explain or apologise</td><td>Offer / stop / remove</td></tr>
+    <tr><td><b>Thanks / bye</b></td><td>thanks · thank you · shukriya · bye · good night</td><td>"Anytime, {name}!" + reminder of their next step</td><td>Conversation stays open</td></tr>
+    <tr><td><b>Abuse / off-topic</b></td><td>insults · spam links · cricket score</td><td>Polite boundary / gentle redirect</td><td>Human review if repeated</td></tr>
+  </tbody></table></div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="tbl"><table><thead><tr><th>Emoji / short reply</th><th>Read as</th></tr></thead><tbody>
+      <tr><td>👍 👌 ✅ 🙏 · ok · yes · haan · done · sure</td><td>Yes to the step's main button</td></tr>
+      <tr><td>👎 · no · nahi · not now</td><td>"Not now" path for that step</td></tr>
+      <tr><td>❤️ 😍 🔥 👏</td><td>Thanks + nudge to 3D</td></tr>
+      <tr><td>😡 😠 🤬</td><td>Apology + human priority</td></tr>
+      <tr><td>👋</td><td>Greeting by status</td></tr>
+      <tr><td>❓ 🤔 · "?" · "hmm"</td><td>Help card with 4 options</td></tr>
+      <tr><td>1, 2, 3…</td><td>Picks that option from the last menu</td></tr>
+      <tr><td>Sticker / GIF</td><td>👍 if a question is pending, else greeting</td></tr>
+    </tbody></table></div>
+    <div class="tbl"><table><thead><tr><th>Media</th><th>Handled as</th></tr></thead><tbody>
+      <tr><td>📷 Photo</td><td>"Floor plan or site photo?" → plan scores +15 / site photo to designer</td></tr>
+      <tr><td>📄 PDF</td><td>Plan · builder's handover sheet (→ snag check) · another designer's quote (→ designer compares)</td></tr>
+      <tr><td>🎤 Voice note</td><td>Human within 5 min (transcribe where available)</td></tr>
+      <tr><td>🎥 Video</td><td>Designer reviews, replies with next step</td></tr>
+      <tr><td>📍 Location pin</td><td>Sets city, offers nearest live site or home visit</td></tr>
+      <tr><td>👤 Contact card</td><td>"A friend to refer, or your other number?"</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="flow" style="margin-top:16px"><div class="fh"><span class="fid">WA-15</span><h3>Universal listener</h3><span class="tr">Default reply + "not matched" branch of every user-input step, all channels</span></div>
+    <div class="chain"><span class="n o">Any message</span><span class="ar">→</span><span class="n a">Stop? · Waiting for human? · Human / call?</span><span class="ar">→</span><span class="n a">Media? · Side question? · Short reply?</span><span class="ar">→</span><span class="n a">Greeting by status</span><span class="ar">→</span><span class="n g">Relevant reply + next step</span></div>
+    <div class="chain br"><span class="if">Side question mid-flow</span><span class="ar">→</span><span class="n a">Answer</span><span class="ar">→</span><span class="n a">"↩ Continue where we left off"</span></div>
+    <div class="chain br"><span class="if">Unclear</span><span class="ar">→</span><span class="n a">Miss 1: note for designer + step again</span><span class="ar">→</span><span class="n h">Miss 2: person takes over</span></div></div>
+  <div class="flow"><div class="fh"><span class="fid">WA-16</span><h3>Call request</h3><span class="tr">"anyone available for a quick call?", "call me", "baat ho sakti hai?"</span></div>
+    <div class="chain"><span class="n o">Asks for a call</span><span class="ar">→</span><span class="n a">Phone known? (Instagram: ask number)</span><span class="ar">→</span><span class="n a">Call now · Pick a time · Call us</span><span class="ar">→</span><span class="n h">Designer calls within 10 min</span><span class="ar">→</span><span class="n g">Qualify on call → booking template</span></div>
+    <div class="chain br"><span class="if">9 PM – 9 AM</span><span class="ar">→</span><span class="n a">Call-back picker: 10 AM · 12 PM · 6 PM</span><span class="ar">→</span><span class="n h">Morning call</span></div>
+    <div class="chain br"><span class="if">Call missed</span><span class="ar">→</span><span class="n a">"Tried calling you — when's a good time?"</span><span class="ar">→</span><span class="n h">Second try</span></div></div>
+  <div class="flow"><div class="fh"><span class="fid">WA-17</span><h3>Location, contact, timings</h3><span class="tr">"location?", "phone number?", "open today?"</span></div>
+    <div class="chain"><span class="n o">Asks</span><span class="ar">→</span><span class="n a">Pin / contact card / hours</span><span class="ar">→</span><span class="n g">Book a visit</span><span class="ar">·</span><span class="n a">Call me</span><span class="ar">·</span><span class="n a">Too far → live site / home visit</span></div></div>
+
+  <div class="grid g3">
+    <div class="card l"><h3>Burst rule</h3><p class="small">Three messages in 10 seconds ("hi" / "price?" / "location?") are grouped and answered once, in order — never three separate menus.</p></div>
+    <div class="card b"><h3>Repeat rule</h3><p class="small">The same message sent twice, or "hello??" after a reply, means we missed something — a person takes over.</p></div>
+    <div class="card l"><h3>Long message rule</h3><p class="small">Anything over ~40 words is a brief, not a keyword: saved to the contact and handed to a designer with a summary.</p></div>
+    <div class="card b"><h3>Never dead-end</h3><p class="small">Every reply ends with a button, a question or a named person. No "I didn't understand" twice.</p></div>
+    <div class="card l"><h3>After hours</h3><p class="small">9 PM – 9 AM: answers still go out; calls and human requests get a call-back time picker and a 10 AM promise.</p></div>
+    <div class="card b"><h3>Build in ManyChat</h3><p class="small">Default reply → router flow; keyword rules ("contains") for each intent list; conditions on stage tags; every user-input block's "not matched" path → router. Confirm AI-intent options in your ManyChat plan.</p></div>
+  </div>
+</div></section>
+
+<!-- 04 INSTAGRAM -->
+<section id="ig"><div class="wrap">
+  <div class="sh"><h2><span class="num">04</span>Instagram flows</h2><span class="kick">The 24-hour rule</span></div>
+  <p class="lead">Instagram lets the business message only within <b>24 hours of the person's last message</b> (a team member can reply up to 7 days with the human-agent tag), and there are no templates. Every Instagram flow therefore has one job: <b>get the WhatsApp tap or the phone number inside that window.</b></p>
+
+  <div class="flow"><div class="fh"><span class="fid">IG-1</span><h3>Comment keyword</h3><span class="tr">Any post or reel · keywords 3D, PRICE, SNAG, KITCHEN, POOJA, PLOT + seasonal (DIWALI, XMAS, NEWYEAR)</span></div>
+    <div class="chain"><span class="n o">Comments "3D"</span><span class="ar">→</span><span class="n a">Public reply (5 rotating variants)</span><span class="ar">→</span><span class="n a">DM + one button</span><span class="ar">→</span><span class="n a">Menu: 3D of my flat · Prices · Snag check · See projects</span><span class="ar">→</span><span class="n a">City + possession</span><span class="ar">→</span><span class="n a">Phone with consent</span><span class="ar">→</span><span class="n g">Continue on WhatsApp</span></div>
+    <div class="chain br"><span class="if">No button tap</span><span class="ar">→</span><span class="n a">Nothing more allowed → comment-only contact; next touch restarts</span></div>
+    <div class="chain br"><span class="if">Tapped, no WhatsApp in 30 min</span><span class="ar">→</span><span class="n a">One nudge</span><span class="ar">→</span><span class="if">+22 h</span><span class="ar">→</span><span class="n a">Last chance: "Hold a studio slot this week?"</span></div>
+    <div class="chain br"><span class="if">Wrong phone ×2</span><span class="ar">→</span><span class="n a">Continue without phone, keep in Instagram</span></div>
+    <div class="spec"><b>Keyword → answer:</b> PRICE → price card by BHK · KITCHEN → kitchen reel + price band · POOJA → pooja-room / feature-wall gallery · PLOT → design-build package · SNAG → snag-check sign-up.</div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">IG-2</span><h3>New DM / Message button</h3><span class="tr">Default reply, once per 24 h, plus keyword rules</span></div>
+    <div class="chain"><span class="n o">"Hi, what's the cost for 3BHK?"</span><span class="ar">→</span><span class="n a">Routing rules read the words</span><span class="ar">→</span><span class="n a">Answer what they asked (price band)</span><span class="ar">→</span><span class="n a">4 questions</span><span class="ar">→</span><span class="n g">WhatsApp / book visit</span></div>
+    <div class="chain br"><span class="if">Voice note · photo of plan · long message</span><span class="ar">→</span><span class="n a">"A designer will reply here shortly"</span><span class="ar">→</span><span class="n h">Team replies within 15 min, signed</span></div>
+    <div class="chain br"><span class="if">9 PM – 9 AM</span><span class="ar">→</span><span class="n a">Night reply + WhatsApp booking link</span><span class="ar">→</span><span class="n h">Morning reply by 10 AM</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">IG-3 · 4 · 5</span><h3>Story reply · mention · new follower</h3><span class="tr">Story-reply, mention and follow triggers</span></div>
+    <div class="chain"><span class="n o">Replies 🔥 to a project story</span><span class="ar">→</span><span class="n a">Thanks + "Want this for your home?"</span><span class="ar">→</span><span class="n a">3D of my flat · Prices</span><span class="ar">→</span><span class="n g">WhatsApp</span></div>
+    <div class="chain br"><span class="if">Client mentions Edge Homes</span><span class="ar">→</span><span class="n a">Thank-you, no selling</span><span class="ar">→</span><span class="n h">Team reshares</span><span class="ar">→</span><span class="n a">Day 7: referral offer</span></div>
+    <div class="chain br"><span class="if">New follower</span><span class="ar">→</span><span class="n a">Soft welcome: "Taking possession soon? Free 2026 cost guide"</span><span class="ar">→</span><span class="if">taps</span><span class="ar">→</span><span class="n a">IG-1 menu</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">IG-6</span><h3>Instagram ad → DM</h3><span class="tr">One flow per ad · inf. ad name in source</span></div>
+    <div class="chain"><span class="n o">Taps "Send message"</span><span class="ar">→</span><span class="n a">Ad-specific greeting (same angle as the ad)</span><span class="ar">→</span><span class="n a">City + possession</span><span class="ar">→</span><span class="n a">Phone</span><span class="ar">→</span><span class="n g">WhatsApp qualify (WA-1 step 3)</span></div></div>
+
+  <div class="tbl"><table><thead><tr><th>When</th><th>Instagram follow-up</th><th>Allowed?</th><th>If it fails</th></tr></thead><tbody>
+    <tr><td>0 min</td><td>Automatic reply to comment / DM</td><td class="ok">Yes</td><td>—</td></tr>
+    <tr><td>+30 min</td><td>One nudge if WhatsApp not tapped</td><td class="ok">Yes</td><td>Wait for 22 h</td></tr>
+    <tr><td>+22 h</td><td>Last automatic message</td><td class="ok">Yes</td><td>Window closes</td></tr>
+    <tr><td>Up to 7 days</td><td>Team member answers an open question</td><td class="ok">Yes (human agent)</td><td>Close the question</td></tr>
+    <tr><td>After 24 h</td><td>Any automatic Instagram message</td><td class="no">No</td><td>Phone given → WhatsApp template · no phone → wait for next comment</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<!-- 05 WHATSAPP -->
+<section id="wa"><div class="wrap">
+  <div class="sh"><h2><span class="num">05</span>WhatsApp flows</h2><span class="kick">Where chats become walk-ins</span></div>
+  <p class="lead">WhatsApp carries the lead from first question to signed project. Inside 24 hours of their last message any message is free-form; after that only <b>approved templates</b> (Utility for bookings and updates, Marketing for offers) can be sent.</p>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-1</span><h3>Welcome → qualify → floor plan</h3><span class="tr">Default reply, bio link, Google, website, CTWA ads</span></div>
+    <div class="chain"><span class="n o">"Hi"</span><span class="ar">→</span><span class="n a">Known contact?</span><span class="ar">→</span><span class="n a">Language mirror (English / Hinglish)</span><span class="ar">→</span><span class="n a">Welcome + season offer</span><span class="ar">→</span><span class="n a">4 questions</span><span class="ar">→</span><span class="n a">Score</span><span class="ar">→</span><span class="n a">"Send your floor plan"</span><span class="ar">→</span><span class="n g">Studio slot picker</span></div>
+    <div class="chain br"><span class="if">Known: active client</span><span class="ar">→</span><span class="n a">Client care (WA-11)</span><span class="if">· Visit booked</span><span class="ar">→</span><span class="n a">Their visit details</span><span class="if">· Proposal stage</span><span class="ar">→</span><span class="n a">Designer notified</span></div>
+    <div class="chain br"><span class="if">No plan yet</span><span class="ar">→</span><span class="n a">"Builder's brochure page is fine" / "We'll measure on site"</span><span class="ar">→</span><span class="n a">Book anyway</span></div>
+    <div class="chain br"><span class="if">Unclear ×2</span><span class="ar">→</span><span class="n h">Human takeover</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-2 · 3 · 4</span><h3>Society QR · partner referral · missed call</h3><span class="tr">Pre-filled tags and call webhook</span></div>
+    <div class="chain"><span class="n o">Scans QR at BPTP Parklands camp</span><span class="ar">→</span><span class="n a">"Welcome, Parklands owner — we've designed your layout"</span><span class="ar">→</span><span class="n a">Snag check · 3D of my layout · Prices</span><span class="ar">→</span><span class="n a">Possession + budget</span><span class="ar">→</span><span class="n g">Book</span></div>
+    <div class="chain br"><span class="if">Partner link</span><span class="ar">→</span><span class="n a">"{Partner} told us about you"</span><span class="ar">→</span><span class="n a">Qualify</span><span class="ar">→</span><span class="n h">Partner notified on visit &amp; sign</span></div>
+    <div class="chain br"><span class="if">Missed call</span><span class="ar">→</span><span class="n a">Utility template in 60 s</span><span class="ar">→</span><span class="n h">Call-back within 15 min</span><span class="ar">→</span><span class="n a">Qualify on call → booking template</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-5</span><h3>Book the studio visit</h3><span class="tr">From any "Book" button or a hot lead's designer call</span></div>
+    <div class="chain"><span class="n a">Weekday / weekend</span><span class="ar">→</span><span class="n a">3 real slots from the studio calendar</span><span class="ar">→</span><span class="n g">Confirmation + map pin + designer name</span><span class="ar">→</span><span class="n a">Calendar invite · sheet row · team alert</span></div>
+    <div class="chain br"><span class="if">"None of these"</span><span class="ar">→</span><span class="n h">Designer fixes a custom slot</span></div>
+    <div class="chain br"><span class="if">Studio too far (Noida / Palwal)</span><span class="ar">→</span><span class="n a">Offer live-site visit or architect home visit</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-6</span><h3>Reminders → walk-in → no-show</h3><span class="tr">Utility templates, date triggers</span></div>
+    <div class="chain"><span class="n a">Day before, 7 PM: reminder + "bring plan &amp; handover sheet"</span><span class="ar">→</span><span class="n a">2 h before: "See you at {time}"</span><span class="ar">→</span><span class="n h">Desk marks <code>visited</code></span><span class="ar">→</span><span class="n g">Post-visit flow (WA-7)</span></div>
+    <div class="chain br"><span class="if">"Running late"</span><span class="ar">→</span><span class="n a">"We'll hold 20 min"</span><span class="ar">→</span><span class="n h">Designer alerted</span></div>
+    <div class="chain br"><span class="if">Not marked visited +30 min</span><span class="ar">→</span><span class="n a">No-show template with 3 new slots</span><span class="ar">→</span><span class="n h">Day-1 call</span><span class="ar">→</span><span class="n a">Day-3 last try</span><span class="ar">→</span><span class="n o">Nurture</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-7</span><h3>After the visit → proposal → decision</h3><span class="tr">Tag <code>visited</code> · proposal tag set by designer</span></div>
+    <div class="chain"><span class="n a">Same day: 3D photos + choices recap</span><span class="ar">→</span><span class="n h">Within 48 h: proposal call</span><span class="ar">→</span><span class="n a">+1 day: "Any questions on the proposal?"</span><span class="ar">→</span><span class="n h">+3 days: founder call</span><span class="ar">→</span><span class="n a">Season deadline reminder</span><span class="ar">→</span><span class="n g">Booking amount link</span></div>
+    <div class="chain br"><span class="if">Doubt = price</span><span class="ar">→</span><span class="n a">Finish-level comparison card</span><span class="if">· timeline</span><span class="ar">→</span><span class="n a">12-week plan to their muhurat</span><span class="if">· trust</span><span class="ar">→</span><span class="n a">Same-developer project video + client voice note</span></div>
+    <div class="chain br"><span class="if">Paid</span><span class="ar">→</span><span class="n g">Won → onboarding (WA-10)</span><span class="if">· Says later</span><span class="ar">→</span><span class="n a">Follow-up on chosen date</span><span class="if">· No</span><span class="ar">→</span><span class="n a">Lost reason (WA-9)</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-8 · 9</span><h3>Nurture · lost with reason</h3><span class="tr">Cold leads, "not now", "lost"</span></div>
+    <div class="chain"><span class="n o">"Not now"</span><span class="ar">→</span><span class="n a">"When do you get possession?" (month picker)</span><span class="ar">→</span><span class="n a">One useful message a month</span><span class="ar">→</span><span class="n a">60 / 30 days before possession: re-activate</span><span class="ar">→</span><span class="n g">WA-1 step 3</span></div>
+    <div class="chain br"><span class="if">Lost</span><span class="ar">→</span><span class="n a">"What was the main reason?" Price · Went with builder package · Another designer · Timing · Family decision</span><span class="ar">→</span><span class="n a">Win-back at 90 / 180 days (price, timing only)</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-10 · 11</span><h3>Won → project updates → handover → referral</h3><span class="tr">Tag <code>won</code> · milestone tags from project manager</span></div>
+    <div class="chain"><span class="n g">Welcome + project manager intro</span><span class="ar">→</span><span class="n a">Design sign-off reminders</span><span class="ar">→</span><span class="n a">Weekly site photos (Saturday)</span><span class="ar">→</span><span class="n a">Milestone + payment-due templates</span><span class="ar">→</span><span class="n h">Handover walkthrough</span><span class="ar">→</span><span class="n a">Day 7: rating</span><span class="ar">→</span><span class="n a">Loved it → Google review → Day 21 referral</span></div>
+    <div class="chain br"><span class="if">Rating low</span><span class="ar">→</span><span class="n h">Founder calls same day</span></div>
+    <div class="chain br"><span class="if">Active client asks for update</span><span class="ar">→</span><span class="n a">Latest photos + next milestone</span><span class="ar">→</span><span class="n h">PM replies within 2 h</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-12</span><h3>Broadcast to past clients &amp; old enquiries</h3><span class="tr">CSV import, consent column required</span></div>
+    <div class="chain"><span class="n a">Season template</span><span class="ar">→</span><span class="n o">Interested</span><span class="ar">→</span><span class="n a">WA-1 qualify</span><span class="ar">→</span><span class="n g">Book</span></div>
+    <div class="chain br"><span class="if">"Who is this?"</span><span class="ar">→</span><span class="n a">Explain where they shared their number</span><span class="ar">→</span><span class="n o">Offer or stop</span></div>
+    <div class="chain br"><span class="if">Past client</span><span class="ar">→</span><span class="n a">Referral ask, never a sales offer</span></div>
+    <div class="chain br"><span class="if">No reply</span><span class="ar">→</span><span class="n a">One different-angle message after 7 days</span><span class="ar">→</span><span class="n o">Monthly nurture only</span></div></div>
+
+  <div class="flow"><div class="fh"><span class="fid">WA-13 · 14</span><h3>Human takeover · opt-out</h3><span class="tr">Keywords, voice notes, low confidence</span></div>
+    <div class="chain"><span class="n o">Discount · structural change · complaint · voice note · 2 unclear</span><span class="ar">→</span><span class="n a"><code>needs_human</code>, automation paused</span><span class="ar">→</span><span class="n h">Reply within 5 min</span><span class="ar">→</span><span class="if">late</span><span class="ar">→</span><span class="n h">Manager alert + apology</span></div>
+    <div class="chain br"><span class="n o">STOP</span><span class="ar">→</span><span class="n a"><code>optout</code>, all sequences cancelled</span><span class="ar">→</span><span class="if">messages "Hi" later</span><span class="ar">→</span><span class="n a">Re-subscribed</span></div></div>
+</div></section>
+
+<!-- 06 META -->
+<section id="meta"><div class="wrap">
+  <div class="sh"><h2><span class="num">06</span>Meta ads flows</h2><span class="kick">Click-to-WhatsApp · lead forms · retargeting</span></div>
+  <p class="lead">Three ad types, three entries. All carry city and ad name, so <b>cost per qualified lead and per walk-in</b> can be read by creative and city every evening.</p>
+  <div class="flow"><div class="fh"><span class="fid">MT-1</span><h3>Click-to-WhatsApp</h3><span class="tr">Ad referral data · one welcome per ad angle</span></div>
+    <div class="chain"><span class="n o">Ad tap</span><span class="ar">→</span><span class="n a">Welcome in the ad's angle (muhurat / layout / price / plot)</span><span class="ar">→</span><span class="n a">4 questions</span><span class="ar">→</span><span class="n a">Score</span><span class="ar">→</span><span class="n g">Floor plan → slot</span></div>
+    <div class="spec">Messages within 72 hours of an ad click are free — run qualification, booking and the first two follow-ups inside that window.</div></div>
+  <div class="flow"><div class="fh"><span class="fid">MT-2</span><h3>Instant lead form</h3><span class="tr">Form questions: city, possession month, BHK, budget, WhatsApp consent</span></div>
+    <div class="chain"><span class="n o">Form submit</span><span class="ar">→</span><span class="n a">Pre-scored from form answers</span><span class="ar">→</span><span class="n a">WhatsApp template in 60 s</span><span class="ar">+</span><span class="n a">Email with cost guide</span><span class="ar">→</span><span class="n g">Book</span></div>
+    <div class="chain br"><span class="if">Hot</span><span class="ar">→</span><span class="n h">Designer call in 15 min</span></div>
+    <div class="chain br"><span class="if">No WhatsApp reply 24 h</span><span class="ar">→</span><span class="n h">Call once</span><span class="ar">→</span><span class="n a">Email series (EM-2)</span></div>
+    <div class="chain br"><span class="if">No consent ticked</span><span class="ar">→</span><span class="n h">Call only, no WhatsApp</span></div></div>
+  <div class="flow"><div class="fh"><span class="fid">MT-3</span><h3>Retargeting audiences fed by the flows</h3><span class="tr">Custom audiences synced daily</span></div>
+    <div class="chain"><span class="n a">Started chat, not qualified</span><span class="ar">→</span><span class="n a">Ad: price card + 3D reel</span></div>
+    <div class="chain br"><span class="n a">Qualified, not booked</span><span class="ar">→</span><span class="n a">Ad: "Your 3D in 60 minutes" + studio tour</span></div>
+    <div class="chain br"><span class="n a">Visited, no proposal yes</span><span class="ar">→</span><span class="n a">Ad: client stories, same city</span></div>
+    <div class="chain br"><span class="n a">Won / opted out</span><span class="ar">→</span><span class="n o">Excluded from all ads</span></div></div>
+</div></section>
+
+<!-- 07 EMAIL -->
+<section id="email"><div class="wrap">
+  <div class="sh"><h2><span class="num">07</span>Email flows</h2><span class="kick">Long content · no 24-hour window</span></div>
+  <p class="lead">Email has no messaging window, so it carries what WhatsApp should not: <b>the cost guide, case studies, proposals, and seasonal campaigns</b>. Every email ends with one WhatsApp button that carries a <code>[EH-EM-…]</code> tag back into the chat flows.</p>
+  <div class="flow"><div class="fh"><span class="fid">EM-1</span><h3>Guide download → welcome</h3><span class="tr">Website form or Meta form with email</span></div>
+    <div class="chain"><span class="n o">Downloads guide</span><span class="ar">→</span><span class="n a">Instant email: guide PDF + price bands</span><span class="ar">→</span><span class="n a">WhatsApp template (if consent)</span><span class="ar">→</span><span class="n g">Starts EM-2</span></div></div>
+  <div class="flow"><div class="fh"><span class="fid">EM-2</span><h3>Possession nurture series</h3><span class="tr">Stops the moment they book, reply or unsubscribe</span></div>
+    <div class="chain"><span class="n a">D0 Guide</span><span class="ar">→</span><span class="n a">D2 "Snag list before you take keys"</span><span class="ar">→</span><span class="n a">D5 Case study: same city or developer</span><span class="ar">→</span><span class="n a">D9 Real cost breakdown of a 3 BHK</span><span class="ar">→</span><span class="n a">D14 Studio invite + season offer</span><span class="ar">→</span><span class="n a">Monthly newsletter</span></div></div>
+  <div class="grid g2">
+    <div class="flow" style="margin:0"><div class="fh"><span class="fid">EM-3 · 4</span><h3>Visit &amp; proposal emails</h3></div>
+      <div class="chain"><span class="n a">Booking: calendar invite + directions</span><span class="ar">→</span><span class="n a">Visit recap: 3D images + choices</span><span class="ar">→</span><span class="n h">Proposal PDF</span><span class="ar">→</span><span class="n a">+2 days: FAQ on materials &amp; warranty</span><span class="ar">→</span><span class="n a">Deadline reminder</span></div></div>
+    <div class="flow" style="margin:0"><div class="fh"><span class="fid">EM-5 · 6</span><h3>Client updates · inbound auto-reply</h3></div>
+      <div class="chain"><span class="n a">Won: welcome pack + timeline</span><span class="ar">→</span><span class="n a">Monthly progress report</span><span class="ar">→</span><span class="n a">Handover: warranty &amp; care guide</span></div>
+      <div class="chain br"><span class="if">Inbound email</span><span class="ar">→</span><span class="n a">Instant auto-reply + WhatsApp link</span><span class="ar">→</span><span class="n h">Reply within 2 h</span></div></div>
+  </div>
+  <div class="tbl" style="margin-top:14px"><table><thead><tr><th>Email</th><th>Subject line</th><th>Goal</th></tr></thead><tbody>
+    <tr><td>EM-1 Guide</td><td>Your 2026 turnkey interior cost guide (Faridabad · Gurugram · Noida · Palwal)</td><td>Deliver, set expectation</td></tr>
+    <tr><td>EM-2 D2</td><td>Check these 12 things before you accept your keys</td><td>Useful first, book snag check</td></tr>
+    <tr><td>EM-2 D5</td><td>How a {city} family moved in 11 weeks after possession</td><td>Proof from their city</td></tr>
+    <tr><td>EM-2 D9</td><td>What a 3 BHK actually costs, line by line</td><td>Price clarity</td></tr>
+    <tr><td>EM-2 D14</td><td>See your flat in 3D before we build it — this week</td><td>Studio visit</td></tr>
+    <tr><td>EM-4 Proposal</td><td>Your Edge Homes proposal for {society}</td><td>Decision</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<!-- 08 FOLLOW -->
+<section id="follow"><div class="wrap">
+  <div class="sh"><h2><span class="num">08</span>Follow-up master schedule</h2><span class="kick">Every touch, one place</span></div>
+  <p class="lead">Every automatic follow-up <b>stops the moment the person replies, books, pays, says no or opts out</b>. Maximum 2 messages a day; nothing between 9 PM and 9 AM except replies to their own messages.</p>
+  <div class="tbl"><table><thead><tr><th>Stage</th><th>Instagram</th><th>WhatsApp</th><th>Email</th><th>Team</th></tr></thead><tbody>
+    <tr><td>New, no reply</td><td>+30 min · +22 h</td><td>+2 h nudge · next-day template · day 3 reel · day 6 last nudge</td><td>EM-2 if email known</td><td>Missed call → 15 min call-back</td></tr>
+    <tr><td>Qualified, not booked</td><td>—</td><td>+24 h slot reminder · day 4 same-developer project</td><td>D14 studio invite</td><td>Hot: call in 15 min · Warm: call in 24 h</td></tr>
+    <tr><td>Visit booked</td><td>—</td><td>Day before 7 PM · 2 h before</td><td>Calendar invite</td><td>Prepare 3D from plan</td></tr>
+    <tr><td>No-show</td><td>—</td><td>+30 min rebook · day 3 last try</td><td>—</td><td>Day-1 call</td></tr>
+    <tr><td>Visited</td><td>—</td><td>Same-day recap · +1 day proposal questions · deadline reminder</td><td>Recap + proposal</td><td>Proposal in 48 h · founder call day 3</td></tr>
+    <tr><td>Proposal, undecided</td><td>—</td><td>Day 5 client voice note · day 10 "still planning for {muhurat}?"</td><td>FAQ email</td><td>Decision meeting</td></tr>
+    <tr><td>Won</td><td>Mention thank-you</td><td>Weekly photos · milestones · day 7 rating · day 21 referral</td><td>Monthly report</td><td>PM owns chat</td></tr>
+    <tr><td>Nurture</td><td>—</td><td>1 a month · 60 / 30 days before possession</td><td>Monthly newsletter</td><td>—</td></tr>
+    <tr><td>Lost</td><td>—</td><td>90 / 180-day win-back (price or timing only)</td><td>Newsletter</td><td>—</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<!-- 09 INBOX -->
+<section id="inbox"><div class="wrap">
+  <div class="sh"><h2><span class="num">09</span>Running many chats at once</h2><span class="kick">Inbox rules · roles · SLAs</span></div>
+  <p class="lead">When dozens of chats run in parallel, the risk is not the bot — it is <b>two people answering the same lead, or nobody answering a hot one</b>. These rules keep the shared inbox calm.</p>
+  <div class="grid g3">
+    <div class="card b"><h3>Roles</h3><ul class="clean small"><li><b>Inbox owner</b> (9 AM–3 PM, 3 PM–9 PM shifts): first human replies, assigns</li><li><b>Designers</b>: hot calls, 3D prep, proposals</li><li><b>Project manager</b>: active clients only</li><li><b>Founder</b>: ₹25 L+ leads, plots, decision meetings, complaints</li></ul></div>
+    <div class="card l"><h3>Assignment</h3><ul class="clean small"><li>Hot → round-robin to designers, by city</li><li>Same lead always keeps the same designer</li><li>Active client → their PM</li><li>Unassigned &gt; 10 min → inbox owner alert</li><li>One person per chat; others leave notes</li></ul></div>
+    <div class="card b"><h3>Reply-time SLAs</h3><ul class="clean small"><li>Bot: instant, 24×7</li><li>Hot lead: call within 15 min</li><li>needs_human: 5 min (9 AM–9 PM)</li><li>Active client: 2 h</li><li>Email: 2 h</li><li>Breach → manager alert + apology message</li></ul></div>
+  </div>
+  <div class="lbl">Inbox views (saved filters)</div>
+  <div class="tbl"><table><thead><tr><th>View</th><th>Shows</th><th>Checked</th></tr></thead><tbody>
+    <tr><td>🔴 Hot now</td><td>Score 70+, no human reply yet</td><td>Every 15 min</td></tr>
+    <tr><td>🟠 Needs human</td><td>needs_human tag, oldest first</td><td>Every 15 min</td></tr>
+    <tr><td>📐 Plans received</td><td>Floor plan uploaded, 3D not prepared</td><td>10 AM, 4 PM</td></tr>
+    <tr><td>📅 Visits today &amp; tomorrow</td><td>visit_booked with date</td><td>9:30 AM, 6 PM</td></tr>
+    <tr><td>📄 Proposals open</td><td>proposal_sent, no decision</td><td>Daily, founder</td></tr>
+    <tr><td>🧹 Stuck</td><td>No stage change in 7 days, no sequence running</td><td>9 PM</td></tr>
+  </tbody></table></div>
+  <div class="lbl">Quick replies (saved, one tap)</div>
+  <div class="grid g4">
+    <div class="card"><h3>/price</h3><p class="small">Price bands by BHK with "exact price after we see your plan".</p></div>
+    <div class="card"><h3>/slots</h3><p class="small">Next three studio slots.</p></div>
+    <div class="card"><h3>/location</h3><p class="small">Studio pin, parking, hours.</p></div>
+    <div class="card"><h3>/process</h3><p class="small">Design weeks 1–6, execution 7–16, handover + warranty.</p></div>
+    <div class="card"><h3>/snag</h3><p class="small">Free possession snag check sign-up.</p></div>
+    <div class="card"><h3>/paylink</h3><p class="small">Booking amount link with season benefit.</p></div>
+    <div class="card"><h3>/callback</h3><p class="small">"Calling you in 15 minutes from 98715 22556."</p></div>
+    <div class="card"><h3>/projects</h3><p class="small">Gallery link filtered by their city.</p></div>
+  </div>
+</div></section>
+
+<!-- 10 SEASONS -->
+<section id="season"><div class="wrap">
+  <div class="sh"><h2><span class="num">10</span>The season engine</h2><span class="kick">Diwali · muhurat · Christmas · New Year</span></div>
+  <p class="lead">Every welcome, offer and nurture message reads the <b>current season from one sheet</b>, so flows switch themselves on the right date. When no season is live, the evergreen offer runs — no lead ever reads "Diwali offer" in December.</p>
+  <div class="timeline">
+    <div class="tl"><span class="d">25 Oct – 15 Nov</span><h3>Diwali sprint</h3><p>Possession Pack + sign-by-15-Nov benefit. Quiet day: Sun 8 Nov (greeting only).</p></div>
+    <div class="tl"><span class="d">16 Nov – 20 Dec</span><h3>Muhurat season</h3><p>Griha pravesh dates Nov 20, 21, 25, 26 · Dec 2, 3, 4, 11, 12, 18, 19, 30. "Move in by your muhurat".</p></div>
+    <div class="tl"><span class="d">21 – 25 Dec</span><h3>Christmas</h3><p>Festive home styling, gift a design consultation, year-end price lock.</p></div>
+    <div class="tl"><span class="d">26 Dec – 15 Jan</span><h3>New Year</h3><p>"New year, new home" — design in January, move in by spring; 2026 prices held till 15 Jan.</p></div>
+    <div class="tl"><span class="d">Any gap</span><h3>Evergreen</h3><p>Free 3D of your flat in 60 minutes + snag check.</p></div>
+  </div>
+  <div class="lbl">See how the same flows change by season</div>
+  <div class="seasons" role="tablist">
+    <button class="btn on" data-s="diwali">Diwali</button>
+    <button class="btn" data-s="muhurat">Muhurat</button>
+    <button class="btn" data-s="xmas">Christmas</button>
+    <button class="btn" data-s="ny">New Year</button>
+    <button class="btn" data-s="ever">Evergreen</button>
+  </div>
+
+  <div class="spanel on" id="p-diwali"><div class="grid g3">
+    <div><div class="msg"><small>WA-1 welcome</small>Hi {name}! 🪔 Happy Diwali season from Edge Homes.
+Taking possession this year? Bring your floor plan to our studio and leave with your living room and kitchen in 3D and an exact price band — in 60 minutes.
+Sign by 15 Nov: design fee adjusted + prices locked till 31 Jan.
+Which city is your home in?<span class="sig">शुभ दीपावली।</span></div></div>
+    <div><div class="msg ig"><small>IG comment keyword · DIWALI</small>Lovely, {name}! ✨ Our Diwali Possession Pack is in your DMs — free snag check + your flat in 3D at the studio.</div></div>
+    <div><div class="msg"><small>Proposal deadline · template</small>{name}, a quick reminder: the Diwali benefit on your {society} proposal (design fee adjusted + price lock till 31 Jan) ends on 15 Nov.
+Shall we fix a 20-minute call to close any open questions?</div></div>
+  </div><p class="small muted" style="margin-top:10px">Diwali day (Sun 8 Nov): greeting only to clients and leads — no offer, no buttons. Dhanteras (Fri 6 Nov): "Invest in the home that lasts" angle allowed.</p></div>
+
+  <div class="spanel" id="p-muhurat"><div class="grid g3">
+    <div><div class="msg"><small>WA-1 welcome</small>Hi {name}! Congratulations on your new home.
+December has 8 griha pravesh dates. Interiors take 10–12 weeks, so families planning a February move-in are designing now.
+Send your floor plan — we'll show you your home in 3D at our studio. Which city?</div></div>
+    <div><div class="msg ig"><small>IG reel caption CTA</small>Griha pravesh in Feb? Comment "MUHURAT" and we'll send you a 12-week plan for your flat.</div></div>
+    <div><div class="msg"><small>Nurture template</small>{name}, planning your griha pravesh? Here's a 12-week interior timeline for a {BHK} — design, kitchen, wardrobes, finishing — worked back from your date. Want us to plan yours?</div></div>
+  </div></div>
+
+  <div class="spanel" id="p-xmas"><div class="grid g3">
+    <div><div class="msg"><small>WA-1 welcome</small>Hi {name}! 🎄 Season's greetings from Edge Homes.
+Planning your home for the new year? Visit our studio this week for a free 3D of your living room and kitchen — and lock 2026 prices on any project signed by 31 Dec.
+Which city is your home in?</div></div>
+    <div><div class="msg ig"><small>IG comment keyword · XMAS</small>Merry Christmas, {name}! 🎁 Our year-end price lock and studio slots are in your DMs.</div></div>
+    <div><div class="msg"><small>Past-client template</small>Merry Christmas from all of us at Edge Homes, {name}. Thank you for letting us build your home. If a friend is planning theirs, we'd love to look after them — and we'll thank you with a gift voucher.</div></div>
+  </div><p class="small muted" style="margin-top:10px">Christmas Day (25 Dec): greeting only to clients — no offer.</p></div>
+
+  <div class="spanel" id="p-ny"><div class="grid g3">
+    <div><div class="msg"><small>WA-1 welcome</small>Hi {name}! ✨ New year, new home.
+Design in January, move in by spring. Bring your floor plan for a free 3D at our studio — 2026 prices held on projects signed by 15 Jan.
+Which city is your home in?</div></div>
+    <div><div class="msg ig"><small>IG comment keyword · NEWYEAR</small>Happy New Year, {name}! 🥂 Your "new home by spring" plan is in your DMs.</div></div>
+    <div><div class="msg em"><small>Email · 2 Jan</small>Subject: Your home, finished by spring
+Hi {name}, if your possession landed in 2026, January is the month to design. Here's how a {BHK} goes from plan to move-in in 12 weeks — and how to keep 2026 prices if you sign by 15 Jan.</div></div>
+  </div><p class="small muted" style="margin-top:10px">New Year's Day (1 Jan): greeting only to clients — no offer.</p></div>
+
+  <div class="spanel" id="p-ever"><div class="grid g3">
+    <div><div class="msg"><small>WA-1 welcome</small>Hi {name}, thanks for reaching Edge Homes — architects, interiors and turnkey construction.
+Send your floor plan and we'll show you your home in 3D at our studio, with an exact price band, in 60 minutes. Which city?</div></div>
+    <div><div class="msg ig"><small>IG comment keyword · 3D</small>Done, {name}! 📐 Your 3D-of-your-flat invite is in your DMs.</div></div>
+    <div><div class="msg"><small>Nurture template</small>{name}, here's a recent {city} project from your developer's layout — the kitchen and wardrobes are what most families spend on first. Want to see yours in 3D?</div></div>
+  </div></div>
+
+  <div class="lbl">Season sheet columns (synced to ManyChat bot fields each morning)</div>
+  <div class="tbl"><table><thead><tr><th>Column</th><th>Example</th><th>Feeds</th></tr></thead><tbody>
+    <tr><td>season_key · start · end</td><td>xmas · 2026-12-21 · 2026-12-25</td><td><code>eh_season</code> — which row is live</td></tr>
+    <tr><td>offer_name · offer_line</td><td>Year-end price lock · "lock 2026 prices on projects signed by 31 Dec"</td><td>Every welcome and offer template</td></tr>
+    <tr><td>deadline</td><td>2026-12-31</td><td>Proposal deadline reminders</td></tr>
+    <tr><td>keyword · emoji · greeting</td><td>XMAS · 🎄 · Season's greetings</td><td>Comment triggers, message accent</td></tr>
+    <tr><td>creative_url</td><td>Season image link</td><td>Template image header</td></tr>
+    <tr><td>quiet_days</td><td>2026-11-08, 2026-12-25, 2027-01-01</td><td>No sales messages that day</td></tr>
+  </tbody></table></div>
+  <div class="callout"><b>Old reels keep working:</b> every season keyword stays live all year. Someone commenting DIWALI on an old reel in January gets the live New Year offer, with a line saying Diwali has ended.</div>
+</div></section>
+
+<!-- 11 COPY -->
+<section id="copy"><div class="wrap">
+  <div class="sh"><h2><span class="num">11</span>Copy library</h2><span class="kick">Core messages · English + Hinglish mirror</span></div>
+  <p class="lead">If the lead writes in Hindi or Hinglish, every following message switches to the <b>Hinglish mirror</b>. Templates below need Meta approval in both languages before go-live.</p>
+  <div class="grid g2">
+    <div><div class="msg"><small>Qualify · after city</small>Great — {society} is a layout we know well. 🏡
+When do you get possession?
+[Keys in hand] [Within 3 months] [3–6 months] [Later]</div></div>
+    <div><div class="msg"><small>Hinglish mirror</small>Badhiya — {society} ka layout hum achhe se jaante hain. 🏡
+Possession kab mil raha hai?
+[Chaabi mil gayi] [3 mahine mein] [3–6 mahine] [Baad mein]</div></div>
+    <div><div class="msg"><small>Floor plan ask</small>Perfect. Please send your floor plan here (a photo of the builder's brochure page is fine).
+Our designer will prepare your living room and kitchen in 3D before you visit. 📐</div></div>
+    <div><div class="msg"><small>Booking confirmation · Utility template</small>Booked ✅ {day}, {time} at the Edge Homes studio, {address}.
+Designer: {designer}. Please bring your floor plan and builder's handover sheet.
+Reply 1 to confirm or 2 to change the time.</div></div>
+    <div><div class="msg"><small>Post-visit recap</small>Thank you for visiting today, {name}! Here are your 3D views and the choices you liked. 
+{designer} will share your itemised proposal by {date}. Any question in the meantime — just reply here.</div></div>
+    <div><div class="msg"><small>Hand-off to human</small>Good question — I'm passing this to {designer} from our team. They'll reply right here within 5 minutes. 🙂</div></div>
+    <div><div class="msg"><small>Night reply</small>Thanks, {name}! 🌙 Our studio team is offline now and will reply by 10 AM. You can already pick a studio slot here 👇</div></div>
+    <div><div class="msg"><small>Call request (9 AM – 9 PM)</small>Sure, {name}! 📞 How would you like it?
+[Call me now · within 10 min] [Pick a time] [I'll call you: 98715 22556]</div></div>
+    <div><div class="msg"><small>Call request (after hours)</small>Our team is offline right now 🌙 Pick a call-back time and {designer} will ring you:
+[Tomorrow 10 AM] [Tomorrow 12 PM] [Tomorrow 6 PM]</div></div>
+    <div><div class="msg"><small>"Talk to a human"</small>Of course — connecting you to {designer} now. They'll reply right here within 5 minutes. Prefer a call instead? Tap below.
+[Call me instead]</div></div>
+    <div><div class="msg"><small>"Available?"</small>Yes, we're here 🙂 {designer} is online now. Chat here, or would you like a quick call?
+[Call me] [Chat here] [Book 3D session]</div></div>
+    <div><div class="msg"><small>"Location?" / "phone number?"</small>📍 {studio address} · parking at the gate
+🕙 Visits: {studio hours}
+📞 +91 98715 22556 · ✉️ {studio email}
+[Book a visit] [Call me] [Too far? Home visit]</div></div>
+    <div><div class="msg"><small>Welcome back (mid-flow)</small>Welcome back, {name}! 👋 You were 2 taps away from your 3D session. Shall we continue?
+[Continue] [Start over] [Talk to a designer]</div></div>
+    <div><div class="msg"><small>"Are you a bot?"</small>I'm Edge Homes' assistant 🤖 — I handle the quick things so our designers can focus on your home. A real person is one tap away.
+[Talk to a person] [Continue]</div></div>
+    <div><div class="msg"><small>Unclear · first miss</small>Got it — I've noted that for {designer} 📝 Meanwhile, here's where we were 👇</div></div>
+    <div><div class="msg"><small>Opt-out</small>Done — you won't get any more updates from us. If you ever want to plan your home with us, just message "Hi". 🙂</div></div>
+  </div>
+</div></section>
+
+<!-- 12 RULES -->
+<section id="rules"><div class="wrap">
+  <div class="sh"><h2><span class="num">12</span>Routing &amp; guardrails</h2><span class="kick">What the bot never handles alone</span></div>
+  <p class="lead">These rules run <b>before</b> any menu, in every flow, on every channel.</p>
+  <div class="tbl"><table><thead><tr><th>If the message…</th><th>Example</th><th>Goes to</th></tr></thead><tbody>
+    <tr><td>says STOP / unsubscribe</td><td>"stop"</td><td>Opt-out (WA-14)</td></tr>
+    <tr><td>asks for a discount</td><td>"Best price if I sign today?"</td><td>Designer — bot never negotiates</td></tr>
+    <tr><td>mentions structure, walls, columns, seepage</td><td>"Can we remove this wall?"</td><td>Architect — structural safety</td></tr>
+    <tr><td>is a complaint or delay on a live project</td><td>"Work hasn't started"</td><td>Founder within 30 min</td></tr>
+    <tr><td>asks about vastu, pooja room, mandir</td><td>"Vastu-compliant kitchen?"</td><td>Pooja / vastu gallery + designer note</td></tr>
+    <tr><td>is an office / clinic / commercial space</td><td>"Office in Udyog Vihar"</td><td>Commercial flow + founder</td></tr>
+    <tr><td>is a plot / construction enquiry</td><td>"200 yard plot in Palwal"</td><td>Design-build flow + architect call</td></tr>
+    <tr><td>is a voice note, PDF or photo</td><td>🎤 0:24</td><td>Team (photos of plans also tagged <code>plan_received</code>)</td></tr>
+    <tr><td>is unclear twice</td><td>"hmm ok"</td><td>One fallback, then team</td></tr>
+  </tbody></table></div>
+  <div class="lbl">Guardrails · how a lead could be lost, and the guard</div>
+  <div class="tbl"><table><thead><tr><th>Risk</th><th>Guard</th></tr></thead><tbody>
+    <tr><td>Comment never becomes a DM</td><td>Opening DM ends with one big button</td></tr>
+    <tr><td>Instagram window closes</td><td>Phone captured early; 30-min and 22-h nudges</td></tr>
+    <tr><td>Hot lead waits</td><td>Hot view checked every 15 min; unassigned alert at 10 min</td></tr>
+    <tr><td>Two people reply to one lead</td><td>One owner per chat; notes for everyone else</td></tr>
+    <tr><td>Client gets sales messages</td><td>Known-contact check at every entry</td></tr>
+    <tr><td>Old season offer shown</td><td>Season sheet + evergreen fallback</td></tr>
+    <tr><td>Over-messaging</td><td>Max 2 a day, quiet hours, max 2 campaign messages per season</td></tr>
+    <tr><td>Messaging without consent</td><td>Consent column required for imports; forms carry consent line</td></tr>
+    <tr><td>Festival greeting turns into a sales pitch</td><td>Quiet-day templates carry no offer and no buttons</td></tr>
+    <tr><td>Call or human request missed</td><td>Any phrasing triggers WA-16 / hand-off before menus; 10-min call target</td></tr>
+    <tr><td>Emoji, number or "ok" ignored</td><td>Applied to the current step; help card if no step is open</td></tr>
+    <tr><td>Returning contact gets the new-lead pitch</td><td>Greeting by contact status</td></tr>
+    <tr><td>Side question derails the flow</td><td>Answer + "Continue where we left off"</td></tr>
+    <tr><td>Bot loops on unclear text</td><td>Second miss always goes to a person</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<!-- 13 DATA -->
+<section id="data"><div class="wrap">
+  <div class="sh"><h2><span class="num">13</span>Fields, tags &amp; reports</h2><span class="kick">What ManyChat records</span></div>
+  <div class="grid g2">
+    <div class="tbl"><table><thead><tr><th>Field</th><th>Values</th></tr></thead><tbody>
+      <tr><td><code>eh_source</code></td><td>From section 2</td></tr>
+      <tr><td><code>eh_city</code> · <code>eh_society</code></td><td>Faridabad … · BPTP Parklands …</td></tr>
+      <tr><td><code>eh_possession</code></td><td>keys / 0-3 / 3-6 / later / reno + month</td></tr>
+      <tr><td><code>eh_property</code> · <code>eh_budget</code></td><td>2BHK … plot · 5-8 … 25+</td></tr>
+      <tr><td><code>eh_score</code></td><td>0–100</td></tr>
+      <tr><td><code>eh_lang</code></td><td>en / hi</td></tr>
+      <tr><td><code>eh_visit_at</code> · <code>eh_designer</code></td><td>Date-time · name</td></tr>
+      <tr><td><code>eh_value</code> · <code>eh_lost_reason</code></td><td>Proposal ₹ · reason</td></tr>
+      <tr><td><code>eh_season</code></td><td>diwali / muhurat / xmas / ny / ever</td></tr>
+    </tbody></table></div>
+    <div class="tbl"><table><thead><tr><th>Stage tag (one at a time)</th><th>Set by</th></tr></thead><tbody>
+      <tr><td><code>st_new</code> → <code>st_qualifying</code></td><td>Automation</td></tr>
+      <tr><td><code>st_qualified</code> (+ <code>hot</code>/<code>warm</code>/<code>cold</code>)</td><td>Score</td></tr>
+      <tr><td><code>st_visit_booked</code></td><td>Slot picker / designer</td></tr>
+      <tr><td><code>st_visited</code> · <code>st_noshow</code></td><td>Desk</td></tr>
+      <tr><td><code>st_proposal</code></td><td>Designer</td></tr>
+      <tr><td><code>st_won</code></td><td>Payment / founder</td></tr>
+      <tr><td><code>st_nurture</code> · <code>st_lost</code></td><td>Automation / designer</td></tr>
+      <tr><td><code>optout</code> · <code>needs_human</code> · <code>client_active</code></td><td>Rules</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="lbl">9 PM report (auto-sent to founder and 4SYSTMS)</div>
+  <div class="grid g4">
+    <div class="card l"><h3>Today</h3><p class="small">Leads by source and city · qualified · hot · visits booked</p></div>
+    <div class="card b"><h3>Speed</h3><p class="small">Median first human reply · SLA breaches · unassigned chats</p></div>
+    <div class="card l"><h3>Pipeline</h3><p class="small">Visits tomorrow · proposals open · ₹ value in proposal</p></div>
+    <div class="card b"><h3>Cost</h3><p class="small">Ad spend ÷ qualified leads and ÷ walk-ins, by city and creative</p></div>
+  </div>
+</div></section>
+
+<!-- 14 GO -->
+<section id="go"><div class="wrap">
+  <div class="sh"><h2><span class="num">14</span>Go-live checklist</h2><span class="kick">Before the first ad or broadcast</span></div>
+  <div class="grid g3">
+    <div class="card"><h3>Accounts</h3><ul class="check"><li>ManyChat Pro owned by Edge Homes</li><li>Instagram connected, message access on</li><li>WhatsApp 98715 22556 on the Business API</li><li>Email tool with domain verified</li><li>Team members and roles added</li></ul></div>
+    <div class="card"><h3>Content</h3><ul class="check"><li>Cost guide PDF final</li><li>Price card by BHK</li><li>Gallery by city and developer</li><li>Templates approved in English + Hinglish</li><li>Season sheet filled to 15 Jan 2027</li></ul></div>
+    <div class="card"><h3>Links &amp; tags</h3><ul class="check"><li>Bio, website, Google, Maps, QR and partner links, each tagged</li><li>Meta ads named by city + angle</li><li>Lead forms with consent line</li><li>Missed-call webhook or hourly check</li></ul></div>
+    <div class="card"><h3>Flows</h3><ul class="check"><li>IG-1 to IG-6 live</li><li>WA-1 to WA-14 live</li><li>MT-1 to MT-3, EM-1 to EM-6 live</li><li>Routing rules above every menu</li><li>WA-15 to WA-17 listener live on every channel</li><li>Studio address, hours and email filled in</li><li>Caps and quiet hours set</li></ul></div>
+    <div class="card"><h3>People</h3><ul class="check"><li>Inbox shifts assigned</li><li>Quick replies saved</li><li>Desk trained on 4 tags: visited, no-show, proposal, won/lost</li><li>Manager on SLA alerts</li></ul></div>
+    <div class="card"><h3>Proof</h3><ul class="check"><li>Every flow tested from a second phone and Instagram account</li><li>Season switch tested on each date</li><li>Fields and tags checked after each test</li><li>9 PM report arriving</li></ul></div>
+  </div>
+  <div class="callout"><b>Note:</b> platform rules (Instagram 24-hour and 7-day human windows, WhatsApp 24-hour session and template categories, the 72-hour free window after click-to-WhatsApp ads, follower-trigger availability) are as understood in October 2026 — <em>confirm inside ManyChat and Meta before launch.</em></div>
+</div></section>
+
+<footer><div class="wrap"><b>EDGEHOMES</b>Automation flows for Edge Homes — Architects · Interiors · Constructions. Companion to the 21-Day Walk-in Sprint. Prepared by 4SYSTMS, 25 Oct 2026.</div></footer>
+
+<script>
+document.querySelectorAll('.seasons .btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.seasons .btn').forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('.spanel').forEach(function(p){p.classList.remove('on')});
+    b.classList.add('on');
+    document.getElementById('p-'+b.dataset.s).classList.add('on');
+  });
+});
+</script>
+</body>
+</html>
