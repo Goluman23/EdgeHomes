@@ -26,14 +26,22 @@ function varsFor_(tpl, c) {
   var time = visit ? Utilities.formatDate(visit, 'Asia/Kolkata', 'h:mm a') : '';
   var map = {
     s_nudge: [name], s_guide: [name, c['Property'] || 'your', city], s_ig_lastchance: [name],
-    eh_fu_d1_guide: [name, city], eh_fu_d3_proof: [name, city], eh_fu_d6_muhurat: [name, prop_('MUHURAT_MONTH', 'December')],
-    eh_q_slots: [name, designer, city, prop_('SLOT_1', 'Saturday 11 AM'), prop_('SLOT_2', 'Sunday 11 AM')],
+    eh_fu_d1_guide: [name, city], eh_fu_d3_proof: [name, city], eh_fu_d7_muhurat: [name, prop_('MUHURAT_MONTH', 'February')],
+    eh_fu_d14_checkin: [name, c['Interest'] || c['Property'] || 'home'], eh_fu_d21_close: [name],
+    eh_q_slots: [name, designer, city, prop_('SLOT_1', 'Friday 11 AM'), prop_('SLOT_2', 'Saturday 11 AM')],
     eh_visit_confirm: [name, day, time, designer], eh_visit_reminder_eve: [name, time, prop_('STUDIO_PIN', 'studio location (to confirm)')],
-    eh_visit_reminder_2h: [name, time, designer], eh_visit_rebook: [name, prop_('SLOT_1', 'Saturday 11 AM'), prop_('SLOT_2', 'Sunday 11 AM')],
+    eh_visit_reminder_2h: [name, time, designer], eh_visit_rebook: [name, prop_('SLOT_1', 'Friday 11 AM'), prop_('SLOT_2', 'Saturday 11 AM')],
     eh_post_visit_ask: [name], eh_proposal_followup: [name, designer], eh_welcome_signed: [name, c['Society'] || city, designer],
     eh_nurture_monthly: [name, city]
   };
-  return map[tpl] || [name];
+  return map[tpl.replace(/_hinglish$/, '')] || [name];
+}
+
+// Hinglish leads (column Language = hi) get the _hinglish version of a template when one exists.
+var HINGLISH_TPLS = ['eh_fu_d1_guide', 'eh_fu_d3_proof', 'eh_fu_d7_muhurat', 'eh_fu_d14_checkin', 'eh_fu_d21_close'];
+function tplFor_(tpl, c) {
+  var lang = String(c['Language'] || '').toLowerCase();
+  return (lang === 'hi' || lang === 'hinglish') && HINGLISH_TPLS.indexOf(tpl) >= 0 ? tpl + '_hinglish' : tpl;
 }
 
 function leadForEngine_(L) {
@@ -83,7 +91,7 @@ function runFollowups() {
       var plan = planNext(eng, now);
       var key = plan.step ? plan.step.key : '';
       if (plan.action === 'send') {
-        var tpl = plan.step.tpl;
+        var tpl = tplFor_(plan.step.tpl, L.cols);
         var r = api_('/api/es/followup-send', { lead_id: L.cols['Lead ID'], phone: L.cols['Phone'], channel: eng.channel, tpl: tpl, vars: varsFor_(tpl, L.cols), step: key });
         if (r.code === 200) {
           L.state.sent.push(key); L.state.lastTpl = tpl; L.state.lastSentAt = now; L.state.replyCredited = false;

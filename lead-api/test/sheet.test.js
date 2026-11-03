@@ -35,7 +35,7 @@ post({action:'wa_message',phone:'919999999999',text:'job?',intent:'job',source:'
 const L=()=>sheets['Leads'].rows;
 assert.equal(L().length-1,2,'one row per phone');assert.equal(L()[1][5],'qualified');assert.equal(L()[1][14],'SRC_META_FORM');assert.equal(L()[1][15],'SRC_META_CTWA');assert.equal(L()[2][5],'not_lead');
 for(let i=0;i<12;i++){now+=6*3600e3;vm.runInContext('runFollowups()',ctx)}
-assert.deepEqual(sent.filter(s=>s[0].endsWith('send')).map(s=>s[1]),['eh_q_slots','eh_fu_d3_proof']);
+assert.deepEqual(sent.filter(s=>s[0].endsWith('send')).map(s=>s[1]),['s_guide','eh_q_slots','eh_fu_d3_proof']);
 // desk books a visit
 const c=n=>vm.runInContext(`col_(${JSON.stringify(n)})`,ctx);
 L()[1][c('Stage')-1]='visit_booked';L()[1][c('Visit at')-1]=new ctx.Date(now+2*86400e3);sent.length=0;
