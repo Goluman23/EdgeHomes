@@ -127,7 +127,7 @@ export function reply(intent, ctx = {}) {
     case 'bot_question':
       return R(hi ? `Main ${BRAND.short} ka assistant hoon 🤖 — chhote sawaal main sambhalta hoon, designer ek message door hain.` : `I'm the ${BRAND.short} assistant 🤖 — I handle the quick things; a designer is one message away.`, [BTN.designer, BTN.prices, BTN.book]);
     case 'contact':
-      return R(`📞 ${BRAND.phone} (call or WhatsApp)${BRAND.email ? `\n✉️ ${BRAND.email}` : ''}\n📸 Instagram @edgehomes_architects\n🌐 ${BRAND.site.replace('https://', '')}`, [BTN.call, BTN.book]);
+      return R((hi ? `Zaroor! Humse yahan sampark kijiye 🙏` : `Of course! Here's how to reach us 🙏`) + `\n\n📞 ${BRAND.phone} (call or WhatsApp)\n💬 ${BRAND.whatsappLink}${BRAND.email ? `\n✉️ ${BRAND.email}` : ''}\n📍 ${BRAND.studioAddress || BRAND.studioArea}\n🗺 ${BRAND.mapLink}\n🕙 ${BRAND.hours}\n🌐 ${BRAND.site.replace('https://', '')}`, [BTN.call, BTN.book]);
     case 'location':
       return R(locationText(lang, now), [BTN.book, 'Site consultation'], BRAND.studioAddress ? {} : { tags: ['NEEDS_ADDRESS'] });
     case 'timings':
