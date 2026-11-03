@@ -176,7 +176,8 @@ function eligibleFor(lead, campaign) {
 // apps-script/FollowupEngine.gs so the Google Sheet runs the identical logic.
 // Keep this file free of Node-only APIs and optional chaining (Apps Script V8 safe).
 
-const FU_SEND_WINDOW = { startMin: 9 * 60 + 30, endMin: 20 * 60 + 30 };
+// Client rule (3 Nov 2026): automated follow-ups go out only 10:00–19:00 IST, studio hours.
+const FU_SEND_WINDOW = { startMin: 10 * 60, endMin: 19 * 60 };
 
 // kind: session  = free-form inside WhatsApp's 24-h window (or Instagram's 24-h window)
 //       template = approved WhatsApp template (category below); WhatsApp only
@@ -184,20 +185,27 @@ const FU_SEND_WINDOW = { startMin: 9 * 60 + 30, endMin: 20 * 60 + 30 };
 //       move     = the engine moves the lead to another stage
 const CADENCE = {
   new: [
-    { key: 'nudge_30m', after: 30 * MIN, kind: 'session', tpl: 's_nudge', ignoreWindow: true },
-    { key: 'guide_2h', after: 2 * HOUR, kind: 'session', tpl: 's_guide' },
+    // Standard 7-touch cadence (client brief, 3 Nov 2026): 30 min · 3 h · 1 d · 3 d · 7 d · 14 d · 21 d.
+    // A reply from the lead restarts it (RESET_ON_REPLY). Sends only inside FU_SEND_WINDOW, never on quiet days.
+    { key: 'nudge_30m', after: 30 * MIN, kind: 'session', tpl: 's_nudge' },
+    { key: 'nudge_3h', after: 3 * HOUR, kind: 'session', tpl: 's_guide' },
     { key: 'ig_last', after: 22 * HOUR, kind: 'task', channel: 'ig', task: 'Instagram last-chance before the 24-h window closes: send s_ig_lastchance and ask for a WhatsApp number' },
     { key: 'd1', after: 1 * DAY, kind: 'template', tpl: 'eh_fu_d1_guide', category: 'marketing' },
     { key: 'd3', after: 3 * DAY, kind: 'template', tpl: 'eh_fu_d3_proof', category: 'marketing' },
-    { key: 'd6', after: 6 * DAY, kind: 'template', tpl: 'eh_fu_d6_muhurat', category: 'marketing' },
-    { key: 'to_nurture', after: 8 * DAY, kind: 'move', to: 'nurture' },
+    { key: 'd7', after: 7 * DAY, kind: 'template', tpl: 'eh_fu_d7_muhurat', category: 'marketing' },
+    { key: 'd14', after: 14 * DAY, kind: 'template', tpl: 'eh_fu_d14_checkin', category: 'marketing' },
+    { key: 'd21', after: 21 * DAY, kind: 'template', tpl: 'eh_fu_d21_close', category: 'marketing' },
+    { key: 'to_nurture', after: 22 * DAY, kind: 'move', to: 'nurture' },
   ],
   qualified: [
     { key: 'call_task', after: 0, kind: 'task', task: 'Designer call within 24 h — offer two studio slots' },
+    { key: 'nudge_3h', after: 3 * HOUR, kind: 'session', tpl: 's_guide' },
     { key: 'd1', after: 1 * DAY, kind: 'template', tpl: 'eh_q_slots', category: 'marketing' },
     { key: 'd3', after: 3 * DAY, kind: 'template', tpl: 'eh_fu_d3_proof', category: 'marketing' },
-    { key: 'd6', after: 6 * DAY, kind: 'template', tpl: 'eh_fu_d6_muhurat', category: 'marketing' },
-    { key: 'to_nurture', after: 9 * DAY, kind: 'move', to: 'nurture' },
+    { key: 'd7', after: 7 * DAY, kind: 'template', tpl: 'eh_fu_d7_muhurat', category: 'marketing' },
+    { key: 'd14', after: 14 * DAY, kind: 'template', tpl: 'eh_fu_d14_checkin', category: 'marketing' },
+    { key: 'd21', after: 21 * DAY, kind: 'template', tpl: 'eh_fu_d21_close', category: 'marketing' },
+    { key: 'to_nurture', after: 22 * DAY, kind: 'move', to: 'nurture' },
   ],
   booked: [
     { key: 'confirm', at: 'anchor', kind: 'template', tpl: 'eh_visit_confirm', category: 'utility' },
@@ -247,8 +255,8 @@ function adjustDue(ts) {
   for (let i = 0; i < 5; i++) {
     const d = ist(t);
     if (QUIET_DAYS.indexOf(d.ymd) >= 0) { t = istAt(addDaysYmd(d.ymd, 1), 10, 0); continue; }
-    if (d.minOfDay < FU_SEND_WINDOW.startMin) { t = istAt(d.ymd, 9, 30); continue; }
-    if (d.minOfDay > FU_SEND_WINDOW.endMin) { t = istAt(addDaysYmd(d.ymd, 1), 9, 30); continue; }
+    if (d.minOfDay < FU_SEND_WINDOW.startMin) { t = istAt(d.ymd, 10, 0); continue; }
+    if (d.minOfDay > FU_SEND_WINDOW.endMin) { t = istAt(addDaysYmd(d.ymd, 1), 10, 0); continue; }
     break;
   }
   return t;

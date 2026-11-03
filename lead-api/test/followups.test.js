@@ -16,15 +16,22 @@ function run(lead, from, to, step = 10 * MIN) {
   return log;
 }
 
-test('QA-01 new lead, no reply: 30 min, 2 h, day 1, day 3, day 6, then nurture', () => {
-  const log = run(base(), T0, T0 + 9 * DAY);
-  assert.deepEqual(log.map(x => x.k), ['nudge_30m', 'guide_2h', 'd1', 'd3', 'd6', 'to_nurture']);
+test('QA-01 new lead, no reply: 30 min, 3 h, day 1, 3, 7, 14, 21, then nurture — all inside 10:00–19:00 IST', () => {
+  const log = run(base(), T0, T0 + 23 * DAY);
+  assert.deepEqual(log.map(x => x.k), ['nudge_30m', 'nudge_3h', 'd1', 'd3', 'd7', 'd14', 'd21', 'to_nurture']);
   assert.equal(log[0].t - T0, 30 * MIN);
   assert.ok(log.every(x => ist(x.t).ymd !== '2026-11-08'), 'nothing on Diwali');
+  assert.ok(log.filter(x => x.a === 'send').every(x => { const m = ist(x.t).minOfDay; return m >= 600 && m <= 1140; }), 'sends only 10:00–19:00');
+});
+
+test('QA-01b drop-off at 6:50 PM: the 30-min nudge waits for 10 AM next day', () => {
+  const late = istAt('2026-11-02', 18, 50);
+  const p = planNext(fresh({ stage: 'new', stageChangedAt: late, lastInboundAt: late, channel: 'wa', consent: true }), late + 31 * MIN);
+  assert.equal(p.action, 'wait'); assert.equal(ist(p.dueAt).hh, 10); assert.equal(ist(p.dueAt).ymd, '2026-11-03');
 });
 
 test('QA-02 a reply restarts the sequence from the reply', () => {
-  const l = base({ sent: ['nudge_30m', 'guide_2h'], seq: 'new', anchorAt: T0 });
+  const l = base({ sent: ['nudge_30m', 'nudge_3h'], seq: 'new', anchorAt: T0 });
   const r = refreshAnchor({ ...l, lastInboundAt: T0 + 5 * HOUR });
   assert.deepEqual(r.sent, []); assert.equal(r.anchorAt, T0 + 5 * HOUR);
 });
@@ -36,7 +43,7 @@ test('QA-03 session messages are skipped once the 24-h window has closed', () =>
 });
 
 test('QA-04 no marketing consent → marketing templates skipped, utility still sent', () => {
-  const l = base({ consent: false, sent: ['nudge_30m', 'guide_2h'] });
+  const l = base({ consent: false, sent: ['nudge_30m', 'nudge_3h'] });
   assert.equal(planNext(l, T0 + DAY + HOUR).reason, 'no marketing consent');
   const b = refreshAnchor({ stage: 'visit_booked', stageChangedAt: T0, visitAt: istAt('2026-11-04', 11), channel: 'wa', consent: false, sent: [] });
   assert.equal(planNext(b, T0).action, 'send');
@@ -85,15 +92,16 @@ test('QA-10 walked in: 3D same day, proposal 48 h, founder day 3, ask-why day 5'
 });
 
 test('QA-11 Instagram lead: templates become desk tasks inside 7 days, skipped after', () => {
-  const l = base({ channel: 'ig', sent: ['nudge_30m', 'guide_2h', 'ig_last'] });
+  const l = base({ channel: 'ig', sent: ['nudge_30m', 'nudge_3h', 'ig_last'] });
   assert.equal(planNext(l, T0 + DAY + HOUR).action, 'task');
   const old = fresh({ ...l, lastInboundAt: T0 - 8 * DAY, stageChangedAt: T0 - 8 * DAY, anchorAt: 0, seq: undefined });
-  const p = planNext({ ...old, sent: ['nudge_30m', 'guide_2h', 'ig_last', 'd1', 'd3'] }, T0);
+  const p = planNext({ ...old, sent: ['nudge_30m', 'nudge_3h', 'ig_last', 'd1', 'd3'] }, T0);
   assert.equal(p.action, 'skip');
 });
 
 test('QA-12 quiet hours and Diwali move sends to the next allowed slot', () => {
-  assert.equal(ist(adjustDue(istAt('2026-11-02', 22, 0))).hh, 9);
+  assert.equal(ist(adjustDue(istAt('2026-11-02', 22, 0))).hh, 10);
+  assert.equal(ist(adjustDue(istAt('2026-11-02', 19, 30))).ymd, '2026-11-03');
   const d = ist(adjustDue(istAt('2026-11-08', 12, 0)));
   assert.equal(d.ymd, '2026-11-09'); assert.equal(d.hh, 10);
 });

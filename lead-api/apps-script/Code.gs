@@ -7,7 +7,7 @@
 var COLS = ['Lead ID', 'Name', 'Phone', 'IG handle', 'Channel', 'Stage', 'City', 'Society', 'Property', 'Possession',
   'Budget', 'Score', 'Tier', 'Qualified', 'First source', 'Last source', 'Campaign', 'Consent', 'Consent source',
   'First enquiry', 'Last inbound', 'Last sent', 'Messages sent', 'Next step', 'Next due', 'Visit at', 'Designer',
-  'Lost reason', 'Proposal value (₹)', 'Signed value (₹)', 'Paid on', 'Paused until', 'Notes', 'State'];
+  'Lost reason', 'Proposal value (₹)', 'Signed value (₹)', 'Paid on', 'Paused until', 'Notes', 'State', 'Language'];
 var TABS = {
   leads: 'Leads',
   convo: 'Conversations',

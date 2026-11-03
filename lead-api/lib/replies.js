@@ -97,7 +97,7 @@ export function reply(intent, ctx = {}) {
     case 'human':
       return H(staffed
         ? (hi ? `Bilkul — ${BRAND.designer} se jod rahe hain. Woh yahin 5 minute mein reply karenge.` : `Of course — connecting you to ${BRAND.designer}. They'll reply right here within 5 minutes.`)
-        : (hi ? 'Team subah 9 baje se online hogi; sabse pehle aapko reply karenge. Call-back ka time chun lein?' : "Our team is back at 9 AM and you'll be first in line. Want to pick a call-back time?"), ['Call me instead']);
+        : (hi ? 'Team subah 10 baje se online hogi; sabse pehle aapko reply karenge. Call-back ka time chun lein?' : "Our team is back at 10 AM and you'll be first in line. Want to pick a call-back time?"), ['Call me instead']);
     case 'chase':
       return H(hi ? `Deri ke liye maafi${n} — ${BRAND.designer} ko abhi alert kar diya hai.` : `Sorry for the wait${n} — I've just alerted ${BRAND.designer} again.`, ['Call me instead']);
     case 'note_for_human':
@@ -131,7 +131,7 @@ export function reply(intent, ctx = {}) {
     case 'location':
       return R(locationText(lang, now), [BTN.book, 'Site consultation'], BRAND.studioAddress ? {} : { tags: ['NEEDS_ADDRESS'] });
     case 'timings':
-      return R(`🕙 ${hi ? 'Studio' : 'Studio hours'}: ${BRAND.hours}${holidayLine(now)}\n💬 ${hi ? 'Chat aur call: 9 AM – 9 PM' : 'Chat & calls: 9 AM – 9 PM'}`);
+      return R(`🕙 ${hi ? 'Studio' : 'Studio hours'}: ${BRAND.hours}${holidayLine(now)}\n💬 ${hi ? 'Chat aur call: 10 AM – 7 PM' : 'Chat & calls: 10 AM – 7 PM'}`);
     case 'timeline': {
       const m = upcomingMuhurats(now);
       return R((hi ? '⏱ Design aur 3D pehle, phir costing, phir build. Ek 2 BHK turnkey: lagbhag 45–90 din; bade ghar aur construction zyada.' : '⏱ Design and 3D first, then costing, then build. A 2 BHK turnkey job takes about 45–90 days; larger homes and construction take longer.') + (m.length ? `\n🪔 ${hi ? 'Agle griha pravesh muhurat' : 'Next griha pravesh muhurats'}: ${m.join(', ')}` : ''));

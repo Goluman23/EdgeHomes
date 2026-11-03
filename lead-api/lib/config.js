@@ -23,9 +23,9 @@ export const BRAND = {
   cities: ['Faridabad', 'Gurugram', 'Noida', 'Palwal', 'Delhi'],
 };
 
-// Desk replies 9 AM – 9 PM IST; automation covers nights.
-export const STAFFED = { startHour: 9, endHour: 21 };
+// Desk replies in studio hours, 10 AM – 7 PM IST; automation covers the rest.
+export const STAFFED = { startHour: 10, endHour: 19 };
 // Automated follow-ups are only sent inside this window (IST).
-export const SEND_WINDOW = { startMin: 9 * 60 + 30, endMin: 20 * 60 + 30 };
+export const SEND_WINDOW = { startMin: 10 * 60, endMin: 19 * 60 };
 
 export const isLive = () => process.env.FOLLOWUP_LIVE === '1';

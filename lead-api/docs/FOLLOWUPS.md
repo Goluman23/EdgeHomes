@@ -16,8 +16,8 @@ The Google Sheet runs `runFollowups()` every 10 minutes and takes **one** action
 ## Cadence by stage
 | Stage | Steps |
 |---|---|
-| new / qualifying | +30 min session nudge · +2 h cost-guide offer (session) · IG only: +22 h desk task "last chance" · d1 `eh_fu_d1_guide` · d3 `eh_fu_d3_proof` · d6 `eh_fu_d6_muhurat` · d8 → nurture |
-| qualified | task now: designer call within 24 h · d1 `eh_q_slots` · d3 proof · d6 muhurat · d9 → nurture |
+| new / qualifying | Standard 7-touch (client brief 3 Nov 2026): +30 min session nudge · +3 h cost-guide offer (session) · IG only: +22 h desk task "last chance" · d1 `eh_fu_d1_guide` · d3 `eh_fu_d3_proof` · d7 `eh_fu_d7_muhurat` · d14 `eh_fu_d14_checkin` · d21 `eh_fu_d21_close` · d22 → nurture |
+| qualified | task now: designer call within 24 h · +3 h session · d1 `eh_q_slots` · d3 proof · d7 · d14 · d21 · d22 → nurture |
 | visit_booked | `eh_visit_confirm` now · `eh_visit_reminder_eve` 7 PM day before · `eh_visit_reminder_2h` · task 30 min after: mark Walked in / No-show |
 | no_show | task +30 min rebook call · d1 `eh_visit_rebook` · d4 → nurture |
 | walked_in | task: send 3D same day · task d2: proposal · task d3: founder call · d5 `eh_post_visit_ask` |
@@ -30,9 +30,10 @@ The Google Sheet runs `runFollowups()` every 10 minutes and takes **one** action
 - Any reply restarts new / qualified / nurture from the reply time.
 - Session messages only within 24 h of the lead's last message.
 - Marketing templates need `Consent = YES` (with a consent source); utility templates don't.
-- Instagram: session nudges run in the inbox bot; templates become desk tasks within 7 days (human-agent tag), skipped after.
+- Hinglish leads (sheet column *Language* = hi) get the `_hinglish` template versions.
+- Instagram / Messenger (Meta rule): automated messages only within 24 h of the customer's last message, so they get +30 min and +3 h; the 30-min one runs in EasySocial's Auto Reminder. Session nudges run in the inbox bot; templates become desk tasks within 7 days (human-agent tag), skipped after.
 - Human pause (48 h after a person/call/complaint request) stops everything except visit reminders. A desk stage change clears it.
-- Send window 9:30 AM – 8:30 PM IST; quiet days 8 Nov, 25 Dec, 1 Jan move steps to the next day 10 AM.
+- Send window **10 AM – 7 PM IST** (studio hours), including the 30-min nudge: a drop-off at 6:50 PM gets its nudge at 10 AM next day; quiet days 8 Nov, 25 Dec, 1 Jan move steps to the next day 10 AM.
 - Reminders whose moment has passed (e.g. booked at 3 PM for 6 PM) are skipped, not sent late.
 
 ## Attribution
