@@ -60,8 +60,8 @@ test('greeting depends on the contact status', () => {
 
 test('location never invents an address while it is unconfirmed', () => {
   const r = reply('location', { now: DAY });
-  assert.match(r.text, /Faridabad, Haryana/); assert.match(r.text, /google.com\/maps/); assert.match(r.text, /exact pin/);
-  assert.ok(r.tags.includes('NEEDS_ADDRESS'));
+  assert.match(r.text, /Omaxe World Street, Sector 79/); assert.match(r.text, /maps.google.com/); assert.doesNotMatch(r.text, /exact pin/);
+  assert.ok(!(r.tags || []).includes('NEEDS_ADDRESS'));
 });
 
 test('price reply quotes bands only', () => {

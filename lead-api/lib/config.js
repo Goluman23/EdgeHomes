@@ -10,12 +10,12 @@ export const BRAND = {
   phoneE164: '919871522556',
   site: 'https://edgehomesarchitects.in',
   instagram: 'https://www.instagram.com/edgehomes_architects/',
-  // Studio: the website names the area only ("Faridabad, Haryana" + a Maps search link).
-  // Set EH_STUDIO_ADDRESS to the full street address once confirmed; until then the bot gives the
-  // area + map link and hands over for the exact pin.
+  // Studio address and Google Maps pin confirmed by the client (3 Nov 2026).
   studioArea: 'Faridabad, Haryana',
-  studioAddress: process.env.EH_STUDIO_ADDRESS || '',
-  mapLink: process.env.EH_MAP_LINK || 'https://www.google.com/maps/search/?api=1&query=Edgehomes+Architects+Faridabad',
+  studioAddress: process.env.EH_STUDIO_ADDRESS || 'SCO-8, 1st Floor, Omaxe World Street, Sector 79, Faridabad, Haryana 121101',
+  mapLink: process.env.EH_MAP_LINK || 'https://maps.google.com/?cid=7041372647983848355',
+  whatsappLink: 'https://wa.me/919871522556',
+  serviceArea: 'PAN India (studio in Faridabad)',
   // Normal hours (website footer). Holiday hours live in calendar.js SPECIAL_HOURS.
   hours: process.env.EH_HOURS || 'Mon–Sat 10 AM – 7 PM',
   email: process.env.EH_EMAIL || '',
