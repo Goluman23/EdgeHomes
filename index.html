@@ -840,6 +840,10 @@ function onScroll(){const y=scrollY,vh=innerHeight;
   tk=false}
 addEventListener('scroll',()=>{if(!tk){tk=true;requestAnimationFrame(onScroll)}},{passive:true});onScroll();
 
+/* Meta pixel: Contact when someone taps WhatsApp or Call (the base pixel code in <head> stays unchanged) */
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="tel:"],a[href*="wa.me/"]');if(!a||typeof fbq!=='function')return;
+  const method=a.href.startsWith('tel:')?'call':'whatsapp';const where=a.closest('.mbar')?'mobile_bar':a.closest('.fabs')?'floating_button':a.closest('footer')?'footer':a.closest('#contact')?'contact_section':a.closest('.mm')?'menu':'page';
+  fbq('track','Contact',{contact_method:method,placement:where})});
 /* form -> lead-api (sheet + scoring) and WhatsApp with the website source tag */
 const LEAD_API=['https://api.edgehomesarchitects.in/api/lead','https://edgehomes-lead-api.vercel.app/api/lead'];
 const CITY_CODE={Faridabad:'FBD',Gurugram:'GGN',Noida:'NOI',Palwal:'PWL',Delhi:'DEL'};
@@ -848,7 +852,9 @@ $('#lead').addEventListener('submit',e=>{e.preventDefault();const f=e.target;if(
   const type=(f.querySelector('input[name=type]:checked')||{}).value||'';
   const city=f.city.value,code=CITY_CODE[city]||'WEB',poss=f.timeline.options[f.timeline.selectedIndex].text,bud=f.budget.options[f.budget.selectedIndex].text;
   const qs=new URLSearchParams(location.search),utm={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{if(qs.get(k))utm[k]=qs.get(k)});
-  postLead({name:f.name.value.trim(),phone:f.phone.value,city:city==='Other'?'':city,society:f.location.value,property:type,possession:f.timeline.value,budget:f.budget.value,consent:f.consent.checked,consent_source:'website form',source:'website',campaign:utm.utm_campaign||'',utm,message:f.msg.value,website_url_hp:f.website_url_hp.value});
+  const eventID='eh-lead-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
+  if(typeof fbq==='function')fbq('track','Lead',{content_name:type,content_category:city==='Other'?'PAN India':city,lead_source:'website_form'},{eventID});
+  postLead({event_id:eventID,name:f.name.value.trim(),phone:f.phone.value,city:city==='Other'?'':city,society:f.location.value,property:type,possession:f.timeline.value,budget:f.budget.value,consent:f.consent.checked,consent_source:'website form',source:'website',campaign:utm.utm_campaign||'',utm,message:f.msg.value,website_url_hp:f.website_url_hp.value});
   const msg=`Hi Edgehomes, I'd like to book a consultation.\n\nName: ${f.name.value}\nInterested in: ${type}\nCity: ${city==='Other'?'Other (PAN India)':city}${f.location.value?' · '+f.location.value:''}\nPossession: ${poss}\nBudget: ${bud}${f.msg.value?'\n\n'+f.msg.value:''}\n\nEH-WEB-${code}`;
   open('https://wa.me/919871522556?text='+encodeURIComponent(msg),'_blank','noopener')});
 $('#yr').textContent=new Date().getFullYear();
