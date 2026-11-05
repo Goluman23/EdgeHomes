@@ -3,6 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- META DOMAIN VERIFICATION: paste Meta's <meta name="facebook-domain-verification" content="…"> tag on the next line -->
+
+<!-- Tracking (Meta Pixel + GA4 / Google Ads). IDs are public; leave a value empty to switch that tool off. -->
+<script>
+window.EH_TRACK={pixel:'',ga4:'',gads:''};
+(function(T){var d=document,w=window;
+ try{var q=new URLSearchParams(location.search);['fbclid','gclid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){var v=q.get(k);if(v)localStorage.setItem('eh_'+k,JSON.stringify({v:v,t:Date.now()}))})}catch(e){}
+ if(T.pixel){!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(w,d,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init',T.pixel);fbq('track','PageView')}
+ if(T.ga4||T.gads){var s=d.createElement('script');s.async=1;s.src='https://www.googletagmanager.com/gtag/js?id='+(T.ga4||T.gads);d.head.appendChild(s);w.dataLayer=w.dataLayer||[];w.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());if(T.ga4)gtag('config',T.ga4);if(T.gads)gtag('config',T.gads)}
+ var GA={Lead:'generate_lead',Contact:'contact',ViewContent:'view_item'},STD={Lead:1,Contact:1,ViewContent:1,Schedule:1};
+ w.ehTrack=function(name,params,eventId){params=params||{};try{if(w.fbq&&T.pixel)fbq(STD[name]?'track':'trackCustom',name,params,eventId?{eventID:eventId}:{});if(w.gtag)gtag('event',GA[name]||name,params)}catch(e){}};
+ w.ehClickIds=function(){var o={};['fbclid','gclid'].forEach(function(k){try{var x=JSON.parse(localStorage.getItem('eh_'+k)||'null');if(x&&Date.now()-x.t<90*864e5)o[k]=x.v}catch(e){}});var c=function(n){var m=d.cookie.match('(?:^|; )'+n+'=([^;]*)');return m?decodeURIComponent(m[1]):''};o.fbp=c('_fbp');o.fbc=c('_fbc');return o};
+ d.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';if(h.indexOf('wa.me/')>-1)ehTrack('Contact',{method:'whatsapp',content_name:'whatsapp_click'});else if(h.indexOf('tel:')===0)ehTrack('Contact',{method:'call',content_name:'call_click'});else if(h.indexOf('instagram.com')>-1)ehTrack('InstagramClick',{})},true);
+ d.addEventListener('DOMContentLoaded',function(){if(!('IntersectionObserver' in w))return;[['projects','projects'],['process','process'],['faq','faq']].forEach(function(p){var el=d.getElementById(p[0]);if(!el)return;var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){ehTrack('ViewContent',{content_name:p[1],content_category:'section'});io.disconnect()}},{threshold:.35});io.observe(el)})});
+})(window.EH_TRACK);
+</script>
 <title>Edgehomes Architects | Turnkey Architecture, Interiors &amp; Construction since 2015</title>
 <meta name="description" content="Edgehomes Architects: turnkey architecture, interiors and construction since 2015. Studio in Faridabad, homes across Delhi NCR (Faridabad, Gurugram, Noida, Palwal, Delhi) and PAN India.">
 <meta name="theme-color" content="#F6F0DC">
@@ -831,7 +847,9 @@ $('#lead').addEventListener('submit',e=>{e.preventDefault();const f=e.target;if(
   const type=(f.querySelector('input[name=type]:checked')||{}).value||'';
   const city=f.city.value,code=CITY_CODE[city]||'WEB',poss=f.timeline.options[f.timeline.selectedIndex].text,bud=f.budget.options[f.budget.selectedIndex].text;
   const qs=new URLSearchParams(location.search),utm={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{if(qs.get(k))utm[k]=qs.get(k)});
-  postLead({name:f.name.value.trim(),phone:f.phone.value,city:city==='Other'?'':city,society:f.location.value,property:type,possession:f.timeline.value,budget:f.budget.value,consent:f.consent.checked,consent_source:'website form',source:'website',campaign:utm.utm_campaign||'',utm,message:f.msg.value,website_url_hp:f.website_url_hp.value});
+  const eid=(self.crypto&&crypto.randomUUID)?crypto.randomUUID():'eh-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+  if(window.ehTrack)ehTrack('Lead',{content_name:type,content_category:city||'Other',lead_source:'website_form'},eid);
+  postLead({...(window.ehClickIds?ehClickIds():{}),event_id:eid,page_url:location.href,name:f.name.value.trim(),phone:f.phone.value,city:city==='Other'?'':city,society:f.location.value,property:type,possession:f.timeline.value,budget:f.budget.value,consent:f.consent.checked,consent_source:'website form',source:'website',campaign:utm.utm_campaign||'',utm,message:f.msg.value,website_url_hp:f.website_url_hp.value});
   const msg=`Hi Edgehomes, I'd like to book a consultation.\n\nName: ${f.name.value}\nInterested in: ${type}\nCity: ${city==='Other'?'Other (PAN India)':city}${f.location.value?' · '+f.location.value:''}\nPossession: ${poss}\nBudget: ${bud}${f.msg.value?'\n\n'+f.msg.value:''}\n\nEH-WEB-${code}`;
   open('https://wa.me/919871522556?text='+encodeURIComponent(msg),'_blank','noopener')});
 $('#yr').textContent=new Date().getFullYear();
