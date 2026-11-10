@@ -1,6 +1,6 @@
 # Edge Homes — Lead System & Campaign Implementation Brief
 
-**Client:** Edge Homes — Architects · Interiors · Constructions (since 2015) · +91 98715 22556 · edgehomesarchitects.in
+**Client:** Edge Homes — Architects · Interiors · Constructions (since 2015) · +91 99114 46288 · edgehomesarchitects.in
 **Prepared by:** 4SYSTMS · **Version:** 1.0 · 1 Nov 2026
 **Sprint goal:** 10 walk-ins and 2 signed projects by 15 Nov 2026 (plan: 258 leads → 92 qualified → 26 booked → 15 walk-ins → 2–3 signed)
 
@@ -104,7 +104,7 @@ Tags: source `SRC_*` · city `CITY_FBD/GGN/NOI/PWL/DEL/OTHER` · intent `INTENT_
 1. **Qualification (buttons, not typing):** city + society → possession (keys / ≤ 3 months / 3–6 / later) → home (2/3/4 BHK, builder floor, villa, plot) → budget (₹5–8 L / 8–15 / 15–25 / 25 L+) → floor plan → two studio slots.
 2. **Priority stack** (implemented in `lib/intent.js`): STOP → opted-out silence → call request → human request → waiting-for-person (chase escalates, other text "noted") → "available?" → anger/abuse/complaint → repeat / 40+ words → emoji (👍 = yes, ❤️🔥 = thanks, 😡 = person) → number picks → yes/no → thanks/bye → bot question → contact, location, timings, timeline, payment terms → job/vendor/discount/structural/client update/out of area/small scope/vastu/commercial/plot → warranty, services, portfolio, referral, wrong number, not interested → price → snag check → visit/plan → greeting by stage → Claude fallback → "pick one" buttons.
 3. **Greeting by stage:** new = welcome + season line; qualifying = "two taps from your 3D session"; booked = visit details; proposal = questions; client = hand to designer; past client = "how's the home?"; nurture/lost = "is the project still on?".
-4. **Call requests:** 9 AM–9 PM → call within 10 min / pick a time / call 98715 22556; at night → call-back slots 10 AM / 12 PM / 6 PM; Instagram → ask for the number first.
+4. **Call requests:** 9 AM–9 PM → call within 10 min / pick a time / call 99114 46288; at night → call-back slots 10 AM / 12 PM / 6 PM; Instagram → ask for the number first.
 5. **Hand to a person:** person/call/manager requests, complaints, anger, discount or "best price", structural work, commercial, voice notes, repeats, long briefs, 2 unclear replies. Automation pauses 48 h (visit reminders still go).
 6. **Claude fallback** (`claude-haiku-5-5`, max 600 tokens, no temperature): approved facts only, price bands only, never confirms a booking; a guard rejects any rupee figure outside the bands.
 

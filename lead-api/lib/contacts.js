@@ -3,7 +3,7 @@ import { normalizePhone } from './phone.js';
 import { BRAND } from './config.js';
 import { ist } from './time.js';
 
-const OWN = new Set([BRAND.phoneE164, ...(process.env.EH_OWN_NUMBERS || '').split(',').map(normalizePhone).filter(Boolean)]);
+const OWN = new Set([BRAND.phoneE164, ...(BRAND.formerPhonesE164 || []), ...(process.env.EH_OWN_NUMBERS || '').split(',').map(normalizePhone).filter(Boolean)]);
 
 /** "Neha Sharma (old enq)" → "Neha"; no usable name → "there". */
 export function firstName(raw) {
