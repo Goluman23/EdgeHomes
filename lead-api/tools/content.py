@@ -72,7 +72,7 @@ TEMPLATES = [
   "Hi {{1}}, {{2}} will call you {{3}} on this number. Reply here if another time suits you better.",
   "{{1}}=Neha; {{2}}=Aditi; {{3}}=tomorrow at 10 AM",""),
  ("eh_proposal_ready","template","Utility","Proposal ready",
-  "Hi {{1}}, your Edgehomes proposal is ready. {{2}} will walk you through it on {{3}}.",
+  "Hi {{1}}, your Edgehomes proposal is ready. {{2}} will walk you through it on {{3}}. Reply here if you have any questions before then.",
   "{{1}}=Neha; {{2}}=Aditi; {{3}}=Thursday 6 PM",""),
  ("eh_site_update","template","Utility","Active client · weekly",
   "Hi {{1}}, this week's site update for {{2}}: {{3}}. Photos follow in this chat.",
