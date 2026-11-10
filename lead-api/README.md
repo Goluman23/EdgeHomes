@@ -1,6 +1,6 @@
 # Edgehomes lead-api — WhatsApp & Instagram chatbot, lead sheet, follow-ups, campaigns
 
-The back end for **Edgehomes Architects** (Faridabad · Delhi NCR · +91 98715 22556). It lives in this
+The back end for **Edgehomes Architects** (Faridabad · Delhi NCR · +91 99114 46288). It lives in this
 folder of the website repo; the website's `vercel.json` redirects `/lead-api/*` to `/`, so none of it is
 served on the site.
 
@@ -10,7 +10,7 @@ and holiday hours live in `lib/calendar.js`; every bot reply and follow-up reads
 | Part | Where | Job |
 |---|---|---|
 | Server | Vercel project `edgehomes-lead-api`, root `lead-api`, `https://api.edgehomesarchitects.in` | Concierge replies, webhook, follow-up sender, tag sync, campaign push |
-| Channel | EasySocial (WhatsApp +91 98715 22556, Instagram @edgehomes_architects) | Carries the conversation; LIVE blocks call the server |
+| Channel | EasySocial (WhatsApp +91 99114 46288, Instagram @edgehomes_architects) | Carries the conversation; LIVE blocks call the server |
 | AI | Claude Console workspace "Edgehomes", `claude-haiku-5-5`, monthly cap | Only for messages the rules miss |
 | Database + timer | Google Sheet "Edgehomes Leads" + Apps Script | One row per lead, follow-ups every 10 min, logs |
 | Optional | `n8n/` | Meta instant forms, Google lead forms, person-waiting alert, 9 PM scoreboard |
@@ -39,7 +39,7 @@ and holiday hours live in `lib/calendar.js`; every bot reply and follow-up reads
 | For each topic: `<TOPIC> KEYWORDS` | Basic Message, Navigation by Keywords on, Jump on, Re-send off | One short line, e.g. "Here's how it works" |
 | `LIVE <TOPIC>` | API Basic Message → concierge URL with `intent=<topic>` | Jump on, Save user input off |
 | Topic button blocks | Evergreen text only (no dates, offers or hours), keywords cleared | Every button that opened the topic now opens LIVE first |
-| Unmatched | → "AI CONCIERGE" API Basic Message (URL without `intent`) | Fallback text: call +91 98715 22556, or type PRICE, POOJA, WALL, BUILD, VISIT |
+| Unmatched | → "AI CONCIERGE" API Basic Message (URL without `intent`) | Fallback text: call +91 99114 46288, or type PRICE, POOJA, WALL, BUILD, VISIT |
 | Human Handover | Assign to desk | Triggered by "talk to designer", call requests, complaints |
 
 Topic keywords (English + Hinglish, ~10 each):
