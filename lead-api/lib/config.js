@@ -12,6 +12,10 @@ export const BRAND = {
   formerPhonesE164: ['919871522556'],
   site: 'https://edgehomesarchitects.in',
   instagram: 'https://www.instagram.com/edgehomes_architects/',
+  guideUrl: 'https://edgehomesarchitects.in/guide/2026-cost-guide',
+  guidePdf: 'https://edgehomesarchitects.in/guide/edgehomes-2026-cost-guide.pdf',
+  // Referral reward for past clients: 1% of the referred client's total signed project value (ex-tax).
+  referralReward: '1% of their total project value',
   // Studio address and Google Maps pin confirmed by the client (3 Nov 2026).
   studioArea: 'Faridabad, Haryana',
   studioAddress: process.env.EH_STUDIO_ADDRESS || 'SCO-8, 1st Floor, Omaxe World Street, Sector 79, Faridabad, Haryana 121101',

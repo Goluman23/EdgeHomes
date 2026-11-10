@@ -2,7 +2,7 @@
 // (services, process, FAQ, studio hours). The concierge uses these first; Claude only fills gaps
 // and is checked against the same facts. Every reply ends with a next step — never a dead end.
 import { BRAND, STAFFED } from './config.js';
-import { PRICE_BANDS, seasonAt, benefitActive, BENEFIT, upcomingMuhurats, specialHoursNotes } from './calendar.js';
+import { PRICE_BANDS, FINISH_TIERS, seasonAt, benefitActive, BENEFIT, upcomingMuhurats, specialHoursNotes } from './calendar.js';
 import { ist } from './time.js';
 
 export const BTN = {
@@ -10,7 +10,7 @@ export const BTN = {
   services: 'Our services', work: 'See our work', call: 'Call me',
 };
 const BOOK = [BTN.book, BTN.plan, BTN.designer];
-const bandsText = () => PRICE_BANDS.map(b => `• ${b.label} — ${b.total} (${b.perSqft})`).join('\n');
+const bandsText = () => PRICE_BANDS.map(b => `• ${b.label} — ${b.total}`).join('\n') + `\nFinish levels: ${FINISH_TIERS}.`;
 export const isStaffed = now => { const h = ist(now).hh; return h >= STAFFED.startHour && h < STAFFED.endHour; };
 
 function holidayLine(now) {
@@ -144,6 +144,10 @@ export function reply(intent, ctx = {}) {
       return R(hi ? SERVICES_HI : SERVICES_EN, ['Interiors', 'Pooja room', 'Feature wall', 'Construction']);
     case 'portfolio':
       return R(hi ? `Hamara kaam: ${BRAND.instagram} aur ${BRAND.site} 📸 Apne ghar ka 3D dekhna chahenge?` : `See our work: ${BRAND.instagram} and ${BRAND.site} 📸 Want to see your own home in 3D?`, ['Yes, show me', BTN.prices]);
+    case 'guide':
+      return R(hi ? `Yeh rahi hamari 2026–27 Home Cost Guide 📘 ${BRAND.guideUrl}\n\nIsmein har BHK ki price range, construction rate, 12-hafte ka plan, griha pravesh dates aur snag checklist hai (*T&C apply). Apne ghar ka 3D dekhna chahenge?` : `Here's our 2026–27 Home Cost Guide 📘 ${BRAND.guideUrl}\n\nPrice bands per BHK, turnkey construction rates, a 12-week plan, griha pravesh dates and a possession snag checklist (*T&C apply). Would you like to see your own home in 3D?`, [BTN.book, BTN.designer]);
+    case 'refer_program':
+      return H(hi ? `Shukriya! 🙏 Jise aap refer karenge, unka project Edgehomes ke saath sign hone par hum aapko ${'unke total project value ka 1%'} dete hain (pehli milestone payment ke baad). Unka naam aur number (unki permission se) yahan bhejiye.` : `Thank you! 🙏 When someone you refer signs a project with Edgehomes, we thank you with ${BRAND.referralReward}, paid after their first milestone payment. Send their name and number here (with their permission).`, [], { tags: ['NEEDS_HUMAN', 'REFERRAL_GIVEN'], pauseHours: 24 });
     case 'referral':
       return R(hi ? 'Swagat hai! 🙏 Ghar kis shehar mein hai?' : 'Welcome! 🙏 Lovely that someone sent you our way. Which city is your home in?', BRAND.cities.slice(0, 4), { tags: ['SRC_REFERRAL'] });
     case 'wrong_number':

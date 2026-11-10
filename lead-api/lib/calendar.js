@@ -40,13 +40,16 @@ export const REDUCED_SPEND = { start: '2026-11-06', end: '2026-11-10' };
 // Griha pravesh dates as published by Astroyogi (checked 25 Oct 2026). December: TO_CONFIRM.
 export const MUHURATS = ['2026-11-11', '2026-11-14', '2026-11-20', '2026-11-21', '2026-11-25', '2026-11-26'];
 
-// Price bands to quote (Delhi NCR 2026, Interior Company). Bands only — never an exact quote.
+// Price bands to quote (Delhi NCR 2026–27; same as /guide/2026-cost-guide). Bands only — never an exact quote.
 export const PRICE_BANDS = [
-  { key: '2bhk', label: '2 BHK', perSqft: '₹1,000–1,200/sq ft', total: '₹8–11 lakh' },
-  { key: '3bhk', label: '3 BHK', perSqft: '₹1,200–1,700/sq ft', total: '₹10–15 lakh' },
-  { key: '4bhk', label: '4 BHK', perSqft: '₹2,000–2,200/sq ft', total: '₹14–20 lakh' },
-  { key: 'villa', label: 'Villa / builder floor', perSqft: '₹3,000–3,500/sq ft', total: '₹18–25 lakh+' },
+  { key: '2bhk', label: '2 BHK', perSqft: '₹750–1,250/sq ft carpet', total: '₹8–11 lakh' },
+  { key: '3bhk', label: '3 BHK', perSqft: '₹750–1,250/sq ft carpet', total: '₹10–15 lakh' },
+  { key: '4bhk', label: '4 BHK', perSqft: '₹950–1,800/sq ft carpet', total: '₹14–20 lakh' },
+  { key: 'villa', label: 'Villa / builder floor', perSqft: '₹950–1,800/sq ft carpet', total: '₹18–25 lakh+' },
 ];
+
+// Finish levels per sq ft of carpet area (same as the guide).
+export const FINISH_TIERS = 'Essential ₹750–950 · Signature ₹950–1,250 · Luxe ₹1,300+ per sq ft of carpet area';
 
 export function seasonAt(ts) {
   const { ymd } = ist(ts);

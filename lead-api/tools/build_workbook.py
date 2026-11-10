@@ -12,7 +12,7 @@ with open(os.path.join(ROOT, 'data/followup-templates.csv'), 'w', newline='', en
     w = csv.writer(f)
     w.writerow(['key', 'kind', 'meta_category', 'used_in', 'language', 'body', 'sample_values', 'buttons', 'status'])
     for t in TEMPLATES:
-        w.writerow([t[0], t[1], t[2], t[3], 'en', t[4], t[5], t[6], 'draft — submit to Meta' if t[1] == 'template' else 'session text (no approval)'])
+        w.writerow([t[0], t[1], t[2], t[3], 'en', t[4], t[5], t[6], ('hold — submit only after BENEFIT.confirmed' if t[0] == 'eh_benefit_deadline' else 'draft — submit to Meta') if t[1] == 'template' else 'session text (no approval)'])
 
 NAVY = PatternFill('solid', start_color='0F1E36'); GOLD = 'C6A15B'
 HF = Font(name='Arial', bold=True, color='F1EADB', size=10); BF = Font(name='Arial', size=10)
