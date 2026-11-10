@@ -1,7 +1,7 @@
 // Claude fallback for messages the rules don't cover. It must stay inside the approved
 // facts, never quote exact prices and never confirm a booking itself.
 import { BRAND } from './config.js';
-import { PRICE_BANDS, seasonAt } from './calendar.js';
+import { PRICE_BANDS, FINISH_TIERS, seasonAt } from './calendar.js';
 
 const MODEL = process.env.CLAUDE_MODEL || 'claude-haiku-5-5';
 
@@ -22,7 +22,7 @@ export function systemPrompt(now = Date.now()) {
   ].join('\n');
 }
 
-const ALLOWED_RUPEES = new Set(PRICE_BANDS.flatMap(b => [b.total, b.perSqft]).join(' ').match(/₹[\d,.–-]+/g) || []);
+const ALLOWED_RUPEES = new Set([...PRICE_BANDS.flatMap(b => [b.total, b.perSqft]), FINISH_TIERS].join(' ').match(/₹[\d,.–-]+/g) || []);
 
 /** Reject replies that quote any rupee figure outside the approved bands. */
 export function passesGuard(text) {

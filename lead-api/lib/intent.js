@@ -47,6 +47,8 @@ export const R = {
   price: /price|cost|kitn|rate|budget|charges|lagega|quote|estimate/i,
   plan: /\b(plan|3d|design|visit|book|appointment|meet)\b/i,
   snag: /snag|inspection/i,
+  guide: /\b(guide|cost guide|brochure|pdf|rate card|price list pdf)\b|send (it|the guide)|yes,? send it|guide bhej/i,
+  refer: /^\s*refer\s*$|\b(referral (reward|bonus|program|scheme)|refer (a|my) (friend|relative|neighbou?r))\b/i,
 };
 export const EMO = /^[\s‍️\u{1F3FB}-\u{1F3FF}\p{Extended_Pictographic}]+$/u;
 const ANGRY = /[😡😠🤬👎💩]/u;
@@ -116,6 +118,8 @@ export function classify(raw, ctx = {}) {
   if (R.process.test(t)) return out('process');
   if (R.svc.test(t)) return out('service_question');
   if (R.port.test(t)) return out('portfolio');
+  if (R.refer.test(t)) return out('refer_program');
+  if (R.guide.test(t)) return out('guide');
   if (R.ref.test(t)) return out('referral');
   if (R.wrong.test(t)) return out('wrong_number');
   if (R.notint.test(t)) return out('not_interested');

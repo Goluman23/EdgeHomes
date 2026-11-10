@@ -12,6 +12,10 @@ export const BRAND = {
   formerPhonesE164: ['919871522556'],
   site: 'https://edgehomesarchitects.in',
   instagram: 'https://www.instagram.com/edgehomes_architects/',
+  guideUrl: 'https://edgehomesarchitects.in/guide/2026-cost-guide',
+  guidePdf: 'https://edgehomesarchitects.in/guide/edgehomes-2026-cost-guide.pdf',
+  // Referral reward for past clients: 1% of the referred client's total signed project value (ex-tax).
+  referralReward: '1% of their total project value',
   // Studio address and Google Maps pin confirmed by the client (3 Nov 2026).
   studioArea: 'Faridabad, Haryana',
   studioAddress: process.env.EH_STUDIO_ADDRESS || 'SCO-8, 1st Floor, Omaxe World Street, Sector 79, Faridabad, Haryana 121101',
@@ -25,9 +29,9 @@ export const BRAND = {
   cities: ['Faridabad', 'Gurugram', 'Noida', 'Palwal', 'Delhi'],
 };
 
-// Desk replies 9 AM – 9 PM IST; automation covers nights.
-export const STAFFED = { startHour: 9, endHour: 21 };
+// Desk replies in studio hours, 10 AM – 7 PM IST; automation covers the rest.
+export const STAFFED = { startHour: 10, endHour: 19 };
 // Automated follow-ups are only sent inside this window (IST).
-export const SEND_WINDOW = { startMin: 9 * 60 + 30, endMin: 20 * 60 + 30 };
+export const SEND_WINDOW = { startMin: 10 * 60, endMin: 19 * 60 };
 
 export const isLive = () => process.env.FOLLOWUP_LIVE === '1';

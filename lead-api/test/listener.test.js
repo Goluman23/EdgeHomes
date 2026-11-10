@@ -97,3 +97,18 @@ test('Instagram call request asks for a number', async () => {
   const r = await respond({ text: 'anyone available for a quick call?', channel: 'ig', now: DAY });
   assert.equal(r.askPhone, true);
 });
+
+test('guide request sends the hosted 2026 cost guide', () => {
+  assert.equal(classify('send the guide').intent, 'guide');
+  assert.equal(classify('Yes, send it').intent, 'guide');
+  const r = reply('guide', { now: DAY });
+  assert.match(r.text, /edgehomesarchitects\.in\/guide\/2026-cost-guide/);
+  assert.match(r.text, /T&C/);
+});
+
+test('REFER explains the 1% referral reward and hands to a person', () => {
+  assert.equal(classify('REFER').intent, 'refer_program');
+  const r = reply('refer_program', { now: DAY });
+  assert.match(r.text, /1% of their total project value/);
+  assert.equal(r.handoff, true);
+});

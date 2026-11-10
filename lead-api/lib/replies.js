@@ -2,7 +2,7 @@
 // (services, process, FAQ, studio hours). The concierge uses these first; Claude only fills gaps
 // and is checked against the same facts. Every reply ends with a next step — never a dead end.
 import { BRAND, STAFFED } from './config.js';
-import { PRICE_BANDS, seasonAt, benefitActive, BENEFIT, upcomingMuhurats, specialHoursNotes } from './calendar.js';
+import { PRICE_BANDS, FINISH_TIERS, seasonAt, benefitActive, BENEFIT, upcomingMuhurats, specialHoursNotes } from './calendar.js';
 import { ist } from './time.js';
 
 export const BTN = {
@@ -10,7 +10,7 @@ export const BTN = {
   services: 'Our services', work: 'See our work', call: 'Call me',
 };
 const BOOK = [BTN.book, BTN.plan, BTN.designer];
-const bandsText = () => PRICE_BANDS.map(b => `• ${b.label} — ${b.total} (${b.perSqft})`).join('\n');
+const bandsText = () => PRICE_BANDS.map(b => `• ${b.label} — ${b.total}`).join('\n') + `\nFinish levels: ${FINISH_TIERS}.`;
 export const isStaffed = now => { const h = ist(now).hh; return h >= STAFFED.startHour && h < STAFFED.endHour; };
 
 function holidayLine(now) {
@@ -97,7 +97,7 @@ export function reply(intent, ctx = {}) {
     case 'human':
       return H(staffed
         ? (hi ? `Bilkul — ${BRAND.designer} se jod rahe hain. Woh yahin 5 minute mein reply karenge.` : `Of course — connecting you to ${BRAND.designer}. They'll reply right here within 5 minutes.`)
-        : (hi ? 'Team subah 9 baje se online hogi; sabse pehle aapko reply karenge. Call-back ka time chun lein?' : "Our team is back at 9 AM and you'll be first in line. Want to pick a call-back time?"), ['Call me instead']);
+        : (hi ? 'Team subah 10 baje se online hogi; sabse pehle aapko reply karenge. Call-back ka time chun lein?' : "Our team is back at 10 AM and you'll be first in line. Want to pick a call-back time?"), ['Call me instead']);
     case 'chase':
       return H(hi ? `Deri ke liye maafi${n} — ${BRAND.designer} ko abhi alert kar diya hai.` : `Sorry for the wait${n} — I've just alerted ${BRAND.designer} again.`, ['Call me instead']);
     case 'note_for_human':
@@ -131,7 +131,7 @@ export function reply(intent, ctx = {}) {
     case 'location':
       return R(locationText(lang, now), [BTN.book, 'Site consultation'], BRAND.studioAddress ? {} : { tags: ['NEEDS_ADDRESS'] });
     case 'timings':
-      return R(`🕙 ${hi ? 'Studio' : 'Studio hours'}: ${BRAND.hours}${holidayLine(now)}\n💬 ${hi ? 'Chat aur call: 9 AM – 9 PM' : 'Chat & calls: 9 AM – 9 PM'}`);
+      return R(`🕙 ${hi ? 'Studio' : 'Studio hours'}: ${BRAND.hours}${holidayLine(now)}\n💬 ${hi ? 'Chat aur call: 10 AM – 7 PM' : 'Chat & calls: 10 AM – 7 PM'}`);
     case 'timeline': {
       const m = upcomingMuhurats(now);
       return R((hi ? '⏱ Design aur 3D pehle, phir costing, phir build. Ek 2 BHK turnkey: lagbhag 45–90 din; bade ghar aur construction zyada.' : '⏱ Design and 3D first, then costing, then build. A 2 BHK turnkey job takes about 45–90 days; larger homes and construction take longer.') + (m.length ? `\n🪔 ${hi ? 'Agle griha pravesh muhurat' : 'Next griha pravesh muhurats'}: ${m.join(', ')}` : ''));
@@ -144,6 +144,10 @@ export function reply(intent, ctx = {}) {
       return R(hi ? SERVICES_HI : SERVICES_EN, ['Interiors', 'Pooja room', 'Feature wall', 'Construction']);
     case 'portfolio':
       return R(hi ? `Hamara kaam: ${BRAND.instagram} aur ${BRAND.site} 📸 Apne ghar ka 3D dekhna chahenge?` : `See our work: ${BRAND.instagram} and ${BRAND.site} 📸 Want to see your own home in 3D?`, ['Yes, show me', BTN.prices]);
+    case 'guide':
+      return R(hi ? `Yeh rahi hamari 2026–27 Home Cost Guide 📘 ${BRAND.guideUrl}\n\nIsmein har BHK ki price range, construction rate, 12-hafte ka plan, griha pravesh dates aur snag checklist hai (*T&C apply). Apne ghar ka 3D dekhna chahenge?` : `Here's our 2026–27 Home Cost Guide 📘 ${BRAND.guideUrl}\n\nPrice bands per BHK, turnkey construction rates, a 12-week plan, griha pravesh dates and a possession snag checklist (*T&C apply). Would you like to see your own home in 3D?`, [BTN.book, BTN.designer]);
+    case 'refer_program':
+      return H(hi ? `Shukriya! 🙏 Jise aap refer karenge, unka project Edgehomes ke saath sign hone par hum aapko ${'unke total project value ka 1%'} dete hain (pehli milestone payment ke baad). Unka naam aur number (unki permission se) yahan bhejiye.` : `Thank you! 🙏 When someone you refer signs a project with Edgehomes, we thank you with ${BRAND.referralReward}, paid after their first milestone payment. Send their name and number here (with their permission).`, [], { tags: ['NEEDS_HUMAN', 'REFERRAL_GIVEN'], pauseHours: 24 });
     case 'referral':
       return R(hi ? 'Swagat hai! 🙏 Ghar kis shehar mein hai?' : 'Welcome! 🙏 Lovely that someone sent you our way. Which city is your home in?', BRAND.cities.slice(0, 4), { tags: ['SRC_REFERRAL'] });
     case 'wrong_number':
