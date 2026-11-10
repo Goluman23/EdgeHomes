@@ -7,6 +7,7 @@ import { scoreLead } from '../lib/score.js';
 import { parseSourceTag, CITY_CODES } from '../lib/source.js';
 import { logToSheet } from '../lib/sheet.js';
 import { BRAND } from '../lib/config.js';
+import { buildEvent, sendCapi, requestContext } from '../lib/capi.js';
 
 const SRC = { website: 'SRC_WEBSITE', meta_form: 'SRC_META_FORM', google: 'SRC_GOOGLE', society_qr: 'SRC_SOCIETY_QR', partner: 'SRC_PARTNER', referral: 'SRC_REFERRAL', walkin: 'SRC_WALKIN', warm_db: 'SRC_WARM_DB' };
 const CITY_TO_CODE = Object.fromEntries(Object.entries(CITY_CODES).map(([k, v]) => [v.toLowerCase(), k]));
@@ -26,6 +27,7 @@ export function buildLead(b) {
     source, sourceDetail: b.campaign || b.form_name || (tagged && tagged.detail) || '', campaign: b.campaign || '', adset: b.adset || '', ad: b.ad || '',
     consent: b.consent === true || b.consent === 'true' || b.consent === 'yes', consentSource: b.consent_source || (b.consent ? `${source} form` : ''),
     utm: b.utm || null,
+    metaLeadId: b.leadgen_id || b.meta_lead_id || '', fbclid: b.fbclid || '', gclid: b.gclid || '',
     wa: `https://wa.me/${BRAND.phoneE164}?text=${encodeURIComponent(`Hi Edgehomes, I'd like to book a consultation. EH-${source === 'SRC_META_FORM' ? 'FORM' : 'WEB'}-${code}`)}`,
   };
 }
@@ -41,5 +43,15 @@ export default async function handler(req, res) {
   const lead = buildLead(b);
   if (lead.error) return send(res, 400, lead);
   await logToSheet('lead', lead);
-  send(res, 200, { ok: true, qualified: lead.qualified, tier: lead.tier, next: lead.wa });
+  // Server-side Lead for Meta, de-duplicated against the browser Pixel by event_id.
+  // Meta instant-form leads (n8n) are already known to Meta, so only website/other leads are sent.
+  let capi = { skipped: 'meta form lead' };
+  if (lead.source !== 'SRC_META_FORM') {
+    const ctx = fromBrowser ? { ...requestContext(req), url: b.page_url, fbp: b.fbp, fbc: b.fbc, fbclid: b.fbclid } : {};
+    capi = await sendCapi([buildEvent({
+      name: 'Lead', eventId: b.event_id || undefined, lead, ctx, source: fromBrowser ? 'website' : 'system_generated',
+      custom: { content_name: lead.property, content_category: lead.tier, lead_source: lead.source },
+    })]);
+  }
+  send(res, 200, { ok: true, qualified: lead.qualified, tier: lead.tier, next: lead.wa, capi: capi.ok ? 'sent' : (capi.skipped || 'failed') });
 }
