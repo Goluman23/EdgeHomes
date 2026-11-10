@@ -81,7 +81,7 @@ function runFollowups() {
       // Pause expired → tags must drop SUPPRESS_HUMAN_PAUSE
       if (L.state.pausedUntil && L.state.pausedUntil <= now && L.cols['Paused until']) { L.cols['Paused until'] = ''; L.state.pausedUntil = 0; L.state.needsSync = true; }
       if (L.state.needsSync && L.cols['Phone']) {
-        var sync = api_('/api/es/followup-sync', { phone: L.cols['Phone'], stage: deskStage, paused_until: L.state.pausedUntil || 0 });
+        var sync = api_('/api/es/followup-sync', { phone: L.cols['Phone'], stage: deskStage, paused_until: L.state.pausedUntil || 0, city: L.cols['City'] || '', value: deskStage === 'signed' ? (Number(L.cols['Signed value (₹)']) || 0) : 0 });
         if (sync.code === 200) L.state.needsSync = false;
         fulog_(L, 'sync', '', 'sync', JSON.stringify(sync.data).slice(0, 200));
       }
