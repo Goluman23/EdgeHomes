@@ -144,6 +144,8 @@ export function reply(intent, ctx = {}) {
       return R(hi ? SERVICES_HI : SERVICES_EN, ['Interiors', 'Pooja room', 'Feature wall', 'Construction']);
     case 'portfolio':
       return R(hi ? `Hamara kaam: ${BRAND.instagram} aur ${BRAND.site} 📸 Apne ghar ka 3D dekhna chahenge?` : `See our work: ${BRAND.instagram} and ${BRAND.site} 📸 Want to see your own home in 3D?`, ['Yes, show me', BTN.prices]);
+    case 'profile':
+      return R(hi ? `Yeh raha hamara Studio Profile 🤍 ${BRAND.profileUrl}\n\n2015 se hum architecture, interiors aur construction ek hi studio mein karte hain, naksha se chaabi tak. Kya ek 10-minute ki call se aapka plan samajh lein? Bas apna suvidhajanak samay bata dijiye.` : `Here's our Studio Profile 🤍 ${BRAND.profileUrl}\n\nSince 2015 we've designed and built homes with architecture, interiors and construction under one roof, from plan to keys. Would a quick 10-minute call work to understand your plans? Just share a time that suits you.`, [BTN.book, BTN.designer]);
     case 'guide':
       return R(hi ? `Yeh rahi hamari 2026–27 Home Cost Guide 📘 ${BRAND.guideUrl}\n\nIsmein har BHK ki price range, construction rate, 12-hafte ka plan, griha pravesh dates aur snag checklist hai (*T&C apply). Apne ghar ka 3D dekhna chahenge?` : `Here's our 2026–27 Home Cost Guide 📘 ${BRAND.guideUrl}\n\nPrice bands per BHK, turnkey construction rates, a 12-week plan, griha pravesh dates and a possession snag checklist (*T&C apply). Would you like to see your own home in 3D?`, [BTN.book, BTN.designer]);
     case 'refer_program':

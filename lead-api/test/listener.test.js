@@ -15,7 +15,7 @@ const CASES = [
   ['connect me to your manager', 'human'], ['are you a bot?', 'bot_question'], ['phone number?', 'contact'], ['location?', 'location'],
   ['office kahan hai?', 'location'], ['are you open on sunday?', 'timings'], ['how long will it take?', 'timeline'],
   ['EMI available?', 'payment_terms'], ['what about warranty?', 'warranty'], ['do you do painting?', 'service_question'],
-  ['brochure please', 'portfolio'], ['my friend referred you', 'referral'], ['wrong number', 'wrong_number'],
+  ['brochure please', 'profile'], ['show me your past work', 'portfolio'], ['my friend referred you', 'referral'], ['wrong number', 'wrong_number'],
   ['👍', 'yes'], ['ok', 'yes'], ['2', 'number_pick'], ['no', 'no'], ['❤️🔥', 'love'], ['😡', 'angry'], ['🤔', 'emoji_unclear'],
   ['thanks', 'thanks'], ['bye', 'bye'], ['this is useless, fraud company', 'angry'], ['STOP', 'stop'],
   ['price?', 'price'], ['3bhk ka kitna lagega', 'price'], ['best price if I sign today?', 'discount'],
@@ -111,4 +111,10 @@ test('REFER explains the 1% referral reward and hands to a person', () => {
   const r = reply('refer_program', { now: DAY });
   assert.match(r.text, /1% of their total project value/);
   assert.equal(r.handoff, true);
+});
+
+test('profile / brochure request sends the hosted Studio Profile', () => {
+  assert.equal(classify('send your studio profile').intent, 'profile');
+  assert.equal(classify('brochure').intent, 'profile');
+  assert.match(reply('profile', { now: DAY }).text, /edgehomesarchitects\.in\/studio-profile\.pdf/);
 });

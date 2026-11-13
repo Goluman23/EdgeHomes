@@ -15,7 +15,8 @@ export const R = {
   emi: /\b(emi|loan|finance|financing|instal+ments?|payment (plan|terms|schedule)|advance (kitna|amount|payment))\b/i,
   warr: /\b(warranty|guarantee|after.?sales|servicing)\b/i,
   svc: /\b(painting|paint|false ceiling|pop|ceiling|modular kitchen|kitchen only|furniture|sofa|construction|renovat\w*|tiles|flooring|lighting|electrical|plumbing)\b/i,
-  port: /\b(brochure|catalog(ue)?|portfolio|photos|pictures|pics|previous work|past work|your projects|samples?|work done|designs? you)\b/i,
+  profile: /\b(studio profile|company profile|your profile|profile pdf|profile bhej\w*|profile send|send (the |your )?profile|brochure)\b/i,
+  port: /\b(catalog(ue)?|portfolio|photos|pictures|pics|previous work|past work|your projects|samples?|work done|designs? you)\b/i,
   ref: /\b(referred|reference|told me about|recommended (you|your)|suggested you|friend (said|told))\b/i,
   wrong: /wrong number|who is this|who are you|kaun (hai|ho)|aap kaun/i,
   thanks: /^\s*(thanks?|thank you|thx|ty|thanku|shukriya|dhanyavad|dhanyawad)\b/i,
@@ -47,7 +48,7 @@ export const R = {
   price: /price|cost|kitn|rate|budget|charges|lagega|quote|estimate/i,
   plan: /\b(plan|3d|design|visit|book|appointment|meet)\b/i,
   snag: /snag|inspection/i,
-  guide: /\b(guide|cost guide|brochure|pdf|rate card|price list pdf)\b|send (it|the guide)|yes,? send it|guide bhej/i,
+  guide: /\b(guide|cost guide|pdf|rate card|price list pdf)\b|send (it|the guide)|yes,? send it|guide bhej/i,
   refer: /^\s*refer\s*$|\b(referral (reward|bonus|program|scheme)|refer (a|my) (friend|relative|neighbou?r))\b/i,
 };
 export const EMO = /^[\s‍️\u{1F3FB}-\u{1F3FF}\p{Extended_Pictographic}]+$/u;
@@ -117,6 +118,7 @@ export function classify(raw, ctx = {}) {
   if (R.offer.test(t)) return out('offer');
   if (R.process.test(t)) return out('process');
   if (R.svc.test(t)) return out('service_question');
+  if (R.profile.test(t)) return out('profile');
   if (R.port.test(t)) return out('portfolio');
   if (R.refer.test(t)) return out('refer_program');
   if (R.guide.test(t)) return out('guide');

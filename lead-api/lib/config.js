@@ -13,6 +13,7 @@ export const BRAND = {
   site: 'https://edgehomesarchitects.in',
   instagram: 'https://www.instagram.com/edgehomes_architects/',
   guideUrl: 'https://edgehomesarchitects.in/guide/2026-cost-guide',
+  profileUrl: 'https://edgehomesarchitects.in/studio-profile.pdf',
   guidePdf: 'https://edgehomesarchitects.in/guide/edgehomes-2026-cost-guide.pdf',
   // Referral reward for past clients: 1% of the referred client's total signed project value (ex-tax).
   referralReward: '1% of their total project value',
