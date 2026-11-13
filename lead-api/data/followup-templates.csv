@@ -29,3 +29,37 @@ eh_past_client_referral,template,Marketing,Broadcast · consent group B (past cl
 eh_possession_pack_intro,template,Marketing,Society QR opt-ins,en,"Hi {{1}}, thanks for signing up at {{2}}. As promised: a free possession snag check plus your living room and kitchen in 3D in 60 minutes. Would you like to book?",{{1}}=Neha; {{2}}=BPTP Parklands clubhouse,Book snag check | Book consultation | Later,draft — submit to Meta
 eh_festive_greeting,template,Marketing,Festivals (no offer),en,"Happy {{1}} from all of us at Edgehomes, {{2}}! 🪔 Wishing your home light and warmth.",{{1}}=Diwali; {{2}}=Neha,,draft — submit to Meta
 eh_benefit_deadline,template,Marketing,Only if BENEFIT.confirmed,en,"Hi {{1}}, a reminder: {{2}} ends on {{3}}. If you'd like to use it, reply VISIT and we'll hold a slot.",{{1}}=Neha; {{2}}=the sign-by-15-Nov benefit; {{3}}=15 November,VISIT,hold — submit only after BENEFIT.confirmed
+eh_studio_profile_share,template,Marketing,After a call · send Studio Profile (header: DOCUMENT studio-profile.pdf),en,"Hello {{1}} 🤍
+
+Warm greetings from *Edge Homes*.
+
+Since 2015, we've been designing and building homes across Delhi NCR and India, with architecture, interiors and construction under one roof, from plan to keys.
+
+Sharing our Studio Profile for you.
+
+Would a *quick 10-minute call* work to understand your plans? Just share a time that suits you. And whenever you're ready, we'd be delighted to host you at our Faridabad studio.
+
+Warm regards,
+*Edge Homes*
+_Homes, drawn & built as one._
+📞 +91 99114 46288 · edgehomesarchitects.in",{{1}}=Neha,Share a call time | Visit the studio,draft — submit to Meta
+eh_studio_profile_share_hinglish,template,Marketing,"After a call · Studio Profile, Hinglish (header: DOCUMENT studio-profile.pdf)",en,"Namaste {{1}} 🤍
+
+*Edge Homes* ki taraf se shubhkamnayein.
+
+2015 se hum Delhi NCR aur poore India mein ghar design aur build kar rahe hain: architecture, interiors aur construction ek hi chhat ke neeche, naksha se chaabi tak.
+
+Aapke liye hamara Studio Profile bhej rahe hain.
+
+Kya ek *10-minute ki call* se aapka plan samajh lein? Apna suvidhajanak samay bata dijiye. Aur jab bhi aap chahein, hamare Faridabad studio mein aapka swagat hai.
+
+Saadar,
+*Edge Homes*
+📞 +91 99114 46288 · edgehomesarchitects.in",{{1}}=Neha,Call ka samay | Studio aana hai,draft — submit to Meta
+eh_profile_nudge_d2,template,Marketing,"Studio Profile sent, no reply · day 2",en,"Hello {{1}}, hope you had a moment with our Studio Profile 🤍 If it helps, our designer can walk you through two or three homes like yours on a quick 10-minute call. Would a morning or an evening suit you better?",{{1}}=Neha,Morning | Evening | Another day,draft — submit to Meta
+eh_profile_nudge_d5,template,Marketing,"Studio Profile sent, no reply · day 5",en,"Hello {{1}}, a small note from Edge Homes. Every home we take on begins with a private consultation at your site or our Faridabad studio, with no obligation. Shall we hold a slot for you this week?",{{1}}=Neha,Studio visit | Site visit | Later,draft — submit to Meta
+eh_profile_nudge_d10,template,Marketing,"Studio Profile sent, no reply · day 10 (last)",en,"Hello {{1}}, we'll leave our Studio Profile with you 🙏 Whenever you're ready to talk about your home, simply reply here and your designer will pick up right where we left off. Warm regards, Edge Homes.",{{1}}=Neha,Talk to designer,draft — submit to Meta
+eh_call_confirm,template,Utility,Call time agreed,en,"Hello {{1}}, thank you. Your call with {{2}} from Edge Homes is set for {{3}}. We'll call you on this number. Reply here if another time suits you better.",{{1}}=Neha; {{2}}=Aditi; {{3}}=today at 6 PM,Change time,draft — submit to Meta
+eh_meta_lead_welcome,template,Utility,Meta / Instagram lead form · within 5 min,en,"Hello {{1}}, thank you for your enquiry about {{2}}. This is Edge Homes. Our designer will call you during working hours (Mon–Sat, 10 AM–7 PM). Meanwhile, here is our Studio Profile: https://edgehomesarchitects.in/studio-profile.pdf Reply here with a time that suits you.",{{1}}=Neha; {{2}}=turnkey construction,Call me today | Share a time,draft — submit to Meta
+eh_retarget_plot,template,Marketing,Retargeting · plot / kothi owners (opted-in),en,"Hello {{1}}, planning to build on your plot? Edge Homes designs and builds homes from naksha to keys, with one team and one contract. We start with a site and feasibility study so you know what your plot allows. Reply PLOT for a free feasibility chat.",{{1}}=Neha,PLOT | Not now,draft — submit to Meta
+eh_retarget_nri,template,Marketing,Retargeting · NRI and absentee owners (opted-in),en,"Hello {{1}}, building or renovating a home in India while you live away? Edge Homes handles design, approvals and construction with video walkthroughs, digital sign-offs and a team on site in your place. Reply NRI for a video consultation at a time that suits your time zone.",{{1}}=Neha,NRI | Not now,draft — submit to Meta
