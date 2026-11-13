@@ -13,6 +13,8 @@ export const BRAND = {
   site: 'https://edgehomesarchitects.in',
   instagram: 'https://www.instagram.com/edgehomes_architects/',
   guideUrl: 'https://edgehomesarchitects.in/guide/2026-cost-guide',
+  // Both numbers take calls and WhatsApp; 99114 46288 is the WhatsApp Business API number the bots run on.
+  callPhones: ['+91 98715 22556', '+91 99114 46288'],
   profileUrl: 'https://edgehomesarchitects.in/studio-profile.pdf',
   guidePdf: 'https://edgehomesarchitects.in/guide/edgehomes-2026-cost-guide.pdf',
   // Referral reward for past clients: 1% of the referred client's total signed project value (ex-tax).
