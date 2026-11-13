@@ -1,7 +1,7 @@
 # Edge Homes: how every channel connects (Nov 2026)
 
 One brand line everywhere: **Edge Homes, architects · interiors · turnkey construction, since 2015. Homes, drawn & built as one.**
-Phone / WhatsApp **+91 99114 46288** · Studio SCO-8, Omaxe World Street, Sector 79, Faridabad · Mon–Sat 10 AM–7 PM · PAN India.
+Call / WhatsApp **+91 98715 22556** and **+91 99114 46288** (99114 46288 is the WhatsApp Business API number the bots and templates run on) · Studio SCO-8, Omaxe World Street, Sector 79, Faridabad · Mon–Sat 10 AM–7 PM · PAN India.
 Assets: Studio Profile `https://edgehomesarchitects.in/studio-profile.pdf` · Cost guide `https://edgehomesarchitects.in/guide/2026-cost-guide`.
 
 ## 1. After a phone call: send the Studio Profile
@@ -34,3 +34,14 @@ PROFILE / brochure → Studio Profile · GUIDE → cost guide · PRICE → bands
 
 ## 5. Still to switch on (needs the owner)
 `META_CAPI_TOKEN` in Vercel · GA4 measurement ID · ad account in edgehomes_1 with payment method · domain verification · Google Sheet logger · `FOLLOWUP_LIVE=1` after templates are approved.
+
+## 6. EasySocial checklist before Meta ads (apply and tick in the dashboard)
+WhatsApp flow 6070 is at 50/50 nodes, so new triggers are added as keywords on existing nodes, not new nodes.
+| Where | Change |
+|---|---|
+| WA + IG `Portfolio` node | message adds the Studio Profile link `https://edgehomesarchitects.in/studio-profile.pdf`; keywords keep `portfolio, designs, catalogue`; add `profile` |
+| WA `Book consultation` | replace weak keywords `3d`, `slot` with `visit the studio`, `share a call time` so the template buttons land on the booking path |
+| WA `Designer intro` | keyword `call me today` (lead-form template button) |
+| IG (1 free node) | `Story reaction` node: 😍 🔥 ❤️ 👏 nice, wow, beautiful, amazing, love it, superb → warm thanks + "type BOOK, PRICE or PROFILE" |
+| Templates | submit `eh_studio_profile_share` (+ `_hinglish`) with the Studio Profile PDF as the document header; `eh_profile_nudge_d2/d5/d10`, `eh_call_confirm`, `eh_meta_lead_welcome`, `eh_retarget_plot`, `eh_retarget_nri` |
+| Contact nodes (WA + IG) | show both numbers: Call / WhatsApp +91 98715 22556 · +91 99114 46288 |
